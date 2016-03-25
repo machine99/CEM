@@ -1,0 +1,16 @@
+<code_scheme name="MyStyle">
+  <option name="FIELD_NAME_PREFIX" value="m" />
+  <option name="STATIC_FIELD_NAME_PREFIX" value="s" />
+  <XML>
+    <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
+  </XML>
+  <codeStyleSettings language="HTML">
+    <indentOptions>
+      <option name="SMART_TABS" value="true" />
+    </indentOptions>
+  </codeStyleSettings>
+  <codeStyleSettings language="JAVA">
+    <option name="LINE_COMMENT_AT_FIRST_COLUMN" value="false" />
+    <option name="BLOCK_COMMENT_AT_FIRST_COLUMN" value="false" />
+  </codeStyleSettings>
+</code_scheme>

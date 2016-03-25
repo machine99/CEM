@@ -1,0 +1,14 @@
+<keymap version="1" name="Eclipse copy" parent="Eclipse">
+  <action id="CloseProject">
+    <keyboard-shortcut first-keystroke="ctrl alt q" />
+  </action>
+  <action id="NewClass">
+    <keyboard-shortcut first-keystroke="alt c" />
+  </action>
+  <action id="NewDir">
+    <keyboard-shortcut first-keystroke="alt p" />
+  </action>
+  <action id="NewProject">
+    <keyboard-shortcut first-keystroke="alt n" />
+  </action>
+</keymap>

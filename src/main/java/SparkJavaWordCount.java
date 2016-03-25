@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 /**
  * Created by tomxie on 2016/3/22 11:06.
  */
-
 public final class SparkJavaWordCount {
     private static final Pattern SPACE = Pattern.compile("\\W");
 
