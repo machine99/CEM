@@ -44,5 +44,6 @@ public final class SparkJavaWordCount {
             System.out.println(tuple2._1() + ":" + tuple2._2());
         }
         context.stop();
+        System.out.println("github");
     }
 }
