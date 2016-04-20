@@ -2,6 +2,7 @@
   <component name="libraryTable">
     <library name="scala-sdk-2.11.8" type="Scala">
       <properties>
+        <option name="languageLevel" value="Scala_2_10" />
         <compiler-classpath>
           <root url="file://D:/scala/lib/scala-compiler.jar" />
           <root url="file://D:/scala/lib/scala-library.jar" />
