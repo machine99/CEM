@@ -2,6 +2,9 @@
   <component name="KeyPromoterConfiguration">
     <option name="settings">
       <KeyPromoterSettings>
+        <option name="borderColor">
+          <Color />
+        </option>
         <option name="displayTime" value="1000" />
         <option name="popupTemplate" value="&lt;html&gt;&#10; &lt;body&gt;&#10;  &lt;table&gt;&#10;   &lt;tr&gt;&#10;    &lt;td align=&quot;center&quot;&gt;&lt;font size=5&gt;{0}&lt;/font&gt;&lt;/td&gt;&#10;   &lt;/tr&gt;&#10;   &lt;tr&gt;&#10;    &lt;td align=&quot;center&quot;&gt;&lt;font size=4&gt;{1} time(s)&lt;/font&gt;&lt;/td&gt;&#10;   &lt;/tr&gt;&#10;  &lt;/table&gt;&#10; &lt;/body&gt;&#10;&lt;/html&gt;" />
       </KeyPromoterSettings>
