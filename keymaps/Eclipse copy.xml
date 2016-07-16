@@ -5,6 +5,9 @@
   <action id="CloseProject">
     <keyboard-shortcut first-keystroke="ctrl alt q" />
   </action>
+  <action id="CreateJavaeeWebPageAction">
+    <keyboard-shortcut first-keystroke="alt j" />
+  </action>
   <action id="EditorSelectWord" />
   <action id="NewClass">
     <keyboard-shortcut first-keystroke="alt c" />
