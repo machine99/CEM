@@ -26,7 +26,13 @@
         <root url="jar://D:/scala/api/jars/scala-swing_2.11-1.0.2-javadoc.jar!/" />
         <root url="jar://D:/scala/api/jars/scala-xml_2.11-1.0.4-javadoc.jar!/" />
       </JAVADOC>
-      <SOURCES />
+      <SOURCES>
+        <root url="file://D:/scala/src" />
+        <root url="file://D:/scala/src/library" />
+        <root url="file://D:/scala/src/partest-extras" />
+        <root url="file://D:/scala/src/partest-javaagent" />
+        <root url="file://D:/scala/src/repl" />
+      </SOURCES>
     </library>
   </component>
 </application>
