@@ -2,7 +2,6 @@
   <component name="UISettings">
     <option name="FONT_FACE" value="Dialog" />
     <option name="FONT_SIZE" value="14" />
-    <option name="HIDE_TOOL_STRIPES" value="false" />
     <option name="PRESENTATION_MODE_FONT_SIZE" value="16" />
   </component>
 </application>
