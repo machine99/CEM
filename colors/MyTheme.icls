@@ -5,6 +5,9 @@
   <option name="CONSOLE_FONT_SIZE" value="14" />
   <option name="EDITOR_FONT_NAME" value="Consolas" />
   <attributes>
+    <option name="BOOKMARKS_ATTRIBUTES">
+      <value />
+    </option>
     <option name="DEFAULT_CLASS_REFERENCE" baseAttributes="DEFAULT_IDENTIFIER" />
     <option name="DEFAULT_CONSTANT" baseAttributes="DEFAULT_IDENTIFIER" />
     <option name="DEFAULT_FUNCTION_CALL" baseAttributes="DEFAULT_IDENTIFIER" />
@@ -27,6 +30,9 @@
       </value>
     </option>
     <option name="JAVA_VALID_STRING_ESCAPE" baseAttributes="DEFAULT_VALID_STRING_ESCAPE" />
+    <option name="LOG_EXPIRED_ENTRY">
+      <value />
+    </option>
     <option name="TEXT">
       <value>
         <option name="FOREGROUND" value="dcdcdc" />
