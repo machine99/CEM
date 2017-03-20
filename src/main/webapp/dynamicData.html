@@ -1,0 +1,300 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据监控</title>
+    <link rel="stylesheet" type="text/css" href="statics/css/table.css">
+
+    <link href="statics/css/bootstrap.min.css" rel="stylesheet">
+    <link href="statics/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+    <link href="statics/css/animate.css" rel="stylesheet">
+    <link href="statics/css/style.css" rel="stylesheet">
+    <link href="css/plugins/ionRangeSlider/ion.rangeSlider.css" rel="stylesheet">
+    <link href="css/plugins/ionRangeSlider/ion.rangeSlider.skinHTML5.css" rel="stylesheet">
+    <link href="css/plugins/ionRangeSlider/normalize.css" rel="stylesheet">
+    <link href="css/plugins/toastr/toastr.min.css" rel="stylesheet">
+    <!--tabs-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <!--tabs-2-->
+    <link rel="stylesheet" href="statics/css/bootstrap-dynamic-tabs.css">
+    <link rel="stylesheet" href="statics/css/jquery.scrolling-tabs/jquery.scrolling-tabs.css">
+
+    <!--人人CSS-->
+    <link rel="stylesheet" href="statics/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="statics/css/all-skins.min.css">
+    <link rel="stylesheet" href="statics/css/main.css">
+
+</head>
+<body class="pace-done">
+<div class="pace  pace-inactive">
+    <div class="pace-progress" data-progress-text="100%" data-progress="99"
+         style="transform: translate3d(100%, 0px, 0px);">
+        <div class="pace-progress-inner"></div>
+    </div>
+    <div class="pace-activity"></div>
+</div>
+
+
+
+<div id="wrapper">
+
+    <header class="main-header"><a href="javascript:void(0);" class="logo"><span class="logo-mini"><b>人人</b></span>
+        <span class="logo-lg"><b>人人权限系统</b></span></a>
+        <nav role="navigation" class="navbar navbar-static-top"><a href="#" data-toggle="offcanvas" role="button"
+                                                                   class="sidebar-toggle"><span class="sr-only">Toggle navigation</span></a>
+            <div style="float: left; color: rgb(255, 255, 255); padding: 15px 10px;">欢迎 admin</div>
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://www.renren.io" target="_blank"><i class="fa fa-home"></i> &nbsp;编程教程</a></li>
+                    <li><a href="javascript:;"><i class="fa fa-lock"></i> &nbsp;修改密码</a></li>
+                    <li><a href="logout"><i class="fa fa-sign-out"></i> &nbsp;退出系统</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav metismenu" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element"> <span>
+<img alt="image" class="img-circle" src="img/profile_small.jpg">
+</span>
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="javascript:void(0)">
+<span class="clear"> <span class="block m-t-xs"> <strong class="font-bold" id="doctorName">admin</strong>
+</span> <span class="text-muted text-xs block">陕西广电<b class="caret"></b></span> </span> </a>
+                        <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                            <li><a href="javascript:void(0)">修改密码</a></li>
+                            <li><a href="javascript:void(0)">个人信息</a></li>
+                            <li><a href="javascript:void(0)">清除缓存</a></li>
+                            <li class="divider"></li>
+                            <li><a href="javascript:void(0)">注销</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="">
+                    <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">探针管理</span>
+                        <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li class="e"><a href="#" id="probebtn">探针列表</a></li>
+                    </ul>
+                </li>
+
+                <li class="">
+                    <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">区域感知分析</span>
+                        <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li class=""><a href="#" id="areaPingBtn">区域ping感知对比</a></li>
+                        <li class=""><a href="#" id="areaWebBtn">区域网页感知对比</a></li>
+                        <li class=""><a href="#" id="areaGameBtn">区域游戏感知对比</a></li>
+                        <li class=""><a href="#" id="areaVideoBtn">区域视频感知对比</a></li>
+                        <li class=""><a href="#" id="areaTrendBtn">区域感知变化趋势</a></li>
+                        <li class=""><a href="#" id="areaTotalBtn">区域总体感知对比</a></li>
+                    </ul>
+                </li>
+                <li class="">
+                    <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">BRAS感知分析</span>
+                        <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li class=""><a href="#" id="BRAS">（空）</a></li>
+                    </ul>
+                </li>
+                <li class="">
+                    <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">门户感知统计</span>
+                        <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li class=""><a href="#" id="">（空）</a></li>
+                    </ul>
+                </li>
+                <li class="">
+                    <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">故障诊断</span>
+                        <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li class=""><a href="#" id="villageQualityBtn">小区质量分段分析</a></li>
+                        <li class=""><a href="#" id="userDiagnoseBtn">用户侧分段诊断</a></li>
+                        <li class=""><a href="#" id="nowTestBtn">实时测试</a></li>
+                    </ul>
+                </li>
+                <!--<li>-->
+                <!--<a href="javascript:void(0)" id="doctorinformation"><i class="fa fa-files-o"></i> <span-->
+                <!--class="nav-label"></span><span style="float: right"><img src="img/lock.png" width="20px"-->
+                <!--height="20px"-->
+                <!--class="lock"></span>-->
+                <!--</a>-->
+                <!--</li>-->
+                <!--<li>-->
+                <!--<a href="javascript:void(0)" id="hisquery"><i class="fa fa-desktop"></i> <span class="nav-label">历史信息查询</span><span-->
+                <!--style="float: right"><img src="img/lock.png" width="20px" height="20px" class="lock"></span>-->
+                <!--</a>-->
+                <!--</li>-->
+
+            </ul>
+
+        </div>
+    </nav>
+    <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+
+            <div id="tabs">
+
+            </div>
+
+        </div>
+        <div class="wrapper wrapper-content">
+            <div class="row">
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="js/jquery-2.0.3.js"></script>
+<script src="js/jquery-2.0.3.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="js/plugins/flot/jquery.flot.js"></script>
+<script src="js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+<script src="js/plugins/flot/jquery.flot.spline.js"></script>
+<script src="js/plugins/flot/jquery.flot.resize.js"></script>
+<script src="js/plugins/flot/jquery.flot.pie.js"></script>
+<script src="js/plugins/flot/jquery.flot.symbol.js"></script>
+<script src="js/plugins/flot/curvedLines.js"></script>
+<script src="js/plugins/peity/jquery.peity.min.js"></script>
+<script src="js/demo/peity-demo.js"></script>
+<script src="js/inspinia.js"></script>    <!--左侧列表下拉需要-->
+<script src="js/plugins/pace/pace.min.js"></script>
+<script src="js/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="js/plugins/jvectormap/jquery-jvectormap-2.0.2.min.js"></script>
+<script src="js/plugins/sparkline/jquery.sparkline.min.js"></script>
+<script src="js/plugins/chartJs/Chart.min.js"></script>
+<script src="js/ion.rangeSlider.js"></script>
+<script src="js/ion.rangeSlider.min.js"></script>
+
+<script type="text/javascript" src="echarts/echarts.min.js"></script>
+
+<script src="js/toastr.js"></script>
+<script src="js/bootstrap-dynamic-tabs.js"></script>   <!--动态添加标签页-->
+<script src="js/jquery.scrolling-tabs.js"></script>    <!--标签滑动-->
+
+
+<script>
+
+
+    var tabs = $('#tabs').bootstrapDynamicTabs();
+
+    $(window).load(function () {
+        tabs.addTab({
+            title: 'Home',
+            text: 'Home tab content',
+            closable: false,
+            ID: 'home'
+        });
+    });
+
+    $('.nav-tabs').scrollingTabs();  //滑动标签页
+
+
+    $('#probebtn').click(function () {
+        tabs.addTab({
+            title: '探针列表',
+            id: 'probe',
+            icon: 'fa fa-user',
+            ajaxUrl: 'probeTable.html'
+        });
+        $('.nav-tabs').scrollingTabs('refresh');
+    });
+    $('#areaPingBtn').click(function () {
+        tabs.addTab({
+            title: '区域ping感知对比',   //标签页题目
+            id: 'areaPing',         //给标签页赋id
+            icon: 'fa fa-user', //加标签页的图标
+            ajaxUrl: 'file.html'  //跳转页面
+        });
+        $('.nav-tabs').scrollingTabs('refresh');  //刷新
+    });
+    $('#areaWebBtn').click(function () {
+        tabs.addTab({
+            title: '区域网页感知对比',
+            id: 'areaWeb',
+            icon: 'fa fa-user',
+            ajaxUrl: 'file.html'
+        });
+        $('.nav-tabs').scrollingTabs('refresh');
+    });
+    $('#areaGameBtn').click(function () {
+        tabs.addTab({
+            title: '区域游戏感知对比',
+            id: 'areaGame',
+            icon: 'fa fa-user',
+            ajaxUrl: 'file.html'
+        });
+        $('.nav-tabs').scrollingTabs('refresh');
+    });
+    $('#areaVideoBtn').click(function () {
+        tabs.addTab({
+            title: '区域视频感知对比',
+            id: 'areaVideo',
+            icon: 'fa fa-user',
+            ajaxUrl: 'file.html'
+        });
+        $('.nav-tabs').scrollingTabs('refresh');
+    });
+    $('#areaTrendBtn').click(function () {
+        tabs.addTab({
+            title: '区域感知变化趋势',
+            id: 'areaTrend',
+            icon: 'fa fa-user',
+            ajaxUrl: 'file.html'
+        });
+        $('.nav-tabs').scrollingTabs('refresh');
+    });
+    $('#areaTotalBtn').click(function () {
+        tabs.addTab({
+            title: '区域总体感知对比',
+            id: 'areaTotal',
+            icon: 'fa fa-user',
+            ajaxUrl: 'file.html'
+        });
+        $('.nav-tabs').scrollingTabs('refresh');
+    });
+    $('#villageQualityBtn').click(function () {
+        tabs.addTab({
+            title: '小区质量分段分析',
+            id: 'villageQuality',
+            icon: 'fa fa-user',
+            ajaxUrl: 'file.html'
+        });
+        $('.nav-tabs').scrollingTabs('refresh');
+    });
+    $('#userDiagnoseBtn').click(function () {
+        tabs.addTab({
+            title: '用户侧分段分析',
+            id: 'userDiagnose',
+            icon: 'fa fa-user',
+            ajaxUrl: 'file.html'
+        });
+        $('.nav-tabs').scrollingTabs('refresh');
+    });
+    $('#nowTestBtn').click(function () {
+        tabs.addTab({
+            title: '实时测试',
+            id: 'nowTest',
+            icon: 'fa fa-user',
+            ajaxUrl: 'file.html'
+        });
+        $('.nav-tabs').scrollingTabs('refresh');
+    });
+    tabs.closeThis();   //关闭当前标签页
+
+
+</script>
+
+</body>
+</html>

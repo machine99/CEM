@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>人人权限系统</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <link rel="stylesheet" href="statics/css/bootstrap.min.css">
+  <link rel="stylesheet" href="statics/css/font-awesome.min.css">
+  <link rel="stylesheet" href="statics/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="statics/css/all-skins.min.css">
+  <link rel="stylesheet" href="statics/css/main.css">
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+    <!--tabs-2-->
+    <link rel="stylesheet" href="statics/css/bootstrap-dynamic-tabs.css">
+    <link rel="stylesheet" href="statics/css/jquery.scrolling-tabs/jquery.scrolling-tabs.css">
+</head>
+<!-- ADD THE CLASS layout-boxed TO GET A BOXED LAYOUT -->
+<body class="hold-transition skin-blue sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper" id="rrapp" v-cloak>
+  <header class="main-header">
+    <a href="javascript:void(0);" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b>人人</b></span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>人人权限系统</b></span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top" role="navigation">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+	  <div style="float:left;color:#fff;padding:15px 10px;">欢迎 {{user.username}}</div>
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <li><a href="http://www.renren.io" target="_blank"><i class="fa fa-home"></i> &nbsp;编程教程</a></li>
+		  <li><a href="javascript:;" @click="updatePassword"><i class="fa fa-lock"></i> &nbsp;修改密码</a></li>
+          <li><a href="logout"><i class="fa fa-sign-out"></i> &nbsp;退出系统</a></li>
+		</ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- =============================================== -->
+
+  <!-- Left side column. contains the sidebar -->
+  <aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+      <!-- /.search form -->
+      <!-- sidebar menu: : style can be found in sidebar.less -->
+      <ul class="sidebar-menu">
+        <li class="header">导航菜单</li>
+        
+        <!-- vue生成的菜单 -->
+		<menu-item :item="item" v-for="item in menuList"></menu-item>
+      </ul>
+    </section>
+    <!-- /.sidebar -->
+  </aside>
+  <!-- =============================================== -->
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <!--<ol class="breadcrumb" id="nav_title" style="position:static;float:none;">
+        <li class="active"><i class="fa fa-home" style="font-size:20px;position:relative;top:2px;left:-3px;"></i> &nbsp; 首页</li>
+        <li class="active">{{navTitle}}</li>
+      </ol>-->
+
+
+    </section>
+      <div id="tabs">
+
+      </div>
+
+    <!-- Main content -->
+    <section class="content" style="background:#fff;">
+      <iframe scrolling="yes" frameborder="0" style="width:100%;min-height:200px;overflow:visible;background:#fff;" :src="main"></iframe>
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      Version 1.6.0
+    </div>
+    Copyright &copy; 2017 <a href="http://www.renren.io" target="_blank">renren.io</a> All Rights Reserved
+  </footer>
+
+  <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+  
+  <!-- 修改密码 -->
+<div id="passwordLayer" style="display: none;">
+	<form class="form-horizontal">
+	<div class="form-group">
+		<div class="form-group">
+		   	<div class="col-sm-2 control-label">账号</div>
+		    <span class="label label-success" style="vertical-align: bottom;">{{user.username}}</span>
+		</div>
+		<div class="form-group">
+		   	<div class="col-sm-2 control-label">原密码</div>
+		   	<div class="col-sm-10">
+		      <input type="password" class="form-control" v-model="password" placeholder="原密码"/>
+		    </div>
+		</div>
+		<div class="form-group">
+		   	<div class="col-sm-2 control-label">新密码</div>
+		   	<div class="col-sm-10">
+		      <input type="text" class="form-control" v-model="newPassword" placeholder="新密码"/>
+		    </div>
+		</div>
+	</div>
+	</form>
+</div>
+
+</div>
+<!-- ./wrapper -->
+
+
+
+<script src="statics/libs/jquery.min.js"></script>
+<script src="statics/libs/vue.min.js"></script>
+<script src="statics/libs/router.js"></script>
+<script src="statics/libs/bootstrap.min.js"></script>
+<script src="statics/libs/jquery.slimscroll.min.js"></script>
+<script src="statics/libs/fastclick.min.js"></script>
+<script src="statics/libs/app.js"></script>
+<script src="statics/plugins/layer/layer.js"></script>
+<script src="js/index.js"></script>
+
+<script src="js/bootstrap-dynamic-tabs.js"></script>   <!--动态添加标签页-->
+<script src="js/jquery.scrolling-tabs.js"></script>    <!--标签滑动-->
+<script src="js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+
+
+<script>
+var tabs = $('#tabs').bootstrapDynamicTabs();
+
+$(window).load(function () {
+    tabs.addTab({
+        title: 'Home',
+        /*text: 'Home tab content',*/
+        closable: false,
+        ID: 'home'
+    });
+});
+
+$('.nav-tabs').scrollingTabs();  //滑动标签页
+
+$('.sidebar-menu').click(function (e) {    /*获取左侧列表被点击元素的值*/
+    var v_id = $(e.target);
+    if(typeof(v_id.attr("href"))=="undefined" || v_id.attr("href")=="javascript:;"){
+        console.log("没有点击!")
+    }else {
+    console.log(v_id.text());
+    var this_icon = v_id.find('i').attr('class');   /*找到被点击元素的图标类型*/
+    var this_id =  v_id.attr("href").split('/')[1].split('.')[0];
+    /*console.log(this_id);*/
+    tabs.addTab({                         /*添加标签页*/
+        title: v_id.text(),
+        id: this_id,
+        icon: this_icon           /*图标赋值为列表对应的*/
+        /*ajaxUrl: v_id.attr("href").split('/')[1]*/    /*这个不需要了*/
+    });
+    $('.nav-tabs').scrollingTabs('refresh');   /*必须要*/
+    }
+});
+
+$('.scrtabs-tabs-movable-container').click(function (e) {
+    var this_tab = $(e.target);
+    if(typeof(this_tab.attr("href"))=="undefined"){
+        console.log("没有点击标签!")
+    }else {
+        var tab_name = this_tab.text().split(' ')[2];  /*获取标签页中点击的标签名字*/
+        /*console.log(tab_name);*/
+        var tabs;
+        var tabs_strs;
+        tabs = $('.sidebar-menu').find('ul li a');  /*获取菜单元素*/
+        tabs_strs =tabs.text();
+        tabs_list=tabs_strs.split(" "); //字符分割,获取菜单元素组成的数组
+        for (i=0;i<tabs_list.length ;i++ )     /*点击标签页 ，寻找左侧映射的菜单名称*/
+        {
+            /*console.log(tabs_list[i]); //分割后的字符输出*/
+            if(tab_name==tabs_list[i]){
+                console.log('找到了:'+tabs_list[i]);
+                tabs[i-1].click(); //对映射的列表元素执行点击事件，这样就模拟出了自动执行点击事件。
+
+            }
+        }
+
+    }
+});
+
+tabs.closeThis();   //关闭当前标签页
+
+
+</script>
+</body>
+</html>

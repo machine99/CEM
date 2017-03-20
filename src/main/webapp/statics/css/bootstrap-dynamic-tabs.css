@@ -1,0 +1,11 @@
+.nav-tabs > li .close {
+	margin: -20px 0 0 10px;
+	font-size: 18px;
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) { /*兼容谷歌瀏覽器*/
+	/* Chrome- and Safari-specific CSS here*/
+	.nav-tabs > li .close {
+		margin: -2px 0 0 10px;
+		font-size: 18px;
+	}
+}
