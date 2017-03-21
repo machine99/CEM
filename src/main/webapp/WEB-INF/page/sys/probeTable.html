@@ -7,9 +7,9 @@
     <link href="../../../statics/css/bootstrap.min.css" rel="stylesheet">
     <link href="../../../statics/css/font-awesome.min.css" rel="stylesheet">
     <link href="../../../statics/css/dataTables/datatables.min.css" rel="stylesheet">
-    <link href="../../../statics/css/animate.css" rel="stylesheet">
+    <!--<link href="../../../statics/css/animate.css" rel="stylesheet">
     <link href="../../../statics/css/style.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="../../../statics/css/table.css">   <!--表格样式-->
+    <link rel="stylesheet" type="text/css" href="../../../statics/css/table.css">   &lt;!&ndash;表格样式&ndash;&gt;-->
 </head>
 <body class="gray-bg">   <!--页面背景颜色-->
 
@@ -256,6 +256,15 @@
 <script>
 
     $(document).ready(function () {
+        $('#DataTables_Table_0').DataTable({
+            dom: '<"html5buttons"B>lTfgitp',
+            buttons: [
+                'copy', 'excel', 'pdf'
+            ]
+        });
+    });
+
+    /*$(document).ready(function () {
         $('.dataTables-example').DataTable({
             dom: '<"html5buttons"B>lTfgitp',
             buttons: [
@@ -278,9 +287,9 @@
 
         });
 
-        var oTable = $('#editable').DataTable();
+     /!*   var oTable = $('#editable').DataTable();*!/
 
-       /* oTable.$('td').editable()('../example_ajax.php', {
+       /!* oTable.$('td').editable()('../example_ajax.php', {
             "callback": function (sValue, y) {
                 var aPos = oTable.fnGetPosition(this);
                 oTable.fnUpdate(sValue, aPos[0], aPos[1]);
@@ -294,12 +303,12 @@
 
             "width": "90%",
             "height": "100%"
-        });*/
+        });*!/
 
 
-    });
+    });*/
 
-    function fnClickAddRow() {
+    /*function fnClickAddRow() {
         $('#editable').dataTable().fnAddData([
             "Custom row",
             "New row",
@@ -307,7 +316,7 @@
             "New row",
             "New row"]);
 
-    }
+    }*/
 </script>
 
 
