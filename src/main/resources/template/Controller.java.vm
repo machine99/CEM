@@ -14,15 +14,13 @@ import org.springframework.stereotype.Controller;
 
 import ${package}.entity.${className}Entity;
 import ${package}.service.${className}Service;
-import io.renren.utils.PageUtils;
-import io.renren.utils.R;
+import PageUtils;
+import R;
 
 
 /**
  * ${comments}
- * 
- * @author ${author}
- * @email ${email}
+ *
  * @date ${datetime}
  */
 @Controller
