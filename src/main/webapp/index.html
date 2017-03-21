@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>人人权限系统</title>
+  <title>用户感知评测系统</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="stylesheet" href="statics/css/bootstrap.min.css">
@@ -31,9 +31,9 @@
   <header class="main-header">
     <a href="javascript:void(0);" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>人人</b></span>
+      <span class="logo-mini"><b>CEM</b></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>人人权限系统</b></span>
+      <span class="logo-lg"><b>用户感知评测系统</b></span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top" role="navigation">
@@ -146,20 +146,22 @@
 <script src="js/bootstrap-dynamic-tabs.js"></script>   <!--动态添加标签页-->
 <script src="js/jquery.scrolling-tabs.js"></script>    <!--标签滑动-->
 <script src="js/plugins/jquery-ui/jquery-ui.min.js"></script>
+<!--<script src="js/jquery.session.js"></script>-->  <!--暂时没用-->
 
 
 
 <script>
 var tabs = $('#tabs').bootstrapDynamicTabs();
 
-$(window).load(function () {
+/*$(window).load(function () {
     tabs.addTab({
         title: 'Home',
-        /*text: 'Home tab content',*/
+        text: 'Home tab content',
         closable: false,
-        ID: 'home'
+        ID: 'home',
+        icon: 'fa fa-address-card-o'
     });
-});
+});*/
 
 $('.nav-tabs').scrollingTabs();  //滑动标签页
 
@@ -182,12 +184,15 @@ $('.sidebar-menu').click(function (e) {    /*获取左侧列表被点击元素�
     }
 });
 
+
+
 $('.scrtabs-tabs-movable-container').click(function (e) {
     var this_tab = $(e.target);
     if(typeof(this_tab.attr("href"))=="undefined"){
         console.log("没有点击标签!")
     }else {
         var tab_name = this_tab.text().split(' ')[2];  /*获取标签页中点击的标签名字*/
+
         /*console.log(tab_name);*/
         var tabs;
         var tabs_strs;
