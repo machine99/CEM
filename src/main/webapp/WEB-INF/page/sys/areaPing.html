@@ -3,8 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <title>区域ping感知对比</title>
+
+    <link href="../../../statics/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../statics/css/style.css" rel="stylesheet">
 </head>
-<body>
-<h1>区域ping感知对比</h1>
+<body style="background-color: #ffffff">
+<div id="wrapper">
+    <div class="wrapper wrapper-content">
+        <form class="bs-example bs-example-form" role="form">
+            <div class="row">
+                <div class="col-lg-4"></div>
+                <div class="col-lg-2">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="area">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right">  <!--应该为动态的-->
+                                <li><a href="#">新城区</a></li>
+                                <li><a href="#">碑林区</a></li>
+                                <li><a href="#">莲湖区</a></li>
+                                <li><a href="#">雁塔区</a></li>
+                                <li><a href="#">未央区</a></li>
+                                <li><a href="#">灞桥区</a></li>
+                                <li><a href="#">长安区</a></li>
+                                <li><a href="#">阎良区</a></li>
+                            </ul>
+                        </div><!-- /btn-group -->
+                    </div><!-- /input-group -->
+                </div><!-- /.col-lg-6 -->
+            </div><!-- /.row -->
+        </form>
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="container" style="height: 400px; margin: 0 auto"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="../../../js/jquery-2.0.3.js"></script>
+<script src="../../../js/jquery-2.0.3.min.js"></script>
+<script src="../../../js/bootstrap.min.js"></script>
+<script src="../../../js/highcharts/highcharts.js"></script>
+
+<script>
+    $(document).on("click",".dropdown-menu li",function(){
+        var get_area= $(this).text();  /*获取下拉值*/
+        $('#area').val(get_area);  /*区域选择框赋值*/
+        console.log(get_area);
+    });
+</script>
+<script language="JavaScript">
+    $(document).ready(function() {
+        var chart = {
+            type: 'column'
+        };
+        var title = {
+            text: '使用负值的反向柱形图'
+        };
+        var xAxis = {
+            categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+        };
+        var credits = {
+            enabled: false
+        };
+        var series= [{
+            name: 'John',
+            data: [5, 3, 4, 7, 2]
+        }, {
+            name: 'Jane',
+            data: [2, -2, -3, 2, 1]
+        }, {
+            name: 'Joe',
+            data: [3, 4, 4, -2, 5]
+        }
+        ];
+
+        var json = {};
+        json.chart = chart;
+        json.title = title;
+        json.xAxis = xAxis;
+        json.credits = credits;
+        json.series = series;
+        $('#container').highcharts(json);
+
+    });
+</script>
 </body>
 </html>
