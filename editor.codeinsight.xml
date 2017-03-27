@@ -1,6 +1,0 @@
-<application>
-  <component name="CodeInsightSettings">
-    <option name="PARAMETER_INFO_DELAY" value="300" />
-    <option name="JAVADOC_INFO_DELAY" value="300" />
-  </component>
-</application>
