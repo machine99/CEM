@@ -1,7 +1,19 @@
 body{
     background-color: #ffffff
 }
-.dropdown-menu{
+
+#first_row{
+    margin-bottom: 20px;
+}
+#area_choose{
     height: 200px;
     overflow-y: scroll;
+}
+
+.ibox-title{
+    background-color: #ECF2FF;
+}
+
+.ibox{
+    border:1px solid #b4b4b4;
 }
