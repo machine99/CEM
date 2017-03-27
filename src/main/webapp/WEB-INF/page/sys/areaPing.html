@@ -5,9 +5,19 @@
     <title>区域ping感知对比</title>
 
     <link href="../../../statics/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
     <link href="../../../statics/css/style.css" rel="stylesheet">
+    <link href="../../../statics/css/datepicker/daterangepicker.css" rel="stylesheet">
+    <link href="../../../statics/css/area.css" rel="stylesheet">  <!--自定义CSS-->
+
+    <!-- Include Required Prerequisites -->
+    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>  <!--用这个-->
+
+
+
+
 </head>
-<body style="background-color: #ffffff">
+<body >
 <div id="wrapper">
     <div class="wrapper wrapper-content">
         <form class="bs-example bs-example-form" role="form">
@@ -15,6 +25,7 @@
                 <div class="col-lg-4"></div>
                 <div class="col-lg-2">
                     <div class="input-group">
+                        <span class="input-group-addon">区县:</span>
                         <input type="text" class="form-control" id="area">
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -32,7 +43,19 @@
                             </ul>
                         </div><!-- /btn-group -->
                     </div><!-- /input-group -->
-                </div><!-- /.col-lg-6 -->
+                </div><!-- /.col-lg-2 -->
+                <div class="col-lg-4">
+                    <!--<div class="input-daterange input-group" id="datepicker">
+                        <input type="text" class="input-sm form-control" name="start" value="05/14/2014">
+                        <span class="input-group-addon">to</span>
+                        <input type="text" class="input-sm form-control" name="end" value="05/22/2014">
+                    </div>-->
+                    <form class="bs-example bs-example-form" role="form">
+                        <div class="input-daterange input-group" id="datepicker">
+                            <input type="text" class="input-sm form-control" name="daterange" value="01/01/2015 - 01/31/2015" />
+                        </div>
+                    </form>
+                </div>
             </div><!-- /.row -->
         </form>
         <div class="row">
@@ -48,6 +71,8 @@
 <script src="../../../js/jquery-2.0.3.min.js"></script>
 <script src="../../../js/bootstrap.min.js"></script>
 <script src="../../../js/highcharts/highcharts.js"></script>
+<script src="../../../js/datepicker/daterangepicker.js"></script> <!--时间选择器-->
+<script src="../../../js/datepicker/moment.min.js"></script> <!--这个js有问题,现在连的网上的-->
 
 <script>
     $(document).on("click",".dropdown-menu li",function(){
@@ -55,6 +80,24 @@
         $('#area').val(get_area);  /*区域选择框赋值*/
         console.log(get_area);
     });
+
+    $('input[name="daterange"]').daterangepicker(
+            {
+                locale: {
+                    format: 'YYYY-MM-DD'
+                },
+                startDate: '2013-01-01',
+                endDate: '2013-12-31'
+            },
+            function(start, end, label) {
+                console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            });
+    /*$('#datepicker').datetimepicker({
+        minView: "month", //选择日期后，不会再跳转去选择时分秒
+        format: "yyyy-mm-dd", //选择日期后，文本框显示的日期格式
+        language: 'zh-CN', //汉化
+        autoclose:true //选择日期后自动关闭
+    });*/
 </script>
 <script language="JavaScript">
     $(document).ready(function() {
