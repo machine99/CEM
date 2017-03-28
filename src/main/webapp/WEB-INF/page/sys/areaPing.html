@@ -1,17 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>区域ping感知对比</title>
 
     <link href="../../../statics/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css"/>
+    <link href="../../../statics/css/font-awesome.min.css" rel="stylesheet">  <!--日期箭头-->
     <link href="../../../statics/css/style.css" rel="stylesheet">
     <link href="../../../statics/css/datepicker/daterangepicker.css" rel="stylesheet">
     <link href="../../../statics/css/area.css" rel="stylesheet">  <!--自定义CSS-->
 
     <!-- Include Required Prerequisites -->
     <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>  <!--用这个-->
+
 
 
 </head>
@@ -22,8 +24,8 @@
 
                         <form class="bs-example bs-example-form" role="form">
                             <div class="row" id="first_row">
-                                <div class="col-lg-6"></div>
-                                <div class="col-lg-2">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"></div>    <!--自适应分辨率-->
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
                                     <div class="input-group">
                                         <span class="input-group-addon">区县:</span>
                                         <input type="text" class="form-control" id="area">
@@ -33,20 +35,25 @@
                                                 <span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu pull-right" id="area_choose">  <!--应该为动态的-->
-                                                <li><a href="#">新城区</a></li>
+                                                <!--<li><a href="#">新城区</a></li>
                                                 <li><a href="#">碑林区</a></li>
                                                 <li><a href="#">莲湖区</a></li>
                                                 <li><a href="#">雁塔区</a></li>
                                                 <li><a href="#">未央区</a></li>
                                                 <li><a href="#">灞桥区</a></li>
                                                 <li><a href="#">长安区</a></li>
-                                                <li><a href="#">阎良区</a></li>
+                                                <li><a href="#">阎良区</a></li>-->
+                                                <li>
+                                                    <a href="#" v-for="item in items">
+                                                        {{ item.message }}
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </div><!-- /btn-group -->
                                     </div><!-- /input-group -->
                                 </div><!-- /.col-lg-2 -->
-                                <div class="col-lg-1"></div>
-                                <div class="col-lg-2">
+                                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
                                     <!--<div class="input-daterange input-group" id="datepicker">
                                         <input type="text" class="input-sm form-control" name="start" value="05/14/2014">
                                         <span class="input-group-addon">to</span>
@@ -61,7 +68,7 @@
                                     </form>
                                 </div>
 
-                                <div class="col-lg-1">
+                                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                                     <div class="btn-toolbar" role="toolbar">
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-default">
@@ -73,15 +80,15 @@
 
                             </div><!-- /.row -->
                         </form>
-                   
+
         </div><!-- /.row -->
 
         <div class="row"> <!-- /.row -->
-            <div class="col-lg-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
                         <span class="label label-primary pull-right">Today</span>
-                        <h5>区县Ping对比</h5>
+                        <h3>区县Ping对比</h3>
                     </div>
                     <div class="ibox-content">
                         <div class="row">
@@ -91,7 +98,7 @@
                 </div>
 
             </div>
-        </div>
+        </div><!-- /.row -->
     </div>
 </div>
 
@@ -102,14 +109,15 @@
 <script src="../../../js/highcharts/highcharts.js"></script>
 <script src="../../../js/datepicker/daterangepicker.js"></script> <!--时间选择器-->
 <script src="../../../js/datepicker/moment.min.js"></script> <!--这个js有问题,现在连的网上的-->
+<script type="text/javascript" src="../../../statics/libs/vue.min.js"></script>
 
 <script>
-    $(document).on("click", ".dropdown-menu li", function () {
+    $(document).on("click", ".dropdown-menu li a", function () {
         var get_area = $(this).text();
         /*获取下拉值*/
-        $('#area').val(get_area);
+        $('#area').val(get_area.trim());   /*trim()去除空格*/
         /*区域选择框赋值*/
-        console.log(get_area);
+        console.log(get_area.trim());
     });
 
     $('input[name="daterange"]').daterangepicker(
@@ -129,6 +137,22 @@
      language: 'zh-CN', //汉化
      autoclose:true //选择日期后自动关闭
      });*/
+
+    var area_choose = new Vue({
+        el:'#area_choose',
+        data:{
+            items : [
+                {message: '新城区'},
+                {message: '碑林区'},
+                {message: '莲湖区'},
+                {message: '雁塔区'},
+                {message: '未央区'},
+                {message: '灞桥区'},
+                {message: '长安区'},
+                {message: '阎良区'}
+            ]
+        }
+    })
 </script>
 <script language="JavaScript">
     $(document).ready(function () {
