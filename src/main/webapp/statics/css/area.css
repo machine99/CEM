@@ -21,3 +21,4 @@ body{
 #charts_button{
     margin-left: 20px;
 }
+.typeahead { z-index: 1051; }
