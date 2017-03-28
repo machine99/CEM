@@ -43,7 +43,7 @@
                                                 <li><a href="#">灞桥区</a></li>
                                                 <li><a href="#">长安区</a></li>
                                                 <li><a href="#">阎良区</a></li>-->
-                                                <li>
+                                                <li>                                       <!--Vue渲染列表-->
                                                     <a href="#" v-for="item in items">
                                                         {{ item.message }}
                                                     </a>
@@ -107,6 +107,8 @@
 <script src="../../../js/jquery-2.0.3.min.js"></script>
 <script src="../../../js/bootstrap.min.js"></script>
 <script src="../../../js/highcharts/highcharts.js"></script>
+<script src="../../../js/highcharts/exporting.js"></script>  <!--highcharts处理导出图片功能的js文件-->
+<script src="../../../js/highcharts/Highcharts-zh_CN.js" charset="UTF-8"></script>
 <script src="../../../js/datepicker/daterangepicker.js"></script> <!--时间选择器-->
 <script src="../../../js/datepicker/moment.min.js"></script> <!--这个js有问题,现在连的网上的-->
 <script type="text/javascript" src="../../../statics/libs/vue.min.js"></script>
@@ -160,23 +162,28 @@
             type: 'column'
         };
         var title = {
-            text: '使用负值的反向柱形图'
+            text: 'ping时延对比'
         };
         var xAxis = {
-            categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+            categories: ['新城区', '碑林区']
+        };
+        var yAxis = {
+            title: {
+                text: '结果(ms)'
+            }
         };
         var credits = {
             enabled: false
         };
         var series = [{
-            name: 'John',
-            data: [5, 3, 4, 7, 2]
+            name: '平均时延',
+            data: [18,19]
         }, {
-            name: 'Jane',
-            data: [2, -2, -3, 2, 1]
+            name: '最大时延',
+            data: [21,23]
         }, {
-            name: 'Joe',
-            data: [3, 4, 4, -2, 5]
+            name: '最小时延',
+            data: [17,18]
         }
         ];
 
@@ -184,6 +191,7 @@
         json.chart = chart;
         json.title = title;
         json.xAxis = xAxis;
+        json.yAxis = yAxis;
         json.credits = credits;
         json.series = series;
         $('#container').highcharts(json);
