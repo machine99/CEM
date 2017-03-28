@@ -17,3 +17,7 @@ body{
 .ibox{
     border:1px solid #b4b4b4;
 }
+
+#charts_button{
+    margin-left: 20px;
+}

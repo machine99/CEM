@@ -91,7 +91,14 @@
                         <h3>区县Ping对比</h3>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">
+                        <div class="row">     <!--切换按钮-->
+                            <div class="btn-group" id="charts_button">
+                                <button type="button" class="btn btn-default" v-on:click="delay">时延</button>
+                                <button type="button" class="btn btn-default" v-on:click="loss">丢包</button>
+                                <button type="button" class="btn btn-default" v-on:click="qoe">qoe</button>
+                            </div>
+                        </div>
+                        <div class="row">     <!--highcharts图-->
                             <div id="container" style="height: 400px; margin: 0 auto"></div>
                         </div>
                     </div>
@@ -108,7 +115,7 @@
 <script src="../../../js/bootstrap.min.js"></script>
 <script src="../../../js/highcharts/highcharts.js"></script>
 <script src="../../../js/highcharts/exporting.js"></script>  <!--highcharts处理导出图片功能的js文件-->
-<script src="../../../js/highcharts/Highcharts-zh_CN.js" charset="UTF-8"></script>
+<script src="../../../js/highcharts/Highcharts-zh_CN.js" charset="UTF-8"></script>    <!--导出按钮中文js文件-->
 <script src="../../../js/datepicker/daterangepicker.js"></script> <!--时间选择器-->
 <script src="../../../js/datepicker/moment.min.js"></script> <!--这个js有问题,现在连的网上的-->
 <script type="text/javascript" src="../../../statics/libs/vue.min.js"></script>
@@ -154,49 +161,135 @@
                 {message: '阎良区'}
             ]
         }
-    })
+    });
+
 </script>
 <script language="JavaScript">
-    $(document).ready(function () {
-        var chart = {
-            type: 'column'
-        };
-        var title = {
-            text: 'ping时延对比'
-        };
-        var xAxis = {
-            categories: ['新城区', '碑林区']
-        };
-        var yAxis = {
-            title: {
-                text: '结果(ms)'
-            }
-        };
-        var credits = {
-            enabled: false
-        };
-        var series = [{
-            name: '平均时延',
-            data: [18,19]
-        }, {
-            name: '最大时延',
-            data: [21,23]
-        }, {
-            name: '最小时延',
-            data: [17,18]
+    var json = {};
+    var options = {
+    chart :{
+        type: 'column'
+    },
+    title : {
+        text: 'ping时延对比'
+    },
+     xAxis : {
+        categories: ['新城区', '碑林区']
+    },
+     yAxis : {
+        title: {
+            text: '结果(ms)'
         }
-        ];
-
-        var json = {};
-        json.chart = chart;
-        json.title = title;
-        json.xAxis = xAxis;
-        json.yAxis = yAxis;
-        json.credits = credits;
-        json.series = series;
-        $('#container').highcharts(json);
-
+    },
+     credits : {
+        enabled: false
+    },
+     series : [{
+        name: '平均时延',
+        data: [18,19]
+    }, {
+        name: '最大时延',
+        data: [21,23]
+    }, {
+        name: '最小时延',
+        data: [17,18]
+    }
+    ]
+    };
+    $(document).ready(function () {
+        var chart = new Highcharts.Chart('container',options)
     });
+</script>
+<script>
+    var button_change = new Vue({
+        el:'#charts_button',
+        data: {
+            option_delay:{   /*设置时延option*/
+                title : {
+                    text: 'ping时延对比'
+                },
+                series_delay :[{
+                    name: '平均时延',
+                    data: [18,19]
+                }, {
+                    name: '最大时延',
+                    data: [21,23]
+                }, {
+                    name: '最小时延',
+                    data: [17,18]
+                }
+                ],
+                yAxis : {
+                    title: {
+                        text: '结果(ms)'
+                    }
+                }
+            },
+            option_qoe:{     /*设置qoe option*/
+                title : {
+                    text: 'qoe对比'
+                },
+                series_qoe :[{
+                    name: 'qoe',
+                    data: [93,96]
+                }
+                ],
+                yAxis : {
+                    title: {
+                        text: '结果(分)'
+                    },
+                    max:100
+                }
+            },
+            option_loss:{    /*设置丢包option*/
+                title : {
+                    text: '丢包率'
+                },
+                series_loss :[{
+                    name: '丢包',
+                    data: [0.03,0.01]
+                }
+                ],
+                yAxis : {
+                    title: {
+                        text: '结果(%)'
+                    },
+                    max:100
+                },
+                tooltip: {     /*数据提示框*/
+                    valueSuffix: '%'    /* y值后缀字符串*/
+                }
+            }
+
+
+
+        },
+        // 在 `methods` 对象中定义方法
+        methods: {                        /*事件监听*/
+            delay:function () {
+                console.log("时延");
+                options.title = this.option_delay.title;
+                options.series = this.option_delay.series_delay;
+                options.yAxis = this.option_delay.yAxis;
+                var chart = new Highcharts.Chart('container',options)
+            },
+            loss:function () {
+                console.log("丢包");
+                options.title = this.option_loss.title;
+                options.series = this.option_loss.series_loss;
+                options.yAxis = this.option_loss.yAxis;
+                options.tooltip = this.option_loss.tooltip;
+                var chart = new Highcharts.Chart('container',options)
+            },
+            qoe: function () {
+                console.log("qoe");
+                options.title = this.option_qoe.title;
+                options.series = this.option_qoe.series_qoe;
+                options.yAxis = this.option_qoe.yAxis;
+                var chart = new Highcharts.Chart('container',options)
+            }
+        }
+    })
 </script>
 </body>
 </html>
