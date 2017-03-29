@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>区域ping感知对比</title>
-    #parse("sys/areaHeader.html")
+    #parse("sys/areaHeader.html")  <!--导入CSS和js文件-->
 </head>
 <body>
 <div id="wrapper">
@@ -103,6 +103,13 @@
                         <span class="label label-primary pull-right">导出</span>
                         <h3>数据明细</h3>
                     </div>
+                    <div class="ibox-content">
+                        <div class="row">     <!--表格-->
+                            <div id="tabledemo">
+                                <data-table :users="filteredUsers"></data-table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -111,6 +118,7 @@
 
 
 <script type="text/javascript" src="${rc.contextPath}/js/sys/areaPing.js?_${date.systemTime}"></script>
+
 
 
 </body>
