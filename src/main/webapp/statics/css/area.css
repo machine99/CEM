@@ -22,3 +22,7 @@ body{
     margin-left: 20px;
 }
 .typeahead { z-index: 1051; }
+
+#ibox-content{
+    margin: auto;
+}

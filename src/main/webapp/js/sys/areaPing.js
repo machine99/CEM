@@ -243,7 +243,7 @@ var button_change = new Vue({     /*实例化Vue*/
 
 
 Vue.component('data-table', {
-    template: '<table></table>',
+    template: '<table class="table table-bordered table-hover table-striped"></table>',
     props: ['users'],
     data() {
         return {
