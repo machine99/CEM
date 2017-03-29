@@ -1,0 +1,24 @@
+body{
+    background-color: #ffffff
+}
+
+#first_row{
+    margin-bottom: 20px;
+}
+#area_choose{
+    height: 200px;
+    overflow-y: scroll;
+}
+
+.ibox-title{
+    background-color: #ECF2FF;
+}
+
+.ibox{
+    border:1px solid #b4b4b4;
+}
+
+#charts_button{
+    margin-left: 20px;
+}
+.typeahead { z-index: 1051; }
