@@ -3,6 +3,7 @@
  */
 var get_area;
 var flag = 0;    /*标志位,判断highcharts绘图Vue点击时间更新的series*/
+var get_data;
 
 $(document).on("click", ".dropdown-menu li a", function () {
     get_area = $(this).text().trim();    /*trim()去除空格*/
@@ -12,7 +13,7 @@ $(document).on("click", ".dropdown-menu li a", function () {
     console.log(get_area);
 });
 
-
+var data_fitst = [];
 
 var area_choose = new Vue({
     el:'#area_choose',
@@ -56,13 +57,13 @@ var options = {
     },
     series : [{
         name: '平均时延',
-        data: [18,19]
+        data: [0,0]
     }, {
         name: '最大时延',
-        data: [21,23]
+        data: [0,0]
     }, {
         name: '最小时延',
-        data: [17,18]
+        data: [0,0]
     }
     ]
 };
@@ -82,7 +83,8 @@ $('input[name="daterange"]').daterangepicker(
     function (start, end, label) {          /*日期选择触发事件*/
         console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
         flag = 1;  /*改变标志位*/
-        var get_data = {             /*模拟异步数据*/
+         get_data = {             /*模拟异步数据*/
+             myarea : get_area,
             AverageDelay : 18,
             MaxDelay : 22,
             MinDelay : 17,
@@ -127,9 +129,14 @@ $('input[name="daterange"]').daterangepicker(
             name: 'qoe',
             data: [get_data.Qoe]
         }
-        ]
+        ];
 
-    });
+        $("#area_table tbody").empty();   /*清空表*/
+        str = "<tr><td >"+get_data.myarea+"</td><td >"+get_data.AverageDelay+"</td><td>"+get_data.MaxDelay+"</td><td >"+get_data.MinDelay+"</td><td >"+get_data.Loss+"</td><td>"+get_data.Qoe+"</td></tr>";
+        $("#area_table tbody").append(str);
+
+
+});
 /*$('#datepicker').datetimepicker({
  minView: "month", //选择日期后，不会再跳转去选择时分秒
  format: "yyyy-mm-dd", //选择日期后，文本框显示的日期格式
@@ -144,15 +151,15 @@ var button_change = new Vue({     /*实例化Vue*/
             title : {
                 text: 'ping时延对比'
             },
-            series_delay :[{
+            series_delay : [{
                 name: '平均时延',
-                data: [18,19]
+                data: [50,50]
             }, {
                 name: '最大时延',
-                data: [21,23]
+                data: [50,50]
             }, {
                 name: '最小时延',
-                data: [17,18]
+                data: [50,50]
             }
             ],
             yAxis : {
@@ -167,7 +174,7 @@ var button_change = new Vue({     /*实例化Vue*/
             },
             series_qoe :[{
                 name: 'qoe',
-                data: [93,96]
+                data: [0,0]
             }
             ],
             yAxis : {
@@ -183,7 +190,7 @@ var button_change = new Vue({     /*实例化Vue*/
             },
             series_loss :[{
                 name: '丢包',
-                data: [0.03,0.01]
+                data: [0,0]
             }
             ],
             yAxis : {
@@ -243,17 +250,17 @@ var button_change = new Vue({     /*实例化Vue*/
 
 
 Vue.component('data-table', {
-    template: '<table class="table table-bordered table-hover table-striped"></table>',
+    template: '<table class="table table-bordered table-hover table-striped" id="area_table"></table>',
     props: ['users'],
     data() {
         return {
             headers: [
-                {title: '用户ID'},
-                {title: '用户名', class: 'some-special-class'},
-                {title: '邮箱'},
-                {title: '手机号'},
-                {title: '状态'},
-                {title: '创建时间'}
+                {title: '区县'},
+                {title: '平均时延(ms)', class: 'some-special-class'},
+                {title: '最大时延(ms)'},
+                {title: '最小时延(ms)'},
+                {title: '丢包(%)'},
+                {title: 'qoe(分)'}
             ],
             rows: [],
             dtHandle: null
@@ -270,12 +277,14 @@ Vue.component('data-table', {
                 // skip this loop...
                 let row = [];
 
-                row.push(item.userId);
-                row.push(item.username);
-                row.push(item.email);
-                row.push(item.mobile);
-                row.push(item.status === 0 ? '禁用' : '正常');
-                row.push(item.createTime);
+                row.push(item.myarea);
+                row.push(item.AverageDelay);
+                row.push(item.MaxDelay);
+                row.push(item.MinDelay);
+                row.push(item.Loss);
+                row.push(item.Qoe);
+
+                console.log(item);
 
                 vm.rows.push(row);
             });
@@ -297,7 +306,8 @@ Vue.component('data-table', {
             searching: false,
             paging: true,
             //serverSide: true,
-            info: false
+            info: false,
+            ordering:false    /*禁用排序功能*/
         });
     }
 });
@@ -309,19 +319,55 @@ new Vue({
         search: ''
     },
     computed: {
-        filteredUsers: function () {
+        filteredUsers: function () {                 /*此处可以对传入数据进行处理*/
             let self = this;
-            let search = self.search.toLowerCase();
+            return self.users;
+            /*let search = self.search.toLowerCase();
             return self.users.filter(function (user) {
                 return user.username.toLowerCase().indexOf(search) !== -1 ||
                     user.email.toLowerCase().indexOf(search) !== -1 ||
                     user.mobile.indexOf(search) !== -1
-            })
+            })*/
         }
     },
     mounted() {
         let vm = this;
-        $.ajax({
+        /*********************************************/
+        var area1 = {
+            myarea : "新城区",
+            AverageDelay : 18,
+            MaxDelay : 21,
+            MinDelay : 17,
+            Loss : 0.03,
+            Qoe : 98};
+        var area2 = {
+            myarea : "碑林区",
+            AverageDelay : 19,
+            MaxDelay : 23,
+            MinDelay : 18,
+            Loss : 0.02,
+            Qoe : 96
+        };
+        data_fitst = [area1,area2];    /*页面刚加载,模拟异步数据*/
+        /********************************************************/
+
+        vm.users = data_fitst;
+        console.log(vm.users);
+
+        for(var i=0;i<=1;i++){
+            options.series[0].data[i] = vm.users[i].AverageDelay;    /*动态设置option*/
+            options.series[1].data[i] = vm.users[i].MaxDelay;
+            options.series[2].data[i] = vm.users[i].MinDelay;
+
+            button_change.option_delay.series_delay[0].data[i] = vm.users[i].AverageDelay;   /*动态设置button_change.option*/
+            button_change.option_delay.series_delay[1].data[i] = vm.users[i].MaxDelay;
+            button_change.option_delay.series_delay[2].data[i] = vm.users[i].MinDelay;
+            button_change.option_loss.series_loss[0].data[i] = vm.users[i].Loss;
+            button_change.option_qoe.series_qoe[0].data[i] = vm.users[i].Qoe;
+        }
+
+
+        /*$.ajax({
             url: '../sys/user/list',
             dataType: 'json',
             data: {
@@ -331,8 +377,9 @@ new Vue({
             },
             success(r) {
                 vm.users = r.page.list;
+                console.log(vm.users)
             }
-        });
+        });*/
     }
 });
 

@@ -34,6 +34,8 @@ Vue.component('data-table', {
                 row.push(item.createTime);
 
                 vm.rows.push(row);
+
+                console.log(item)
             });
 
             // Here's the magic to keeping the DataTable in sync.
