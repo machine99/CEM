@@ -3,27 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>BRASping感知对比</title>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!--<meta charset="UTF-8">-->
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+    <!--<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">-->
     <link rel="stylesheet" href="${rc.contextPath}/statics/css/bootstrap.min.css">
     <link rel="stylesheet" href="${rc.contextPath}/statics/css/font-awesome.min.css">
-    <link rel="stylesheet" href="${rc.contextPath}/statics/plugins/ztree/css/metroStyle/metroStyle.css">
-    <link rel="stylesheet" href="${rc.contextPath}/statics/css/main.css">
+    <link rel="stylesheet" href="${rc.contextPath}/statics/css/dataTables/jquery.dataTables.min.css">
     <script src="${rc.contextPath}/statics/libs/jquery.min.js"></script>
-    <script src="${rc.contextPath}/statics/plugins/layer/layer.js"></script>
     <script src="${rc.contextPath}/statics/libs/bootstrap.min.js"></script>
     <script src="${rc.contextPath}/statics/libs/vue.min.js"></script>
-    <script src="${rc.contextPath}/statics/plugins/ztree/jquery.ztree.all.min.js"></script>
-    <script src="${rc.contextPath}/statics/plugins/dataTables/datatables.min.js"></script>
+    <script src="${rc.contextPath}/js/plugins/dataTables/jquery.dataTables.min.js"></script>
 
 </head>
 <body>
 <h1>BRASping感知对比</h1>
-<div id="app">
-    <button @click="addMockData">Add Data</button>
-    <data-table v-if="list !== null" :head="list.head" :data="list.body"></data-table>
+<div id="tabledemo">
+    <h3>Vue Datatable example</h3>
+    Filter by anything: <input v-model="search">
+    <hr>
+    <data-table :users="filteredUsers"></data-table>
 </div>
-<script src="${rc.contextPath}/js/sys/brasPing.js?_${date.systemTime}"></script>
+<!--<div id="app-4">-->
+    <!--<ol>-->
+        <!--<li v-for="todo in todos">-->
+            <!--{{ todo.text }}-->
+        <!--</li>-->
+    <!--</ol>-->
+<!--</div>-->
+<script type="text/javascript" src="${rc.contextPath}/js/sys/brasPing.js?_${date.systemTime}"></script>
 </body>
 </html>
