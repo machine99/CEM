@@ -80,7 +80,7 @@ $('input[name="daterange"]').daterangepicker(
         applyClass:'btn-success sure',
 
         locale: {
-            format: 'YYYY-MM-DD',
+            format: 'YYYY-MM-DD',               /*时间选择器汉化*/
             applyLabel:'确定',
             cancelLabel:'取消',
             fromLabel:'开始',
@@ -319,7 +319,9 @@ Vue.component('data-table', {
             paging: true,
             //serverSide: true,
             info: false,
-            ordering:false    /*禁用排序功能*/
+            ordering:false,    /*禁用排序功能*/
+            bInfo: false,
+            bLengthChange: false,
         });
     }
 });
