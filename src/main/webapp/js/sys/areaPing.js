@@ -73,9 +73,21 @@ $(document).ready(function () {
 
 
 $('input[name="daterange"]').daterangepicker(
+
     {
+        language:'zn-ch',
+        showDropdowns:false,
+        applyClass:'btn-success sure',
+
         locale: {
-            format: 'YYYY-MM-DD'
+            format: 'YYYY-MM-DD',
+            applyLabel:'确定',
+            cancelLabel:'取消',
+            fromLabel:'开始',
+            toLabel:'结束',
+            monthNames:"一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月".split("_"),
+            daysOfWeek:"一_二_三_四_五_六_日".split("_"),
+
         },
         startDate: '2013-01-01',
         endDate: '2013-12-31'
