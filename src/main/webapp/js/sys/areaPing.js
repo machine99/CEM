@@ -320,9 +320,19 @@ Vue.component('data-table', {
             //serverSide: true,
             info: false,
             ordering:false,    /*禁用排序功能*/
-            bInfo: false,
-            bLengthChange: false,
+            /*bInfo: false,*/
+            bLengthChange: false,    /*禁用Show entries*/
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'excel', 'pdf'
+            ]
         });
+
+        /*new $.fn.dataTable.Buttons( vm.dtHandle, {
+            buttons: [
+                'copy', 'excel', 'pdf'
+            ]
+        } );*/
     }
 });
 
@@ -396,4 +406,24 @@ new Vue({
         });*/
     }
 });
+
+
+       /*导出表格到excel*/
+function exportExcel() {
+    alasql('SELECT * INTO XLSX("区县Ping对比.xlsx",{headers:true}) \
+                    FROM HTML("#area_table",{headers:true})');
+
+}
+
+/*$(document).ready(function() {                         
+    alasql('SELECT * INTO HTML("#res",{headers:true}) \
+                  FROM XLSX("C:/Users/yuanbaby/Downloads/Ping.xlsx",\
+                            {headers:true})');
+    alert("end of function")
+});*/
+
+
+
+
+
 
