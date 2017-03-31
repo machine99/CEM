@@ -146,6 +146,36 @@ $('input[name="daterange"]').daterangepicker(
  language: 'zh-CN', //汉化
  autoclose:true //选择日期后自动关闭
  });*/
+new Vue({
+    el: '#reset',
+    methods:{
+        reset:function () {
+            /****************************/  /*重置,回到页面加载时的数据*/
+            var area1 = {
+                myarea: "新城区",
+                AverageDelay: 18,
+                MaxDelay: 21,
+                MinDelay: 17,
+                Loss: 0.03,
+                Qoe: 98
+            };
+            var area2 = {
+                myarea: "碑林区",
+                AverageDelay: 19,
+                MaxDelay: 23,
+                MinDelay: 18,
+                Loss: 0.02,
+                Qoe: 96
+            };
+            /**********************************/
+            staus = 0;
+            flag = 0;
+            button_change.delay();  /*option先回到状态0,注意,不然会出错*/
+            new_data.users = [area1,area2];
+        }
+    }
+
+});
 
 var button_change = new Vue({
     /*实例化Vue*/
