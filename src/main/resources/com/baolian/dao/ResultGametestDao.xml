@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.baolian.dao.ResultGametestDao">
+
+    <select id="queryObject" resultType="com.baolian.entity.ResultGametestEntity">
+        SELECT *
+        FROM result_gametest
+        WHERE id = #{value}
+    </select>
+
+    <select id="queryList" resultType="com.baolian.entity.ResultGametestEntity">
+        select * from result_gametest
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        SELECT count(*)
+        FROM result_gametest
+    </select>
+
+    <insert id="save" parameterType="com.baolian.entity.ResultGametestEntity" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO result_gametest
+        (
+            `guid`,
+            `state`,
+            `errorcode`,
+            `destid`,
+            `destname`,
+            `destip`,
+            `testtime`,
+            `testagent`,
+            `qoe`,
+            `bandwidth`,
+            `rtt_avg`,
+            `rtt_min`,
+            `rtt_max`,
+            `rtt_std`,
+            `tcpconnect`,
+            `jitter`,
+            `loss`,
+            `testagentid`
+        )
+        VALUES
+            (
+                #{guid},
+                #{state},
+                #{errorcode},
+                #{destid},
+                #{destname},
+                #{destip},
+                #{testtime},
+                #{testagent},
+                #{qoe},
+                #{bandwidth},
+                #{rttAvg},
+                #{rttMin},
+                #{rttMax},
+                #{rttStd},
+                #{tcpconnect},
+                #{jitter},
+                #{loss},
+                #{testagentid}
+            )
+    </insert>
+
+    <update id="update" parameterType="com.baolian.entity.ResultGametestEntity">
+        update result_gametest
+        <set>
+            <if test="guid != null">`guid` = #{guid},</if>
+            <if test="state != null">`state` = #{state},</if>
+            <if test="errorcode != null">`errorcode` = #{errorcode},</if>
+            <if test="destid != null">`destid` = #{destid},</if>
+            <if test="destname != null">`destname` = #{destname},</if>
+            <if test="destip != null">`destip` = #{destip},</if>
+            <if test="testtime != null">`testtime` = #{testtime},</if>
+            <if test="testagent != null">`testagent` = #{testagent},</if>
+            <if test="qoe != null">`qoe` = #{qoe},</if>
+            <if test="bandwidth != null">`bandwidth` = #{bandwidth},</if>
+            <if test="rttAvg != null">`rtt_avg` = #{rttAvg},</if>
+            <if test="rttMin != null">`rtt_min` = #{rttMin},</if>
+            <if test="rttMax != null">`rtt_max` = #{rttMax},</if>
+            <if test="rttStd != null">`rtt_std` = #{rttStd},</if>
+            <if test="tcpconnect != null">`tcpconnect` = #{tcpconnect},</if>
+            <if test="jitter != null">`jitter` = #{jitter},</if>
+            <if test="loss != null">`loss` = #{loss},</if>
+            <if test="testagentid != null">`testagentid` = #{testagentid}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM result_gametest
+        WHERE id = #{value}
+    </delete>
+
+    <delete id="deleteBatch">
+        delete from result_gametest where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

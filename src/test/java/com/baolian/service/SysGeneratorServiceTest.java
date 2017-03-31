@@ -18,35 +18,35 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath:spring-baolian.xml"})
 public class SysGeneratorServiceTest {
-	@Autowired
-	private SysGeneratorService sysGeneratorService;
-	//zip输出路径
-	String zipPath = "E://baolian//code.zip";
-	//表名
-	String[] tableNames = new String[] {"sys_user"};
+    @Autowired
+    private SysGeneratorService sysGeneratorService;
+    //zip输出路径
+    String zipPath = "E://baolian//code.zip";
+    //表名
+    String[] tableNames = new String[]{"result_gametest", "result_httptest", "result_pingtest", "result_youkutest", "testagent"};
 
-	@Test
-	public void testGeneratorCode() throws IOException {
-		byte[] data = sysGeneratorService.generatorCode(tableNames);
-		File file = new File(zipPath);
-		if(!file.getParentFile().exists()){
-			file.getParentFile().mkdirs();
-		}
-		FileUtils.writeByteArrayToFile(file, data);
-		
+    @Test
+    public void testGeneratorCode() throws IOException {
+        byte[] data = sysGeneratorService.generatorCode(tableNames);
+        File file = new File(zipPath);
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        FileUtils.writeByteArrayToFile(file, data);
 
-		//解压zip
-		ZipInputStream zip = new ZipInputStream(new FileInputStream(zipPath));
-		ZipEntry entry;
-		while((entry = zip.getNextEntry()) != null) {
-			file = new File("E://baolian//" + entry.getName());
-			if(!file.getParentFile().exists()){
-				file.getParentFile().mkdirs();
-			}
-			FileOutputStream out = new FileOutputStream(file);
-			IOUtils.copy(zip, out);
-		}
-		zip.close();
-	}
+
+        //解压zip
+        ZipInputStream zip = new ZipInputStream(new FileInputStream(zipPath));
+        ZipEntry entry;
+        while ((entry = zip.getNextEntry()) != null) {
+            file = new File("E://baolian//" + entry.getName());
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+            FileOutputStream out = new FileOutputStream(file);
+            IOUtils.copy(zip, out);
+        }
+        zip.close();
+    }
 
 }

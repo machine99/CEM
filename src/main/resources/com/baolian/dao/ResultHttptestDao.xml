@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.baolian.dao.ResultHttptestDao">
+
+    <select id="queryObject" resultType="com.baolian.entity.ResultHttptestEntity">
+        SELECT *
+        FROM result_httptest
+        WHERE id = #{value}
+    </select>
+
+    <select id="queryList" resultType="com.baolian.entity.ResultHttptestEntity">
+        select * from result_httptest
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        SELECT count(*)
+        FROM result_httptest
+    </select>
+
+    <insert id="save" parameterType="com.baolian.entity.ResultHttptestEntity" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO result_httptest
+        (
+            `guid`,
+            `state`,
+            `errorcode`,
+            `destid`,
+            `destname`,
+            `destip`,
+            `testtime`,
+            `alldelay`,
+            `screendelay`,
+            `testagent`,
+            `qoe`,
+            `bandwidth`,
+            `speed`,
+            `dnsdelay`,
+            `connectdelay`,
+            `responsedelay`,
+            `downloaddelay`,
+            `httpsize`,
+            `httpstatus`,
+            `testagentid`
+        )
+        VALUES
+            (
+                #{guid},
+                #{state},
+                #{errorcode},
+                #{destid},
+                #{destname},
+                #{destip},
+                #{testtime},
+                #{alldelay},
+                #{screendelay},
+                #{testagent},
+                #{qoe},
+                #{bandwidth},
+                #{speed},
+                #{dnsdelay},
+                #{connectdelay},
+                #{responsedelay},
+                #{downloaddelay},
+                #{httpsize},
+                #{httpstatus},
+                #{testagentid}
+            )
+    </insert>
+
+    <update id="update" parameterType="com.baolian.entity.ResultHttptestEntity">
+        update result_httptest
+        <set>
+            <if test="guid != null">`guid` = #{guid},</if>
+            <if test="state != null">`state` = #{state},</if>
+            <if test="errorcode != null">`errorcode` = #{errorcode},</if>
+            <if test="destid != null">`destid` = #{destid},</if>
+            <if test="destname != null">`destname` = #{destname},</if>
+            <if test="destip != null">`destip` = #{destip},</if>
+            <if test="testtime != null">`testtime` = #{testtime},</if>
+            <if test="alldelay != null">`alldelay` = #{alldelay},</if>
+            <if test="screendelay != null">`screendelay` = #{screendelay},</if>
+            <if test="testagent != null">`testagent` = #{testagent},</if>
+            <if test="qoe != null">`qoe` = #{qoe},</if>
+            <if test="bandwidth != null">`bandwidth` = #{bandwidth},</if>
+            <if test="speed != null">`speed` = #{speed},</if>
+            <if test="dnsdelay != null">`dnsdelay` = #{dnsdelay},</if>
+            <if test="connectdelay != null">`connectdelay` = #{connectdelay},</if>
+            <if test="responsedelay != null">`responsedelay` = #{responsedelay},</if>
+            <if test="downloaddelay != null">`downloaddelay` = #{downloaddelay},</if>
+            <if test="httpsize != null">`httpsize` = #{httpsize},</if>
+            <if test="httpstatus != null">`httpstatus` = #{httpstatus},</if>
+            <if test="testagentid != null">`testagentid` = #{testagentid}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM result_httptest
+        WHERE id = #{value}
+    </delete>
+
+    <delete id="deleteBatch">
+        delete from result_httptest where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

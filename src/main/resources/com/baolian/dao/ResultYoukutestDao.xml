@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.baolian.dao.ResultYoukutestDao">
+
+    <select id="queryObject" resultType="com.baolian.entity.ResultYoukutestEntity">
+        SELECT *
+        FROM result_youkutest
+        WHERE id = #{value}
+    </select>
+
+    <select id="queryList" resultType="com.baolian.entity.ResultYoukutestEntity">
+        select * from result_youkutest
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        SELECT count(*)
+        FROM result_youkutest
+    </select>
+
+    <insert id="save" parameterType="com.baolian.entity.ResultYoukutestEntity" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO result_youkutest
+        (
+            `guid`,
+            `state`,
+            `errorcode`,
+            `destid`,
+            `destname`,
+            `testtime`,
+            `testagent`,
+            `qoe`,
+            `bandwidth`,
+            `speed`,
+            `pausecount`,
+            `pausetime`,
+            `buffersize`,
+            `buffertime`,
+            `speedsize`,
+            `testagentid`
+        )
+        VALUES
+            (
+                #{guid},
+                #{state},
+                #{errorcode},
+                #{destid},
+                #{destname},
+                #{testtime},
+                #{testagent},
+                #{qoe},
+                #{bandwidth},
+                #{speed},
+                #{pausecount},
+                #{pausetime},
+                #{buffersize},
+                #{buffertime},
+                #{speedsize},
+                #{testagentid}
+            )
+    </insert>
+
+    <update id="update" parameterType="com.baolian.entity.ResultYoukutestEntity">
+        update result_youkutest
+        <set>
+            <if test="guid != null">`guid` = #{guid},</if>
+            <if test="state != null">`state` = #{state},</if>
+            <if test="errorcode != null">`errorcode` = #{errorcode},</if>
+            <if test="destid != null">`destid` = #{destid},</if>
+            <if test="destname != null">`destname` = #{destname},</if>
+            <if test="testtime != null">`testtime` = #{testtime},</if>
+            <if test="testagent != null">`testagent` = #{testagent},</if>
+            <if test="qoe != null">`qoe` = #{qoe},</if>
+            <if test="bandwidth != null">`bandwidth` = #{bandwidth},</if>
+            <if test="speed != null">`speed` = #{speed},</if>
+            <if test="pausecount != null">`pausecount` = #{pausecount},</if>
+            <if test="pausetime != null">`pausetime` = #{pausetime},</if>
+            <if test="buffersize != null">`buffersize` = #{buffersize},</if>
+            <if test="buffertime != null">`buffertime` = #{buffertime},</if>
+            <if test="speedsize != null">`speedsize` = #{speedsize},</if>
+            <if test="testagentid != null">`testagentid` = #{testagentid}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM result_youkutest
+        WHERE id = #{value}
+    </delete>
+
+    <delete id="deleteBatch">
+        delete from result_youkutest where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
