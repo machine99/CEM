@@ -48,7 +48,7 @@ var options = {
         text: 'ping时延对比'
     },
     xAxis: {
-        categories: ['新城区', '碑林区']
+        categories: []
     },
     yAxis: {
         title: {
@@ -60,13 +60,13 @@ var options = {
     },
     series: [{
         name: '平均时延',
-        data: [0, 0]
+        data: []
     }, {
         name: '最大时延',
-        data: [0, 0]
+        data: []
     }, {
         name: '最小时延',
-        data: [0, 0]
+        data: []
     }
     ]
 };
@@ -110,51 +110,7 @@ $('input[name="daterange"]').daterangepicker(
             Loss: 0.5,
             Qoe: 98
         };
-        options.xAxis = {
-            categories: [get_area]    /*图表中更改地区信息*/  /*[]必须要，不然出错*/
-        };
-        options.series = [{
-            name: '平均时延',
-            data: [get_data.AverageDelay]      /*[]必须要，不然出错*/
-        }, {
-            name: '最大时延',
-            data: [get_data.MaxDelay]
-        }, {
-            name: '最小时延',
-            data: [get_data.MinDelay]
-        }
-        ];
-        var chart = new Highcharts.Chart('container', options);
-        /*重新绘制图表*/
-
-        new_series_delay = [{
-            name: '平均时延',
-            data: [get_data.AverageDelay]      /*[]必须要，不然出错*/
-        }, {
-            name: '最大时延',
-            data: [get_data.MaxDelay]
-        }, {
-            name: '最小时延',
-            data: [get_data.MinDelay]
-        }
-        ];
-
-        new_series_loss = [{
-            name: '丢包',
-            data: [get_data.Loss]
-        }
-        ];
-
-        new_series_qoe = [{
-            name: 'qoe',
-            data: [get_data.Qoe]
-        }
-        ];
-
-        $("#area_table tbody").empty();
-        /*清空表*/
-        str = "<tr><td >" + get_data.myarea + "</td><td >" + get_data.AverageDelay + "</td><td>" + get_data.MaxDelay + "</td><td >" + get_data.MinDelay + "</td><td >" + get_data.Loss + "</td><td>" + get_data.Qoe + "</td></tr>";
-        $("#area_table tbody").append(str);
+            new_data.users = [get_data];     /*更新user数据*/
         }else {          /*如果不选择地区,默认按照日期更新新城区和碑林区的数据*/
 
             /*********************************************/
@@ -201,13 +157,13 @@ var button_change = new Vue({
             },
             series_delay: [{
                 name: '平均时延',
-                data: [50, 50]
+                data: []
             }, {
                 name: '最大时延',
-                data: [50, 50]
+                data: []
             }, {
                 name: '最小时延',
-                data: [50, 50]
+                data: []
             }
             ],
             yAxis: {
@@ -223,7 +179,7 @@ var button_change = new Vue({
             },
             series_qoe: [{
                 name: 'qoe',
-                data: [0, 0]
+                data: []
             }
             ],
             yAxis: {
@@ -240,7 +196,7 @@ var button_change = new Vue({
             },
             series_loss: [{
                 name: '丢包',
-                data: [0, 0]
+                data: []
             }
             ],
             yAxis: {
@@ -264,13 +220,10 @@ var button_change = new Vue({
             console.log("时延");
             options.title = this.option_delay.title;
             /*设置标题*/
-            if (flag == 0) {
-                options.series = this.option_delay.series_delay;
-                /*设置数据*/
-            } else {
-                options.series = new_series_delay;
-                /*series*/
-            }
+
+            options.series = this.option_delay.series_delay;
+            /*设置数据*/
+
             options.yAxis = this.option_delay.yAxis;
             /*设置y轴*/
             options.tooltip = {};
@@ -281,11 +234,9 @@ var button_change = new Vue({
         loss: function () {
             console.log("丢包");
             options.title = this.option_loss.title;
-            if (flag == 0) {
-                options.series = this.option_loss.series_loss;
-            } else {
-                options.series = new_series_loss
-            }
+
+            options.series = this.option_loss.series_loss;
+
             options.yAxis = this.option_loss.yAxis;
             options.tooltip = this.option_loss.tooltip;
             var chart = new Highcharts.Chart('container', options)
@@ -293,11 +244,9 @@ var button_change = new Vue({
         qoe: function () {
             console.log("qoe");
             options.title = this.option_qoe.title;
-            if (flag == 0) {
-                options.series = this.option_qoe.series_qoe;
-            } else {
-                options.series = new_series_qoe
-            }
+
+            options.series = this.option_qoe.series_qoe;
+
             options.yAxis = this.option_qoe.yAxis;
             options.tooltip = {};
             var chart = new Highcharts.Chart('container', options)
@@ -327,8 +276,25 @@ Vue.component('data-table', {
         users(val, oldVal) {
             let vm = this;
             vm.rows = [];
+            var times = 1;
+            if(flag==1){
+                times=0;                          /*先清空所有option的data*/
+                options.xAxis.categories=[];
+                options.series[0].data=[];
+                /*动态设置option*/
+                options.series[1].data=[];
+                options.series[2].data=[];
 
-            for (var i = 0; i <= 1; i++) {                          /*观察user是否变化,重绘HighCharts图*/
+                button_change.option_delay.series_delay[0].data=[];
+                /*动态设置button_change.option*/
+                button_change.option_delay.series_delay[1].data=[];
+                button_change.option_delay.series_delay[2].data=[];
+                button_change.option_loss.series_loss[0].data=[];
+                button_change.option_qoe.series_qoe[0].data=[];
+            }
+
+            for (var i = 0; i <= times; i++) {                          /*观察user是否变化,重绘HighCharts图*/
+                options.xAxis.categories[i] = val[i].myarea;
                 options.series[0].data[i] = val[i].AverageDelay;
                 /*动态设置option*/
                 options.series[1].data[i] = val[i].MaxDelay;
