@@ -62,7 +62,7 @@ Vue.component('data-table', {
                 param.limit = data.length;//页面显示记录条数，在页面显示每页显示多少项的时候
                 param.start = data.start;//开始的记录序号
                 param.page = (data.start / data.length) + 1;//当前页码
-                //console.log(param);
+                console.log(param);
                 //ajax请求数据
                 $.ajax({
                     type: "GET",
@@ -71,7 +71,7 @@ Vue.component('data-table', {
                     data: param,  //传入组装的参数
                     dataType: "json",
                     success: function (result) {
-                        // console.log(result);
+                        console.log(result);
                         //setTimeout仅为测试延迟效果
                         setTimeout(function () {
                             //封装返回数据

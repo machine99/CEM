@@ -97,6 +97,8 @@ $('input[name="daterange"]').daterangepicker(
     },
     function (start, end, label) {          /*日期选择触发事件*/
         console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        console.log("地区选择:"+typeof(get_area) == "undefined");
+        if(typeof(get_area) != "undefined"){
         flag = 1;
         /*改变标志位*/
         get_data = {
@@ -153,7 +155,32 @@ $('input[name="daterange"]').daterangepicker(
         /*清空表*/
         str = "<tr><td >" + get_data.myarea + "</td><td >" + get_data.AverageDelay + "</td><td>" + get_data.MaxDelay + "</td><td >" + get_data.MinDelay + "</td><td >" + get_data.Loss + "</td><td>" + get_data.Qoe + "</td></tr>";
         $("#area_table tbody").append(str);
+        }else {          /*如果不选择地区,默认按照日期更新新城区和碑林区的数据*/
 
+            /*********************************************/
+            var area1 = {
+                myarea: "新城区",
+                AverageDelay: 18.666666,
+                MaxDelay: 21.2333,
+                MinDelay: 17.4,
+                Loss: 0.03,
+                Qoe: 98.6
+            };
+            var area2 = {
+                myarea: "碑林区",
+                AverageDelay: 19.888888,
+                MaxDelay: 23.322,
+                MinDelay: 18.7,
+                Loss: 0.02,
+                Qoe: 96.7
+            };
+            new_area_data = [area1, area2];
+            /*页面刚加载,模拟异步数据*/
+            /********************************************************/
+            new_data.users = new_area_data;        /*观察者,更新highcharts表和表格*/
+            console.log(new_data.users);
+
+        }
 
     });
 /*$('#datepicker').datetimepicker({
@@ -300,8 +327,25 @@ Vue.component('data-table', {
         users(val, oldVal) {
             let vm = this;
             vm.rows = [];
+
+            for (var i = 0; i <= 1; i++) {                          /*观察user是否变化,重绘HighCharts图*/
+                options.series[0].data[i] = val[i].AverageDelay;
+                /*动态设置option*/
+                options.series[1].data[i] = val[i].MaxDelay;
+                options.series[2].data[i] = val[i].MinDelay;
+
+                button_change.option_delay.series_delay[0].data[i] = val[i].AverageDelay;
+                /*动态设置button_change.option*/
+                button_change.option_delay.series_delay[1].data[i] = val[i].MaxDelay;
+                button_change.option_delay.series_delay[2].data[i] = val[i].MinDelay;
+                button_change.option_loss.series_loss[0].data[i] = val[i].Loss;
+                button_change.option_qoe.series_qoe[0].data[i] = val[i].Qoe;
+            }
+            var chart = new Highcharts.Chart('container', options);
+
+
             // You should _probably_ check that this is changed data... but we'll skip that for this example.
-            val.forEach(function (item) {
+            val.forEach(function (item) {              /*观察user是否变化,更新表格数据*/
                 // Fish out the specific column data for each item in your data set and push it to the appropriate place.
                 // Basically we're just building a multi-dimensional array here. If the data is _already_ in the right format you could
                 // skip this loop...
@@ -354,7 +398,7 @@ Vue.component('data-table', {
     }
 });
 
-new Vue({
+var new_data = new Vue({
     el: '#tabledemo',
     data: {
         users: [],
@@ -397,21 +441,6 @@ new Vue({
 
         vm.users = data_fitst;
         console.log(vm.users);
-
-        for (var i = 0; i <= 1; i++) {
-            options.series[0].data[i] = vm.users[i].AverageDelay;
-            /*动态设置option*/
-            options.series[1].data[i] = vm.users[i].MaxDelay;
-            options.series[2].data[i] = vm.users[i].MinDelay;
-
-            button_change.option_delay.series_delay[0].data[i] = vm.users[i].AverageDelay;
-            /*动态设置button_change.option*/
-            button_change.option_delay.series_delay[1].data[i] = vm.users[i].MaxDelay;
-            button_change.option_delay.series_delay[2].data[i] = vm.users[i].MinDelay;
-            button_change.option_loss.series_loss[0].data[i] = vm.users[i].Loss;
-            button_change.option_qoe.series_qoe[0].data[i] = vm.users[i].Qoe;
-        }
-
 
         /*$.ajax({
          url: '../sys/user/list',
