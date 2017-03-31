@@ -4,6 +4,7 @@
 var get_area;
 var flag = 0;
 /*标志位,判断highcharts绘图Vue点击时间更新的series*/
+var staus = 0;
 var get_data;
 
 $(document).on("click", ".dropdown-menu li a", function () {
@@ -217,6 +218,7 @@ var button_change = new Vue({
     methods: {
         /*事件监听*/
         delay: function () {
+            staus = 0;
             console.log("时延");
             options.title = this.option_delay.title;
             /*设置标题*/
@@ -232,6 +234,7 @@ var button_change = new Vue({
             /*重新绘图*/
         },
         loss: function () {
+            staus = 1;
             console.log("丢包");
             options.title = this.option_loss.title;
 
@@ -242,6 +245,7 @@ var button_change = new Vue({
             var chart = new Highcharts.Chart('container', options)
         },
         qoe: function () {
+            staus = 2;
             console.log("qoe");
             options.title = this.option_qoe.title;
 
@@ -278,29 +282,41 @@ Vue.component('data-table', {
             vm.rows = [];
             var times = 1;
             if(flag==1){
-                times=0;                          /*先清空所有option的data*/
+                times=0;
                 options.xAxis.categories=[];
-                options.series[0].data=[];
-                /*动态设置option*/
-                options.series[1].data=[];
-                options.series[2].data=[];
+                if(staus==0) {                       /*先清空当前状态option的data*/
+                    options.series[0].data = [];
+                    /*动态设置option*/
+                    options.series[1].data = [];
+                    options.series[2].data = [];
+                }else if(staus==1){
+                    options.series[0].data = [];
+                }else {
+                    options.series[0].data = [];
+                }
 
-                button_change.option_delay.series_delay[0].data=[];
+                button_change.option_delay.series_delay[0].data = [];    /*清空所以监听事件的option数据*/
                 /*动态设置button_change.option*/
-                button_change.option_delay.series_delay[1].data=[];
-                button_change.option_delay.series_delay[2].data=[];
+                button_change.option_delay.series_delay[1].data = [];
+                button_change.option_delay.series_delay[2].data = [];
                 button_change.option_loss.series_loss[0].data=[];
                 button_change.option_qoe.series_qoe[0].data=[];
             }
 
             for (var i = 0; i <= times; i++) {                          /*观察user是否变化,重绘HighCharts图*/
                 options.xAxis.categories[i] = val[i].myarea;
-                options.series[0].data[i] = val[i].AverageDelay;
-                /*动态设置option*/
-                options.series[1].data[i] = val[i].MaxDelay;
-                options.series[2].data[i] = val[i].MinDelay;
+                if(staus==0){                                       /*设置当前状态option*/
+                    options.series[0].data[i] = val[i].AverageDelay;
+                    /*动态设置option*/
+                    options.series[1].data[i] = val[i].MaxDelay;
+                    options.series[2].data[i] = val[i].MinDelay;
+                }else if(staus==1){
+                    options.series[0].data[i] = val[i].Loss;
+                }else {
+                    options.series[0].data[i] = val[i].Qoe;
+                }
 
-                button_change.option_delay.series_delay[0].data[i] = val[i].AverageDelay;
+                button_change.option_delay.series_delay[0].data[i] = val[i].AverageDelay;   /*设置监听事件所有option*/
                 /*动态设置button_change.option*/
                 button_change.option_delay.series_delay[1].data[i] = val[i].MaxDelay;
                 button_change.option_delay.series_delay[2].data[i] = val[i].MinDelay;
