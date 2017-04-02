@@ -1,5 +1,5 @@
 /**
- * Created by yuanbaby on 2017/3/29.
+ * Created by apple on 2017/4/2.
  */
 var get_area;
 var flag = 0;
@@ -39,7 +39,6 @@ $('#area').typeahead({
     items: 7        /*下拉菜单中显示的最大的条目数。*/
 })
 
-var json = {};
 var options = {
     chart: {
         type: 'column'
