@@ -60,7 +60,7 @@
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                                     <div class="btn-toolbar" role="toolbar">
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-default">
+                                            <button type="button" class="btn btn-default" v-on:click="reset" id="reset">
                                                 <span class="glyphicon glyphicon-repeat"></span>重置
                                             </button>
                                         </div>
@@ -100,7 +100,7 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <span class="label label-primary pull-right">导出</span>
+                        <button type="button" class="btn btn-primary btn-sm pull-right" onclick="exportExcel()">导出</button>  <!--模板按钮,导出表格excel-->
                         <h3>数据明细</h3>
                     </div>
                     <div class="ibox-content">
@@ -118,7 +118,6 @@
 
 
 <script type="text/javascript" src="${rc.contextPath}/js/sys/areaPing.js?_${date.systemTime}"></script>
-
 
 
 </body>

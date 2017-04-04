@@ -33,7 +33,7 @@
 		<taglibs-version>1.1.2</taglibs-version>
 		<freemarker-version>2.3.23</freemarker-version>
 	</properties>
-	
+
 	<!-- 阿里云maven仓库 -->
 	<repositories>
 		<repository>
@@ -61,7 +61,7 @@
 
 	<dependencies>
 		<dependency>
-            <groupId>junit</groupId>
+			<groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit-version}</version>
             <scope>test</scope>

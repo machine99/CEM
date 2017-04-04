@@ -23,38 +23,26 @@
                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
                         <div class="input-group">
                             <span class="input-group-addon">小区:</span>
-                            <input type="text" class="form-control" id="area"  data-provide="typeahead">  <!--输入提示框typeahead-->
+                            <input type="text" class="form-control" id="area" data-provide="typeahead">
+                            <!--输入提示框typeahead-->
                             <div class="input-group-btn" id="area_dropdown">
                                 <button type="button" class="btn btn-default dropdown-toggle"
                                         data-toggle="dropdown">
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu pull-right" id="area_choose">  <!--应该为动态的-->
-                                    <!--<li><a href="#">新城区</a></li>
-                                    <li><a href="#">碑林区</a></li>
-                                    <li><a href="#">莲湖区</a></li>
-                                    <li><a href="#">雁塔区</a></li>
-                                    <li><a href="#">未央区</a></li>
-                                    <li><a href="#">灞桥区</a></li>
-                                    <li><a href="#">长安区</a></li>
-                                    <li><a href="#">阎良区</a></li>-->
                                     <li>                                       <!--Vue渲染列表-->
                                         <a href="#" v-for="item in items">
                                             {{ item.message }}
                                         </a>
                                     </li>
                                 </ul>
-                            </div><!-- /btn-group -->
+                            </div>
                             <div id="message"></div>
-                        </div><!-- /input-group -->
-                    </div><!-- /.col-lg-2 -->
+                        </div>
+                    </div>
                     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                        <!--<div class="input-daterange input-group" id="datepicker">
-                            <input type="text" class="input-sm form-control" name="start" value="05/14/2014">
-                            <span class="input-group-addon">to</span>
-                            <input type="text" class="input-sm form-control" name="end" value="05/22/2014">
-                        </div>-->
                         <form class="bs-example bs-example-form" role="form">
                             <div class="input-daterange input-group" id="datepicker">
                                 <span class="input-group-addon">测试时间:</span>
@@ -67,19 +55,19 @@
                     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                         <div class="btn-toolbar" role="toolbar">
                             <div class="btn-group">
-                                <button type="button" class="btn btn-default">
+                                <button type="button" class="btn btn-default" v-on:click="reset" id="reset">
                                     <span class="glyphicon glyphicon-repeat"></span>重置
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                </div><!-- /.row -->
+                </div>
             </form>
 
-        </div><!-- /.row -->
+        </div>
 
-        <div class="row"> <!-- /.row -->
+        <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
@@ -87,13 +75,6 @@
                         <h3>小区质量分段统计</h3>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">     <!--切换按钮-->
-                            <div class="btn-group" id="charts_button">                   <!--Vue事件监听-->
-                                <button type="button" class="btn btn-default" v-on:click="delay">时延</button>
-                                <button type="button" class="btn btn-default" v-on:click="loss">丢包</button>
-                                <button type="button" class="btn btn-default" v-on:click="qoe">qoe</button>
-                            </div>
-                        </div>
                         <div class="row">     <!--highcharts图-->
                             <div id="container" style="height: 400px; margin: 0 auto"></div>
                         </div>
@@ -101,7 +82,7 @@
                 </div>
 
             </div>
-        </div><!-- /.row -->
+        </div>
 
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -125,7 +106,6 @@
 
 
 <script type="text/javascript" src="${rc.contextPath}/js/sys/segtestArea.js?_${date.systemTime}"></script>
-
 
 
 </body>

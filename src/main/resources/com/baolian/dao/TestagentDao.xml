@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.baolian.dao.TestagentDao">
+
+    <select id="queryObject" resultType="com.baolian.entity.TestagentEntity">
+        SELECT *
+        FROM testagent
+        WHERE id = #{value}
+    </select>
+
+    <select id="queryList" resultType="com.baolian.entity.TestagentEntity">
+        select * from testagent
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        SELECT count(*)
+        FROM testagent
+    </select>
+
+    <insert id="save" parameterType="com.baolian.entity.TestagentEntity" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO testagent
+        (
+            `name`,
+            `ip`,
+            `bandwidth`,
+            `city`,
+            `city_man`,
+            `county`,
+            `useruid`,
+            `sysuuid`,
+            `location`,
+            `isp`,
+            `accesslayer`,
+            `accesstype`,
+            `uplink`,
+            `testgroup`,
+            `testgroup_name`,
+            `onlinestatus`,
+            `online_time`,
+            `register_time`,
+            `model`,
+            `device`,
+            `teststatus`,
+            `version`,
+            `run_interval`,
+            `contact`,
+            `address`,
+            `brasname`,
+            `brasip`,
+            `brasport`,
+            `oltname`,
+            `oltip`,
+            `oltport`,
+            `phonenum`,
+            `dayreport`
+        )
+        VALUES
+            (
+                #{name},
+                #{ip},
+                #{bandwidth},
+                #{city},
+                #{cityMan},
+                #{county},
+                #{useruid},
+                #{sysuuid},
+                #{location},
+                #{isp},
+                #{accesslayer},
+                #{accesstype},
+                #{uplink},
+                #{testgroup},
+                #{testgroupName},
+                #{onlinestatus},
+                #{onlineTime},
+                #{registerTime},
+                #{model},
+                #{device},
+                #{teststatus},
+                #{version},
+                #{runInterval},
+                #{contact},
+                #{address},
+                #{brasname},
+                #{brasip},
+                #{brasport},
+                #{oltname},
+                #{oltip},
+                #{oltport},
+                #{phonenum},
+                #{dayreport}
+            )
+    </insert>
+
+    <update id="update" parameterType="com.baolian.entity.TestagentEntity">
+        update testagent
+        <set>
+            <if test="name != null">`name` = #{name},</if>
+            <if test="ip != null">`ip` = #{ip},</if>
+            <if test="bandwidth != null">`bandwidth` = #{bandwidth},</if>
+            <if test="city != null">`city` = #{city},</if>
+            <if test="cityMan != null">`city_man` = #{cityMan},</if>
+            <if test="county != null">`county` = #{county},</if>
+            <if test="useruid != null">`useruid` = #{useruid},</if>
+            <if test="sysuuid != null">`sysuuid` = #{sysuuid},</if>
+            <if test="location != null">`location` = #{location},</if>
+            <if test="isp != null">`isp` = #{isp},</if>
+            <if test="accesslayer != null">`accesslayer` = #{accesslayer},</if>
+            <if test="accesstype != null">`accesstype` = #{accesstype},</if>
+            <if test="uplink != null">`uplink` = #{uplink},</if>
+            <if test="testgroup != null">`testgroup` = #{testgroup},</if>
+            <if test="testgroupName != null">`testgroup_name` = #{testgroupName},</if>
+            <if test="onlinestatus != null">`onlinestatus` = #{onlinestatus},</if>
+            <if test="onlineTime != null">`online_time` = #{onlineTime},</if>
+            <if test="registerTime != null">`register_time` = #{registerTime},</if>
+            <if test="model != null">`model` = #{model},</if>
+            <if test="device != null">`device` = #{device},</if>
+            <if test="teststatus != null">`teststatus` = #{teststatus},</if>
+            <if test="version != null">`version` = #{version},</if>
+            <if test="runInterval != null">`run_interval` = #{runInterval},</if>
+            <if test="contact != null">`contact` = #{contact},</if>
+            <if test="address != null">`address` = #{address},</if>
+            <if test="brasname != null">`brasname` = #{brasname},</if>
+            <if test="brasip != null">`brasip` = #{brasip},</if>
+            <if test="brasport != null">`brasport` = #{brasport},</if>
+            <if test="oltname != null">`oltname` = #{oltname},</if>
+            <if test="oltip != null">`oltip` = #{oltip},</if>
+            <if test="oltport != null">`oltport` = #{oltport},</if>
+            <if test="phonenum != null">`phonenum` = #{phonenum},</if>
+            <if test="dayreport != null">`dayreport` = #{dayreport}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM testagent
+        WHERE id = #{value}
+    </delete>
+
+    <delete id="deleteBatch">
+        delete from testagent where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
