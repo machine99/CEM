@@ -3,8 +3,13 @@
  */
 var get_area;
 var flag = 0;
+var starttime;
+var endtime;
 /*标志位,判断highcharts绘图Vue点击时间更新的series*/
-var staus = 0;  /*引入status表示当前状态option,解决bug 0:ping 1:loss 2:qoe*/
+
+var staus = 0;
+/*引入status表示当前状态option,解决bug 0:ping 1:loss 2:qoe*/
+
 var get_data;
 
 $(document).on("click", ".dropdown-menu li a", function () {
@@ -38,7 +43,9 @@ $('#area').typeahead({
     /*输入提示框*/
     source: new_data1,
     items: 7        /*下拉菜单中显示的最大的条目数。*/
+
 });
+
 
 var json = {};
 var options = {
@@ -49,7 +56,9 @@ var options = {
         text: 'ping时延对比'
     },
     xAxis: {
+
         categories: []
+
     },
     yAxis: {
         title: {
@@ -77,67 +86,28 @@ $(document).ready(function () {
 
 
 $('input[name="daterange"]').daterangepicker(
-
     {
-        language:'zn-ch',
-        showDropdowns:false,
-        applyClass:'btn-success sure',
+        language: 'zn-ch',
+        showDropdowns: false,
+        applyClass: 'btn-success sure',
 
         locale: {
-            format: 'YYYY-MM-DD',               /*时间选择器汉化*/
-            applyLabel:'确定',
-            cancelLabel:'取消',
-            fromLabel:'开始',
-            toLabel:'结束',
-            monthNames:"一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月".split("_"),
-            daysOfWeek:"一_二_三_四_五_六_日".split("_"),
+            format: 'YYYY-MM-DD', /*时间选择器汉化*/
+            applyLabel: '确定',
+            cancelLabel: '取消',
+            fromLabel: '开始',
+            toLabel: '结束',
+            monthNames: "一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月".split("_"),
+            daysOfWeek: "一_二_三_四_五_六_日".split("_"),
 
         },
         startDate: '2013-01-01',
         endDate: '2013-12-31'
     },
     function (start, end, label) {          /*日期选择触发事件*/
-        console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-        console.log("地区选择:"+typeof(get_area) == "undefined");
-        if(typeof(get_area) != "undefined"&&$('#area').val()!=''){   /*此时应该判断输入框里内容不为空*/
-        flag = 1;
-        /*改变标志位*/
-        get_data = {
-            /*模拟异步数据*/
-            myarea: get_area,
-            AverageDelay: 18,
-            MaxDelay: 22,
-            MinDelay: 17,
-            Loss: 0.5,
-            Qoe: 98
-        };
-            new_data.users = [get_data];     /*观察者,更新user数据*/
-        }else {          /*如果不选择地区,默认按照日期更新新城区和碑林区的数据*/
-             flag = 0;
-            /*********************************************/
-            var area1 = {
-                myarea: "新城区",
-                AverageDelay: 18.666666,
-                MaxDelay: 21.2333,
-                MinDelay: 17.4,
-                Loss: 0.03,
-                Qoe: 98.6
-            };
-            var area2 = {
-                myarea: "碑林区",
-                AverageDelay: 19.888888,
-                MaxDelay: 23.322,
-                MinDelay: 18.7,
-                Loss: 0.02,
-                Qoe: 96.7
-            };
-            new_area_data = [area1, area2];
-            /*页面刚加载,模拟异步数据*/
-            /********************************************************/
-            new_data.users = new_area_data;        /*观察者,更新highcharts表和表格*/
-            console.log(new_data.users);
-
-        }
+        /*console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));*/
+        starttime = start.format('YYYY-MM-DD');
+        endtime = end.format('YYYY-MM-DD');
 
     });
 /*$('#datepicker').datetimepicker({
@@ -146,11 +116,60 @@ $('input[name="daterange"]').daterangepicker(
  language: 'zh-CN', //汉化
  autoclose:true //选择日期后自动关闭
  });*/
+var new_search = new Vue({        /*监听查询事件*/
+   el:'#search',
+    methods:{
+        search:function () {
+            console.log("你选择了时间区间"+starttime+"to"+endtime);
+            if (typeof(get_area) != "undefined" && $('#area').val() != '') {   /*此时应该判断输入框里内容不为空*/
+
+                flag = 1;
+                /*改变标志位*/
+                get_data = {
+                    /*模拟异步数据*/
+                    myarea: get_area,
+                    AverageDelay: 18,
+                    MaxDelay: 22,
+                    MinDelay: 17,
+                    Loss: 0.5,
+                    Qoe: 98
+                };
+                new_data.users = [get_data];
+                /*观察者,更新user数据*/
+            } else {          /*如果不选择地区,默认按照日期更新新城区和碑林区的数据*/
+                flag = 0;
+                /*********************************************/
+                var area1 = {
+                    myarea: "新城区",
+                    AverageDelay: 18.666666,
+                    MaxDelay: 21.2333,
+                    MinDelay: 17.4,
+                    Loss: 0.03,
+                    Qoe: 98.6
+                };
+                var area2 = {
+                    myarea: "碑林区",
+                    AverageDelay: 19.888888,
+                    MaxDelay: 23.322,
+                    MinDelay: 18.7,
+                    Loss: 0.02,
+                    Qoe: 96.7
+                };
+                new_area_data = [area1, area2];
+                /*页面刚加载,模拟异步数据*/
+                /********************************************************/
+                new_data.users = new_area_data;
+                /*观察者,更新highcharts表和表格*/
+            }
+        }
+    }
+});
 new Vue({
     el: '#reset',
-    methods:{
-        reset:function () {
-            /****************************/  /*重置,回到页面加载时的数据*/
+    methods: {
+        reset: function () {
+            /****************************/
+            /*重置,回到页面加载时的数据*/
             var area1 = {
                 myarea: "新城区",
                 AverageDelay: 18,
@@ -170,11 +189,11 @@ new Vue({
             /**********************************/
             staus = 0;
             flag = 0;
-            button_change.delay();  /*option先回到状态0,注意,不然会出错*/
-            new_data.users = [area1,area2];
+            button_change.delay();
+            /*option先回到状态0,注意,不然会出错*/
+            new_data.users = [area1, area2];
         }
     }
-
 });
 
 var button_change = new Vue({
@@ -269,7 +288,6 @@ var button_change = new Vue({
             options.title = this.option_loss.title;
 
             options.series = this.option_loss.series_loss;
-
             options.yAxis = this.option_loss.yAxis;
             options.tooltip = this.option_loss.tooltip;
             var chart = new Highcharts.Chart('container', options)
@@ -278,9 +296,7 @@ var button_change = new Vue({
             staus = 2;
             console.log("qoe");
             options.title = this.option_qoe.title;
-
             options.series = this.option_qoe.series_qoe;
-
             options.yAxis = this.option_qoe.yAxis;
             options.tooltip = {};
             var chart = new Highcharts.Chart('container', options)
@@ -311,43 +327,45 @@ Vue.component('data-table', {
             let vm = this;
             vm.rows = [];
             var times = 1;
-            if(flag==1){
-                times=0;
+            if (flag == 1) {
+                times = 0;
             }
 
-            options.xAxis.categories=[];
-            if(staus==0) {                       /*先清空当前状态option的data*/
+            options.xAxis.categories = [];
+            if (staus == 0) {                       /*先清空当前状态option的data*/
                 options.series[0].data = [];
                 /*动态设置option*/
                 options.series[1].data = [];
                 options.series[2].data = [];
-            }else if(staus==1){
+            } else if (staus == 1) {
                 options.series[0].data = [];
-            }else {
+            } else {
                 options.series[0].data = [];
             }
 
-            button_change.option_delay.series_delay[0].data = [];    /*清空所有监听事件的option数据*/
+            button_change.option_delay.series_delay[0].data = [];
+            /*清空所有监听事件的option数据*/
             /*动态设置button_change.option*/
             button_change.option_delay.series_delay[1].data = [];
             button_change.option_delay.series_delay[2].data = [];
-            button_change.option_loss.series_loss[0].data=[];
-            button_change.option_qoe.series_qoe[0].data=[];
+            button_change.option_loss.series_loss[0].data = [];
+            button_change.option_qoe.series_qoe[0].data = [];
 
             for (var i = 0; i <= times; i++) {                          /*观察user是否变化,重绘HighCharts图*/
                 options.xAxis.categories[i] = val[i].myarea;
-                if(staus==0){                                       /*设置当前状态option*/
+                if (staus == 0) {                                       /*设置当前状态option*/
                     options.series[0].data[i] = val[i].AverageDelay;
                     /*动态设置option*/
                     options.series[1].data[i] = val[i].MaxDelay;
                     options.series[2].data[i] = val[i].MinDelay;
-                }else if(staus==1){
+                } else if (staus == 1) {
                     options.series[0].data[i] = val[i].Loss;
-                }else {
+                } else {
                     options.series[0].data[i] = val[i].Qoe;
                 }
 
-                button_change.option_delay.series_delay[0].data[i] = val[i].AverageDelay;   /*设置监听事件所有option*/
+                button_change.option_delay.series_delay[0].data[i] = val[i].AverageDelay;
+                /*设置监听事件所有option*/
                 /*动态设置button_change.option*/
                 button_change.option_delay.series_delay[1].data[i] = val[i].MaxDelay;
                 button_change.option_delay.series_delay[2].data[i] = val[i].MinDelay;
@@ -394,10 +412,13 @@ Vue.component('data-table', {
             paging: false,
             //serverSide: true,
             info: false,
-            ordering:false,    /*禁用排序功能*/
+            ordering: false, /*禁用排序功能*/
             /*bInfo: false,*/
+
             bLengthChange: false,    /*禁用Show entries*/
         });
+
+
     }
 });
 
@@ -444,7 +465,6 @@ var new_data = new Vue({
 
         vm.users = data_fitst;
         console.log(vm.users);
-
         /*$.ajax({
          url: '../sys/user/list',
          dataType: 'json',
@@ -462,7 +482,7 @@ var new_data = new Vue({
 });
 
 
-       /*导出表格到excel*/
+/*导出表格到excel*/
 function exportExcel() {
     alasql('SELECT * INTO XLSX("区县Ping对比.xlsx",{headers:true}) \
                     FROM HTML("#area_table",{headers:true})');
@@ -470,11 +490,11 @@ function exportExcel() {
 }
 
 /*$(document).ready(function() {                         
-    alasql('SELECT * INTO HTML("#res",{headers:true}) \
-                  FROM XLSX("C:/Users/yuanbaby/Downloads/Ping.xlsx",\
-                            {headers:true})');
-    alert("end of function")
-});*/
+ alasql('SELECT * INTO HTML("#res",{headers:true}) \
+ FROM XLSX("C:/Users/yuanbaby/Downloads/Ping.xlsx",\
+ {headers:true})');
+ alert("end of function")
+ });*/
 
 
 
