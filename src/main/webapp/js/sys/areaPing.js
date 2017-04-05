@@ -397,17 +397,7 @@ Vue.component('data-table', {
             ordering:false,    /*禁用排序功能*/
             /*bInfo: false,*/
             bLengthChange: false,    /*禁用Show entries*/
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'excel', 'pdf'
-            ]
         });
-
-        /*new $.fn.dataTable.Buttons( vm.dtHandle, {
-            buttons: [
-                'copy', 'excel', 'pdf'
-            ]
-        } );*/
     }
 });
 
