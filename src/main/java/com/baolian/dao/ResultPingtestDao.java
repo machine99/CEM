@@ -2,6 +2,9 @@ package com.baolian.dao;
 
 import com.baolian.entity.ResultPingtestEntity;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * ping测试结果表
  *

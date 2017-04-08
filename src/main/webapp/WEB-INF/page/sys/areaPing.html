@@ -41,7 +41,6 @@
                                         <div id="message"></div>
                                     </div><!-- /input-group -->
                                 </div><!-- /.col-lg-2 -->
-                                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
                                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
                                     <!--<div class="input-daterange input-group" id="datepicker">
                                         <input type="text" class="input-sm form-control" name="start" value="05/14/2014">
@@ -57,9 +56,13 @@
                                     </form>
                                 </div>
 
-                                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" >
                                     <div class="btn-toolbar" role="toolbar">
-                                        <div class="btn-group">
+                                        <div class="btn-group" id="min_button">
+                                            <button type="button" class="btn btn-default" v-on:click="search" id="search">
+                                                <span class="fa fa-search"></span>查询
+                                            </button>
                                             <button type="button" class="btn btn-default" v-on:click="reset" id="reset">
                                                 <span class="glyphicon glyphicon-repeat"></span>重置
                                             </button>

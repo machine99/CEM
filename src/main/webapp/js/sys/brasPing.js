@@ -1,3 +1,13 @@
+//重写alert
+// window.alert = function (msg, callback) {
+//     console.log("in custom alert");
+//     parent.layer.alert(msg, function (index) {
+//         parent.layer.close(index);
+//         if (typeof(callback) === "function") {
+//             callback("ok");
+//         }
+//     });
+// };
 Vue.component('data-table', {
     template: '<table></table>',
     props: ['users'],
@@ -100,6 +110,25 @@ Vue.component('data-table', {
                         }, 200);
                     }
                 });
+            }
+        });
+        new AjaxUpload('#upload', {
+            action: '../sys/upload/upload',
+            name: 'file',
+            autoSubmit: true,
+            responseType: "json",
+            onSubmit: function (file, extension) {
+                if (!(extension && /^(xls|xlsx)$/.test(extension.toLowerCase()))) {
+                    alert('请上传xls或xlsx格式的Excel文件！');
+                    return false;
+                }
+            },
+            onComplete: function (file, r) {
+                if (r.code == 0) {
+                    alert(r.msg);
+                } else {
+                    alert(r.msg);
+                }
             }
         });
     }
