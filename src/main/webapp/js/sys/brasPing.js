@@ -102,6 +102,30 @@ Vue.component('data-table', {
                 });
             }
         });
+        new AjaxUpload('#upload', {
+            action: '../sys/oss/upload',
+            name: 'file',
+            autoSubmit:true,
+            responseType:"json",
+            onSubmit:function(file, extension){
+                if(vm.config.type == null){
+                    alert("云存储配置未配置");
+                    return false;
+                }
+                if (!(extension && /^(jpg|jpeg|png|gif)$/.test(extension.toLowerCase()))){
+                    alert('只支持jpg、png、gif格式的图片！');
+                    return false;
+                }
+            },
+            onComplete : function(file, r){
+                if(r.code == 0){
+                    alert(r.url);
+                    vm.reload();
+                }else{
+                    alert(r.msg);
+                }
+            }
+        });
     }
 });
 
