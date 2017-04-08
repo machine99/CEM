@@ -23,8 +23,17 @@ body{
 }
 .typeahead { z-index: 1051; }
 
-#ibox-content{
+/*#ibox-content{
     margin: auto;
-}
+}*/
 
+#search{
+    margin-right: 15px;
+}
+#reset{
+    margin-left: 15px;
+}
+#min_button{   /*按钮组不换行*/
+    min-width: 165px;
+}
 
