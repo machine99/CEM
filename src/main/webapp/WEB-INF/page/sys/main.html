@@ -3,8 +3,61 @@
 <head>
 <meta charset="UTF-8">
 <title>控制台</title>
+    #parse("sys/areaHeader.html")  <!--导入CSS和js文件-->
+    <link href="${rc.contextPath}/statics/css/main1.css" rel="stylesheet">  <!--自定义CSS-->
+
+    <script src="${rc.contextPath}/js/highcharts/highcharts-more.js"></script>
+    <script src="http://code.highcharts.com/modules/data.js"></script>
+
+    <script src="${rc.contextPath}/js/echarts/echarts.min.js"></script>  <!--echarts-->
+    <script src="${rc.contextPath}/js/echarts/shanxi1.js"></script>  <!--陕西地图-->
 </head>
 <body>
-欢迎登录用户感知评测系统
+<div id="wrapper">
+    <div class="wrapper wrapper-content" style="padding-top: 0px !important;">       <!--去除bootstrap网格的内边距padding: 0px !important;-->
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="padding: 0px !important;">
+                <div id="container1" style="height: 360px; margin: 0 auto"></div>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="padding: 0px !important;">
+                <div id="container2" style="height: 360px; margin: 0 auto"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="padding: 0px !important;">
+                <div id="container3" style="height: 360px; margin: 0 auto"></div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="padding: 0px !important;">
+                <div id="container4" style="height: 360px; margin: 0 auto"></div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="padding: 0px !important;">
+                <div id="select_qoe" style="position:absolute;z-index:2;margin-left: 8px;margin-top: 5px;">    <!--左上角下拉区域-->
+                    <select id="lev" v-model="selected" style="border-width: 0px; width: 90px;">  <!--vue表单控制绑定-->
+                        <option lev="avg_qoe">平均QoE</option>
+                        <option lev="http_qoe">网页QoE</option>
+                        <option lev="youku_qoe">视频QoE</option>
+                        <option lev="xunlei_qoe">下载QoE</option>
+                        <option lev="ping_qoe">时延QoE</option>
+                        <option lev="game_qoe">游戏QoE</option>
+                    </select>
+                </div>
+                <div style="position:absolute;z-index:1;width:100%">                   <!--右上角下拉区域-->
+                    <div id="select_version" style="float:right;margin-right: 8px;margin-top: 5px;">
+                        <select id="lev1" v-model="selected" style="border-width: 0px; width: 80px;">
+                            <option lev1="trend">硬件版</option>
+                            <option lev1="pc">软件版</option>
+                            <option lev1="e8c">E8C版</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="container5" style="height: 360px; margin: 0 auto"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="${rc.contextPath}/js/sys/main1.js?_${date.systemTime}"></script>
+
+
 </body>
 </html>
