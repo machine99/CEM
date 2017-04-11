@@ -80,7 +80,7 @@ var options = {
     ]
 };
 $(document).ready(function () {
-    var chart = new Highcharts.Chart('container', options)
+    var chart = new Highcharts.Chart('container', options);
 });
 
 
@@ -168,7 +168,7 @@ $('input[name="daterange"]').daterangepicker(
 new Vue({
     el: '#reset',
     methods: {
-        reset: function () {
+        reset () {
             /****************************/
             /*重置,回到页面加载时的数据*/
             var area1 = {
@@ -177,7 +177,7 @@ new Vue({
                 GoodProp: 34,
                 AverageProp: 26,
                 PoorProp: 12,
-                Qoe:88,
+                Qoe: 88,
             };
             var area2 = {
                 myarea: "小区2",
@@ -185,7 +185,7 @@ new Vue({
                 GoodProp: 37,
                 AverageProp: 25,
                 PoorProp: 10,
-                Qoe:88,
+                Qoe: 88,
 
             };
             var area3 = {
@@ -194,7 +194,7 @@ new Vue({
                 GoodProp: 44,
                 AverageProp: 16,
                 PoorProp: 12,
-                Qoe:88,
+                Qoe: 88,
             };
             var area4 = {
                 myarea: "小区4",
@@ -202,7 +202,7 @@ new Vue({
                 GoodProp: 39,
                 AverageProp: 21,
                 PoorProp: 12,
-                Qoe:88,
+                Qoe: 88,
             };
             /**********************************/
             flag = 0;
@@ -227,7 +227,7 @@ Vue.component('data-table', {
                 {title: '较差占比(%)'}
             ],
             rows: [],
-            dtHandle: null
+            dtHandle: null,
         }
     },
     watch: {
@@ -239,14 +239,16 @@ Vue.component('data-table', {
                 times = 0;
             }
 
-            options.xAxis.categories = [];             /*先清空当前状态option的data*/
+            options.xAxis.categories = [];
+            /*先清空当前状态option的data*/
             options.series[0].data = [];
             options.series[1].data = [];
             options.series[2].data = [];
             options.series[3].data = [];
 
             for (var i = 0; i <= times; i++) {                          /*观察user是否变化,重绘HighCharts图*/
-                options.xAxis.categories[i] = val[i].myarea;/*设置当前状态option*/
+                options.xAxis.categories[i] = val[i].myarea;
+                /*设置当前状态option*/
                 options.series[0].data[i] = val[i].ExcellentProp;
                 options.series[1].data[i] = val[i].GoodProp;
                 options.series[2].data[i] = val[i].AverageProp;
@@ -329,7 +331,7 @@ var new_data = new Vue({
             GoodProp: 34,
             AverageProp: 26,
             PoorProp: 12,
-            Qoe:88,
+            Qoe: 88,
         };
         var area2 = {
             myarea: "小区2",
@@ -337,7 +339,7 @@ var new_data = new Vue({
             GoodProp: 37,
             AverageProp: 25,
             PoorProp: 10,
-            Qoe:88,
+            Qoe: 88,
 
         };
         var area3 = {
@@ -346,7 +348,7 @@ var new_data = new Vue({
             GoodProp: 44,
             AverageProp: 16,
             PoorProp: 12,
-            Qoe:88,
+            Qoe: 88,
         };
         var area4 = {
             myarea: "小区4",
@@ -354,7 +356,7 @@ var new_data = new Vue({
             GoodProp: 39,
             AverageProp: 21,
             PoorProp: 12,
-            Qoe:88,
+            Qoe: 88,
         };
         data_fitst = [area1, area2, area3, area4];
         /*页面刚加载,模拟异步数据*/
@@ -381,17 +383,11 @@ var new_data = new Vue({
 
 /*导出表格到excel*/
 function exportExcel() {
-    alasql('SELECT * INTO XLSX("区县Ping对比.xlsx",{headers:true}) \
+    alasql('SELECT * INTO XLSX("小区质量分段分析.xlsx",{headers:true}) \
                     FROM HTML("#area_table",{headers:true})');
 
 }
 
-/*$(document).ready(function() {
- alasql('SELECT * INTO HTML("#res",{headers:true}) \
- FROM XLSX("C:/Users/yuanbaby/Downloads/Ping.xlsx",\
- {headers:true})');
- alert("end of function")
- });*/
 
 
 

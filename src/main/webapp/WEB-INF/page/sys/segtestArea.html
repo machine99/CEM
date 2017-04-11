@@ -88,13 +88,13 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <span class="label label-primary pull-right">导出</span>
+                        <button class="label label-primary pull-right" onclick="exportExcel()">导出</button>
                         <h3>数据明细</h3>
                     </div>
                     <div class="ibox-content">
-                        <div class="row">     <!--表格-->
+                        <div class="row pre-scrollable">     <!--表格-->
                             <div id="tabledemo">
-                                <data-table :users="filteredUsers"></data-table>
+                                <data-table :users="filteredUsers" class="table-responsive"></data-table>
                             </div>
                         </div>
                     </div>
