@@ -18,7 +18,7 @@ public interface ResultPingtestService {
 
     List<ResultPingtestEntity> queryList(Map<String, Object> map);
 
-    List<ResultPingtestEntity> queryAreaList(Map<String, Object> map);
+    List<ResultPingtestEntity> queryAreaPingList(Map<String, Object> map);
 
     int queryTotal(Map<String, Object> map);
 

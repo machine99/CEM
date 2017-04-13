@@ -16,6 +16,21 @@
         </if>
     </select>
 
+    <!--通过时间范围以及区域查询区域Ping感知数据-->
+    <select id="queryAreaPingList" resultType="com.baolian.entity.ResultPingtestEntity">
+        SELECT *
+        FROM result_pingtest
+        INNER JOIN testagent
+        ON result_pingtest.id = testagent.id
+        WHERE result_pingtest.testtime BETWEEN #{starttime} AND #{endtime}
+        <if test="area != null">
+            AND testagent.county = #{area}
+        </if>
+        <if test="area == null">
+            AND testagent.county IN (`新城区`, `碑林区`)
+        </if>
+    </select>
+
     <select id="queryTotal" resultType="int">
         SELECT count(*)
         FROM result_pingtest

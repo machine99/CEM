@@ -1,7 +1,6 @@
 package com.baolian.controller;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -37,22 +36,17 @@ public class ResultPingtestController {
 
     /*areapingtest*/
     @ResponseBody
-    @RequestMapping("/areaping")
-    @RequiresPermissions("resultpingtest:areaping")
-    public R areaping(String area,String starttime,String endtime){
+    @RequestMapping("/areapinglist")
+    @RequiresPermissions("resultpingtest:areapinglist")
+    public R areapinglist(String area, String starttime, String endtime) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("area",area);
-        map.put("starttime",starttime);
-        map.put("endtime",endtime);
-        System.out.print(area+"时间:"+starttime+"to"+endtime);
+        map.put("area", area);
+        map.put("starttime", starttime);
+        map.put("endtime", endtime);
+        System.out.print(area + "时间:" + starttime + "to" + endtime);
         //查询列表数据
-        List<ResultPingtestEntity> resultPingtestList = resultPingtestService.queryAreaList(map);
-
-
-
-        return  R.ok().put("getdatalist",resultPingtestList);
-
-
+        List<ResultPingtestEntity> resultPingtestList = resultPingtestService.queryAreaPingList(map);
+        return R.ok().put("areaPingList", resultPingtestList);
     }
 
     /**

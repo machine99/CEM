@@ -28,7 +28,7 @@ public class ResultPingtestServiceImpl implements ResultPingtestService {
     }
 
     @Override
-    public List<ResultPingtestEntity> queryAreaList(Map<String, Object> map) {
+    public List<ResultPingtestEntity> queryAreaPingList(Map<String, Object> map) {
         List<ResultPingtestEntity> testlist = new ArrayList<>();
         System.out.println("取得的地区为:"+map.get("area").equals(""));
         ResultPingtestEntity area1 = new ResultPingtestEntity();
@@ -60,7 +60,7 @@ public class ResultPingtestServiceImpl implements ResultPingtestService {
             testlist.add(area1);
         }
         return testlist;
-        /*return resultPingtestDao.queryAreaList(map);*/
+        /*return resultPingtestDao.queryAreaPingList(map);*/
     }
 
     @Override
