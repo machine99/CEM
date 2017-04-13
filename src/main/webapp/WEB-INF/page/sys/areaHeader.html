@@ -3,7 +3,6 @@
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
 <link href="${rc.contextPath}/statics/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css"/>
 <link href="${rc.contextPath}/statics/css/font-awesome.min.css" rel="stylesheet">  <!--日期箭头-->
 <link href="${rc.contextPath}/statics/css/style.css" rel="stylesheet">
 <link href="${rc.contextPath}/statics/css/datepicker/daterangepicker.css" rel="stylesheet">
@@ -13,8 +12,8 @@
 
 
 <!-- Include Required Prerequisites -->
-<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>  <!--用这个-->
-
+<!--<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>-->  <!--用这个-->
+<script src="${rc.contextPath}/js/datepicker/moment.min.js"></script> <!--必须放在daterangepicker.js前面-->
 
 <script src="${rc.contextPath}/js/jquery-2.0.3.js"></script>
 <script src="${rc.contextPath}/js/jquery-2.0.3.min.js"></script>
@@ -24,7 +23,7 @@
 <script src="${rc.contextPath}/js/highcharts/exporting.js"></script>  <!--highcharts处理导出图片功能的js文件-->
 <script src="${rc.contextPath}/js/highcharts/Highcharts-zh_CN.js" charset="UTF-8"></script>    <!--导出按钮中文js文件-->
 <script src="${rc.contextPath}/js/datepicker/daterangepicker.js"></script> <!--时间选择器-->
-<!--<script src="../../../js/datepicker/moment.min.js"></script>--> <!--这个js有问题,现在连的网上的-->
+
 <script type="text/javascript" src="${rc.contextPath}/statics/libs/vue.min.js"></script>
 
 <script src="${rc.contextPath}/js/plugins/dataTables/jquery.dataTables.min.js"></script>

@@ -1,6 +1,7 @@
 /**
- * Created by apple on 2017/3/31.
+ * Created by apple on 2017/4/77.
  */
+
 var get_area;
 var flag = 0;
 /*标志位,判断highcharts绘图Vue点击时间更新的series*/
@@ -25,18 +26,18 @@ var area_choose = new Vue({
     el: '#area_choose',
     data: {
         items: [
-            {message: '小区1'},
-            {message: '小区2'},
-            {message: '小区3'},
-            {message: '小区4'},
-            {message: '小区5'},
-            {message: '小区6'},
-            {message: '小区7'},
-            {message: '小区8'}
+            {message: '新城区'},
+            {message: '碑林区'},
+            {message: '莲湖区'},
+            {message: '雁塔区'},
+            {message: '未央区'},
+            {message: '灞桥区'},
+            {message: '长安区'},
+            {message: '阎良区'}
         ]
     }
 });
-var new_data1 = ['小区1', '小区2', '小区3', '小区4', '小区5', '小区6', '小区7', '小区8']
+var new_data1 = ['新城区', '碑林区', '莲湖区', '雁塔区', '未央区', '灞桥区', '长安区', '阎良区']
 $('#area').typeahead({
     /*输入提示框*/
     source: new_data1,
@@ -58,23 +59,26 @@ var options = {
     },
     yAxis: {
         title: {
-            text: '内网质量'
+            text: 'qoe'
         }
     },
     credits: {
         enabled: false
     },
     series: [{
-        name: '优秀占比',
+        name: '网页感知',
         data: []
     }, {
-        name: '良好占比',
+        name: '视频感知',
         data: []
     }, {
-        name: '一般占比',
+        name: '游戏感知',
         data: []
     }, {
-        name: '较差占比',
+        name: '下载感知',
+        data: []
+    }, {
+        name: 'ping感知',
         data: []
     }
     ]
@@ -101,7 +105,7 @@ $('input[name="daterange"]').daterangepicker(
 
         },
         startDate: '2013-01-01',
-        endDate: '2013-12-31'
+        endDate: '2013-89-31'
     },
     function (start, end, label) {          /*日期选择触发事件*/
         console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
@@ -113,11 +117,11 @@ $('input[name="daterange"]').daterangepicker(
             get_data = {
                 /*模拟异步数据*/
                 myarea: get_area,
-                ExcellentProp: 28,
-                GoodProp: 34,
-                AverageProp: 26,
-                PoorProp: 12,
-                Qoe: 85
+                WebQoe: 78,
+                VideoQoe: 83,
+                GameQoe: 84,
+                DownloadQoe: 89,
+                PingQoe: 85
             };
             new_data.users = [get_data];
             /*观察者,更新user数据*/
@@ -125,39 +129,23 @@ $('input[name="daterange"]').daterangepicker(
             flag = 0;
             /*********************************************/
             var area1 = {
-                myarea: "小区1",
-                ExcellentProp: 28,
-                GoodProp: 34,
-                AverageProp: 26,
-                PoorProp: 12,
-                Qoe: 85
+                myarea: "新城区",
+                WebQoe: 78,
+                VideoQoe: 83,
+                GameQoe: 84,
+                DownloadQoe: 89,
+                PingQoe: 85
             };
             var area2 = {
-                myarea: "小区2",
-                ExcellentProp: 28,
-                GoodProp: 34,
-                AverageProp: 26,
-                PoorProp: 12,
-                Qoe: 85
-            };
-            var area3 = {
-                myarea: "小区1",
-                ExcellentProp: 28,
-                GoodProp: 34,
-                AverageProp: 26,
-                PoorProp: 12,
-                Qoe: 85
-            };
-            var area4 = {
-                myarea: "小区1",
-                ExcellentProp: 28,
-                GoodProp: 34,
-                AverageProp: 26,
-                PoorProp: 12,
-                Qoe: 85
+                myarea: "碑林区",
+                WebQoe: 78,
+                VideoQoe: 83,
+                GameQoe: 84,
+                DownloadQoe: 89,
+                PingQoe: 85
             };
 
-            new_area_data = [area1, area2, area3, area4];
+            new_area_data = [area1, area2];
             /*页面刚加载,模拟异步数据*/
             /********************************************************/
             new_data.users = new_area_data;
@@ -172,42 +160,26 @@ new Vue({
             /****************************/
             /*重置,回到页面加载时的数据*/
             var area1 = {
-                myarea: "小区1",
-                ExcellentProp: 28,
-                GoodProp: 34,
-                AverageProp: 26,
-                PoorProp: 12,
-                Qoe: 88,
+                myarea: "新城区",
+                WebQoe: 78,
+                VideoQoe: 83,
+                GameQoe: 84,
+                DownloadQoe: 89,
+                PingQoe: 88,
             };
             var area2 = {
-                myarea: "小区2",
-                ExcellentProp: 28,
-                GoodProp: 37,
-                AverageProp: 25,
-                PoorProp: 10,
-                Qoe: 88,
+                myarea: "碑林区",
+                WebQoe: 78,
+                VideoQoe: 37,
+                GameQoe: 91,
+                DownloadQoe: 77,
+                PingQoe: 88,
 
-            };
-            var area3 = {
-                myarea: "小区3",
-                ExcellentProp: 28,
-                GoodProp: 44,
-                AverageProp: 16,
-                PoorProp: 12,
-                Qoe: 88,
-            };
-            var area4 = {
-                myarea: "小区4",
-                ExcellentProp: 28,
-                GoodProp: 39,
-                AverageProp: 21,
-                PoorProp: 12,
-                Qoe: 88,
             };
             /**********************************/
             flag = 0;
             /*option先回到状态0,注意,不然会出错*/
-            new_data.users = [area1, area2, area3, area4];
+            new_data.users = [area1, area2];
         }
     }
 });
@@ -219,12 +191,12 @@ Vue.component('data-table', {
     data() {
         return {
             headers: [
-                {title: '小区'},
-                {title: 'QoE(分）'},
-                {title: '优秀占比(%)'},
-                {title: '良好占比(%))'},
-                {title: '一般占比(%)'},
-                {title: '较差占比(%)'}
+                {title: '区域'},
+                {title: '网页感知(分)'},
+                {title: '视频感知(分)'},
+                {title: '游戏感知(分)'},
+                {title: '下载感知(分)'},
+                {title: 'ping感知(分)'},
             ],
             rows: [],
             dtHandle: null,
@@ -234,7 +206,7 @@ Vue.component('data-table', {
         users(val, oldVal) {
             let vm = this;
             vm.rows = [];
-            var times = 3;
+            var times = 1;
             if (flag == 1) {
                 times = 0;
             }
@@ -245,14 +217,16 @@ Vue.component('data-table', {
             options.series[1].data = [];
             options.series[2].data = [];
             options.series[3].data = [];
+            options.series[4].data = [];
 
             for (var i = 0; i <= times; i++) {                          /*观察user是否变化,重绘HighCharts图*/
                 options.xAxis.categories[i] = val[i].myarea;
                 /*设置当前状态option*/
-                options.series[0].data[i] = val[i].ExcellentProp;
-                options.series[1].data[i] = val[i].GoodProp;
-                options.series[2].data[i] = val[i].AverageProp;
-                options.series[3].data[i] = val[i].PoorProp;
+                options.series[0].data[i] = val[i].WebQoe;
+                options.series[1].data[i] = val[i].VideoQoe;
+                options.series[2].data[i] = val[i].GameQoe;
+                options.series[3].data[i] = val[i].DownloadQoe;
+                options.series[4].data[i] = val[i].PingQoe;
 
             }
             var chart = new Highcharts.Chart('container', options);
@@ -262,11 +236,11 @@ Vue.component('data-table', {
                 let row = [];
 
                 row.push(item.myarea);
-                row.push(item.Qoe);
-                row.push(item.ExcellentProp);
-                row.push(item.GoodProp);
-                row.push(item.AverageProp);
-                row.push(item.PoorProp);
+                row.push(item.WebQoe);
+                row.push(item.VideoQoe);
+                row.push(item.GameQoe);
+                row.push(item.DownloadQoe);
+                row.push(item.PingQoe);
                 console.log(item);
 
                 vm.rows.push(row);
@@ -280,7 +254,6 @@ Vue.component('data-table', {
     mounted() {
         let vm = this;
         vm.dtHandle = $(this.$el).DataTable({
-            // Specify whatever options you want, at a minimum these:
             columns: vm.headers,
             data: vm.rows,
             searching: false,
@@ -314,51 +287,29 @@ var new_data = new Vue({
         filteredUsers: function () {                 /*此处可以对传入数据进行处理*/
             let self = this;
             return self.users;
-            /*let search = self.search.toLowerCase();
-             return self.users.filter(function (user) {
-             return user.username.toLowerCase().indexOf(search) !== -1 ||
-             user.email.toLowerCase().indexOf(search) !== -1 ||
-             user.mobile.indexOf(search) !== -1
-             })*/
         }
     },
     mounted() {
         let vm = this;
         /*********************************************/
         var area1 = {
-            myarea: "小区1",
-            ExcellentProp: 28,
-            GoodProp: 34,
-            AverageProp: 26,
-            PoorProp: 12,
-            Qoe: 88,
+            myarea: "新城区",
+            WebQoe: 78,
+            VideoQoe: 83,
+            GameQoe: 84,
+            DownloadQoe: 89,
+            PingQoe: 88,
         };
         var area2 = {
-            myarea: "小区2",
-            ExcellentProp: 28,
-            GoodProp: 37,
-            AverageProp: 25,
-            PoorProp: 10,
-            Qoe: 88,
+            myarea: "碑林区",
+            WebQoe: 78,
+            VideoQoe: 37,
+            GameQoe: 91,
+            DownloadQoe: 77,
+            PingQoe: 88,
 
         };
-        var area3 = {
-            myarea: "小区3",
-            ExcellentProp: 28,
-            GoodProp: 44,
-            AverageProp: 16,
-            PoorProp: 12,
-            Qoe: 88,
-        };
-        var area4 = {
-            myarea: "小区4",
-            ExcellentProp: 28,
-            GoodProp: 39,
-            AverageProp: 21,
-            PoorProp: 12,
-            Qoe: 88,
-        };
-        data_fitst = [area1, area2, area3, area4];
+        data_fitst = [area1, area2];
         /*页面刚加载,模拟异步数据*/
         /********************************************************/
 
@@ -370,7 +321,7 @@ var new_data = new Vue({
          data: {
          username: null,
          page: 1,
-         limit: 10
+         limit: 77
          },
          success(r) {
          vm.users = r.page.list;
@@ -383,10 +334,17 @@ var new_data = new Vue({
 
 /*导出表格到excel*/
 function exportExcel() {
-    alasql('SELECT * INTO XLSX("小区质量分段分析.xlsx",{headers:true}) \
+    alasql('SELECT * INTO XLSX("区域总体感知对比.xlsx",{headers:true}) \
                     FROM HTML("#area_table",{headers:true})');
 
 }
+
+
+
+
+
+
+
 
 
 

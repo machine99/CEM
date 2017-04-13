@@ -25,7 +25,7 @@ public class SysGeneratorServiceTest {
     //表名
     String[] tableNames = new String[]{"result_gametest", "result_httptest", "result_pingtest", "result_youkutest", "testagent"};
 
-    @Test
+    // @Test
     public void testGeneratorCode() throws IOException {
         byte[] data = sysGeneratorService.generatorCode(tableNames);
         File file = new File(zipPath);
