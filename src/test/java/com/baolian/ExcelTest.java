@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,11 +56,13 @@ public class ExcelTest {
         Class<Student> c = Student.class;
         InputStream is = null;
         try {
-            is = new FileInputStream("F://student_info.xls");
-            Collection list = readXls(is, "xls", Student.class);
-            for (Object o : list) {
-                System.out.println(((Student) o).toString());
-            }
+            is = new FileInputStream("F://2016.5.18测试数据（template）.xlsx");
+            XSSFWorkbook workbook = new XSSFWorkbook(is);
+            System.out.println("aaa");
+            // Collection list = readXls(is, "xlsx", Student.class);
+            // for (Object o : list) {
+            //     System.out.println(((Student) o).toString());
+            // }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -127,7 +130,7 @@ public class ExcelTest {
             // // 得到工作表
             // HSSFWorkbook book = new HSSFWorkbook(inputStream);
             // 得到第一页
-            Sheet sheet = book.getSheetAt(0);
+            Sheet sheet = book.getSheetAt(1);
             // 得到第一面的所有行
             Iterator<Row> row = sheet.rowIterator();
             // 得到第一行，也就是标题行
@@ -142,102 +145,104 @@ public class ExcelTest {
             while (cellTitle.hasNext()) {
                 Cell cell = cellTitle.next();
                 String value = cell.getStringCellValue();
+                System.out.println(value);
                 titleMap.put(i, value);
                 i = i + 1;
             }
-            while (row.hasNext()) {
-                // 标题下的第一行
-                Row rown = row.next();
-                // 行的所有列
-                Iterator<Cell> cellbody = rown.cellIterator();
-                // 得到传入类的实例
-                Constructor constructor = entity.getDeclaredConstructor();
-                constructor.setAccessible(true);
-                Object tObject = constructor.newInstance();
-                int k = 0;
-                // 遍历一行的列
-                while (cellbody.hasNext()) {
-                    Cell cell = cellbody.next();
-                    // 这里得到此列的对应的标题
-                    String titleString = (String) titleMap.get(k);
-                    // 如果这一列的标题和类中的某一列的Annotation相同，那么则调用此类的的set方法，进行设值
-                    if (fieldSetMap.containsKey(titleString)) {
-                        Method setMethod = (Method) fieldSetMap.get(titleString);
-                        // 得到setter方法的参数
-                        Type[] ts = setMethod.getGenericParameterTypes();
-                        // 只要一个参数
-                        String xclass = ts[0].toString();
-                        // 判断参数类型
-                        switch (xclass) {
-                            case "class java.lang.String":
-                                // 先设置Cell的类型，然后就可以把纯数字作为String类型读进来了：
-                                cell.setCellType(Cell.CELL_TYPE_STRING);
-                                setMethod.invoke(tObject, cell.getStringCellValue());
-                                break;
-                            case "class java.util.Date":
-                                Date cellDate = null;
-                                if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
-                                    // 日期格式
-                                    cellDate = cell.getDateCellValue();
-                                } else {    // 全认为是  Cell.CELL_TYPE_STRING: 如果不是 yyyy-mm-dd hh:mm:ss 的格式就不对(wait to do:有局限性)
-                                    cellDate = stringToDate(cell.getStringCellValue());
-                                }
-                                setMethod.invoke(tObject, cellDate);
-                                //// --------------------------------------------------------------------------------------------
-                                //String cellValue = cell.getStringCellValue();
-                                //Date theDate = stringToDate(cellValue);
-                                //setMethod.invoke(tObject, theDate);
-                                //// --------------------------------------------------------------------------------------------
-                                break;
-                            case "class java.lang.Boolean":
-                                boolean valBool;
-                                if (Cell.CELL_TYPE_BOOLEAN == cell.getCellType()) {
-                                    valBool = cell.getBooleanCellValue();
-                                } else {// 全认为是  Cell.CELL_TYPE_STRING
-                                    valBool = cell.getStringCellValue().equalsIgnoreCase("true")
-                                            || (!cell.getStringCellValue().equals("0"));
-                                }
-                                setMethod.invoke(tObject, valBool);
-                                break;
-                            case "class java.lang.Integer":
-                                Integer valInt;
-                                if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
-                                    valInt = (new Double(cell.getNumericCellValue())).intValue();
-                                } else {// 全认为是  Cell.CELL_TYPE_STRING
-                                    valInt = new Integer(cell.getStringCellValue());
-                                }
-                                setMethod.invoke(tObject, valInt);
-                                break;
-                            case "class java.lang.Long":
-                                Long valLong;
-                                if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
-                                    valLong = (new Double(cell.getNumericCellValue())).longValue();
-                                } else {// 全认为是  Cell.CELL_TYPE_STRING
-                                    valLong = new Long(cell.getStringCellValue());
-                                }
-                                setMethod.invoke(tObject, valLong);
-                                break;
-                            case "class java.math.BigDecimal":
-                                BigDecimal valDecimal;
-                                if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
-                                    valDecimal = new BigDecimal(cell.getNumericCellValue());
-                                } else {// 全认为是  Cell.CELL_TYPE_STRING
-                                    valDecimal = new BigDecimal(cell.getStringCellValue());
-                                }
-                                setMethod.invoke(tObject, valDecimal);
-                                break;
-                            case "class java.lang.Double":
-                                Double valDouble;
-                                valDouble = new Double(cell.getStringCellValue());
-                                break;
-                        }
-
-                    }
-                    // 下一列
-                    k = k + 1;
-                }
-                dist.add(tObject);
-            }
+            return null;
+            // while (row.hasNext()) {
+            //     // 标题下的第一行
+            //     Row rown = row.next();
+            //     // 行的所有列
+            //     Iterator<Cell> cellbody = rown.cellIterator();
+            //     // 得到传入类的实例
+            //     Constructor constructor = entity.getDeclaredConstructor();
+            //     constructor.setAccessible(true);
+            //     Object tObject = constructor.newInstance();
+            //     int k = 0;
+            //     // 遍历一行的列
+            //     while (cellbody.hasNext()) {
+            //         Cell cell = cellbody.next();
+            //         // 这里得到此列的对应的标题
+            //         String titleString = (String) titleMap.get(k);
+            //         // 如果这一列的标题和类中的某一列的Annotation相同，那么则调用此类的的set方法，进行设值
+            //         if (fieldSetMap.containsKey(titleString)) {
+            //             Method setMethod = (Method) fieldSetMap.get(titleString);
+            //             // 得到setter方法的参数
+            //             Type[] ts = setMethod.getGenericParameterTypes();
+            //             // 只要一个参数
+            //             String xclass = ts[0].toString();
+            //             // 判断参数类型
+            //             switch (xclass) {
+            //                 case "class java.lang.String":
+            //                     // 先设置Cell的类型，然后就可以把纯数字作为String类型读进来了：
+            //                     cell.setCellType(Cell.CELL_TYPE_STRING);
+            //                     setMethod.invoke(tObject, cell.getStringCellValue());
+            //                     break;
+            //                 case "class java.util.Date":
+            //                     Date cellDate = null;
+            //                     if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
+            //                         // 日期格式
+            //                         cellDate = cell.getDateCellValue();
+            //                     } else {    // 全认为是  Cell.CELL_TYPE_STRING: 如果不是 yyyy-mm-dd hh:mm:ss 的格式就不对(wait to do:有局限性)
+            //                         cellDate = stringToDate(cell.getStringCellValue());
+            //                     }
+            //                     setMethod.invoke(tObject, cellDate);
+            //                     //// --------------------------------------------------------------------------------------------
+            //                     //String cellValue = cell.getStringCellValue();
+            //                     //Date theDate = stringToDate(cellValue);
+            //                     //setMethod.invoke(tObject, theDate);
+            //                     //// --------------------------------------------------------------------------------------------
+            //                     break;
+            //                 case "class java.lang.Boolean":
+            //                     boolean valBool;
+            //                     if (Cell.CELL_TYPE_BOOLEAN == cell.getCellType()) {
+            //                         valBool = cell.getBooleanCellValue();
+            //                     } else {// 全认为是  Cell.CELL_TYPE_STRING
+            //                         valBool = cell.getStringCellValue().equalsIgnoreCase("true")
+            //                                 || (!cell.getStringCellValue().equals("0"));
+            //                     }
+            //                     setMethod.invoke(tObject, valBool);
+            //                     break;
+            //                 case "class java.lang.Integer":
+            //                     Integer valInt;
+            //                     if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
+            //                         valInt = (new Double(cell.getNumericCellValue())).intValue();
+            //                     } else {// 全认为是  Cell.CELL_TYPE_STRING
+            //                         valInt = new Integer(cell.getStringCellValue());
+            //                     }
+            //                     setMethod.invoke(tObject, valInt);
+            //                     break;
+            //                 case "class java.lang.Long":
+            //                     Long valLong;
+            //                     if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
+            //                         valLong = (new Double(cell.getNumericCellValue())).longValue();
+            //                     } else {// 全认为是  Cell.CELL_TYPE_STRING
+            //                         valLong = new Long(cell.getStringCellValue());
+            //                     }
+            //                     setMethod.invoke(tObject, valLong);
+            //                     break;
+            //                 case "class java.math.BigDecimal":
+            //                     BigDecimal valDecimal;
+            //                     if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
+            //                         valDecimal = new BigDecimal(cell.getNumericCellValue());
+            //                     } else {// 全认为是  Cell.CELL_TYPE_STRING
+            //                         valDecimal = new BigDecimal(cell.getStringCellValue());
+            //                     }
+            //                     setMethod.invoke(tObject, valDecimal);
+            //                     break;
+            //                 case "class java.lang.Double":
+            //                     Double valDouble;
+            //                     valDouble = new Double(cell.getStringCellValue());
+            //                     break;
+            //             }
+            //
+            //         }
+            //         // 下一列
+            //         k = k + 1;
+            //     }
+            //     dist.add(tObject);
+            // }
             // HSSFWorkbook hssfWorkbook = new HSSFWorkbook(inputStream);
             // Student student = null;
             // List<Student> list = new ArrayList<>();
@@ -268,7 +273,7 @@ public class ExcelTest {
             e.printStackTrace();
             return null;
         }
-        return dist;
+        // return dist;
     }
 
     private boolean isFieldFinal(Field field) {

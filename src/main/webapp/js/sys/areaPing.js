@@ -127,20 +127,20 @@ var new_search = new Vue({        /*监听查询事件*/
             postdata.endtime = endtime;
             $.ajax({                           /*后台取得数据,赋值给观察者*/
                 type: "POST",
-                url: "../resultpingtest/areaping",
+                url: "../resultpingtest/areapinglist",
                 cache: false,  //禁用缓存
                 data: postdata,  //传入组装的参数
                 dataType: "json",
                 success: function (result) {
-                    console.log("成功返回!"+typeof (result.getdatalist));
-                    console.log(result.getdatalist);
-                    console.log(result.getdatalist.length);
-                    if(result.getdatalist.length==1){
+                    console.log("成功返回!"+typeof (result.areaPingList));
+                    console.log(result.areaPingList);
+                    console.log(result.areaPingList.length);
+                    if(result.areaPingList.length==1){
                         flag=1;
                     }else {
                         flag=0;
                     }
-                    new_data.users = result.getdatalist;
+                    new_data.users = result.areaPingList;
                 }
             });
             
@@ -217,20 +217,20 @@ var Reset = new Vue({               /*重置,默认时间区间为最近4天*/
             console.log(postdata);
             $.ajax({                           /*后台取得数据,赋值给观察者*/
                 type: "POST",
-                url: "../resultpingtest/areaping",
+                url: "../resultpingtest/areapinglist",
                 cache: false,  //禁用缓存
                 data: postdata,  //传入组装的参数
                 dataType: "json",
                 success: function (result) {
-                    console.log("成功返回!"+typeof (result.getdatalist));
-                    console.log(result.getdatalist);
-                    console.log(result.getdatalist.length);
+                    console.log("成功返回!"+typeof (result.areaPingList));
+                    console.log(result.areaPingList);
+                    console.log(result.areaPingList.length);
                     staus = 0;
                     flag = 0;
                     button_change.delay();
                     /*option先回到状态0,注意,不然会出错*/
-                    result.getdatalist[0].rttAvg = 18.888888;   /*重新赋值,区分和其他选择日期的值,表示重置了*/
-                    new_data.users = result.getdatalist;
+                    result.areaPingList[0].rttAvg = 18.888888;   /*重新赋值,区分和其他选择日期的值,表示重置了*/
+                    new_data.users = result.areaPingList;
                 }
             });
         }
