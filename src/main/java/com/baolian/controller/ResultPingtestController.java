@@ -39,18 +39,16 @@ public class ResultPingtestController {
     @ResponseBody
     @RequestMapping("/areaping")
     @RequiresPermissions("resultpingtest:areaping")
-    public R areaping(String area,String starttime,String endtime){
+    public R areaping(String area, String starttime, String endtime) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put("area",area);
-        map.put("starttime",starttime);
-        map.put("endtime",endtime);
-        System.out.print(area+"时间:"+starttime+"to"+endtime);
+        map.put("area", area);
+        map.put("starttime", starttime);
+        map.put("endtime", endtime);
+        System.out.print(area + "时间:" + starttime + "to" + endtime);
         //查询列表数据
         List<ResultPingtestEntity> resultPingtestList = resultPingtestService.queryAreaList(map);
 
-
-
-        return  R.ok().put("getdatalist",resultPingtestList);
+        return R.ok().put("getdatalist", resultPingtestList);
 
 
     }
