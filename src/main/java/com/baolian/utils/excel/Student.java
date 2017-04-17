@@ -1,6 +1,7 @@
 package com.baolian.utils.excel;
 
 /**
+ * 用于测试的Entity类
  * Created by tomxie on 2017/4/6 12:41.
  */
 public class Student {

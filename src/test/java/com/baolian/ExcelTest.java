@@ -4,6 +4,8 @@ import com.baolian.factory.WorkbookFactory;
 import com.baolian.factory.impl.HSSFWorkbookFactory;
 import com.baolian.factory.impl.XSSFWorkbookFactory;
 import com.baolian.service.TestagentService;
+import com.baolian.utils.excel.ExcelUtils;
+import com.baolian.utils.excel.Student;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -18,9 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.*;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -56,13 +56,14 @@ public class ExcelTest {
         Class<Student> c = Student.class;
         InputStream is = null;
         try {
-            is = new FileInputStream("F://2016.5.18测试数据（template）.xlsx");
-            XSSFWorkbook workbook = new XSSFWorkbook(is);
-            System.out.println("aaa");
-            // Collection list = readXls(is, "xlsx", Student.class);
-            // for (Object o : list) {
-            //     System.out.println(((Student) o).toString());
-            // }
+            is = new FileInputStream("F://student_info.xls");
+            Collection<Student> list = ExcelUtils.readExcel(is, "xls", Student.class);
+            for (Student student : list) {
+                System.out.println(student);
+            }
+            XSSFWorkbook workbook = ExcelUtils.<Student>exportExcel("sheet1", Student.class, list);
+            File outFile = new File("F://out.xlsx");
+            workbook.write(new FileOutputStream(outFile));
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
