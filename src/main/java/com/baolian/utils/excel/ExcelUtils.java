@@ -3,9 +3,21 @@ package com.baolian.utils.excel;
 import com.baolian.utils.excel.factory.WorkbookFactory;
 import com.baolian.utils.excel.factory.impl.HSSFWorkbookFactory;
 import com.baolian.utils.excel.factory.impl.XSSFWorkbookFactory;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.sl.usermodel.ColorStyle;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.awt.*;
+import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
@@ -16,13 +28,17 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 
 /**
+ * Excel工具类
  * Created by tomxie on 2017/4/8 13:15.
  */
 public class ExcelUtils {
     // 对应xls文件和xlsx的工厂类集合
     private static List<WorkbookFactory<? extends Workbook, InputStream>> workbookFactories = new ArrayList<>();
+    // 输出Excel表格的列宽
+    private static final int FIELD_WIDTH = 15;
 
     static {
         workbookFactories.add(new HSSFWorkbookFactory());
@@ -38,9 +54,9 @@ public class ExcelUtils {
      * @return 实体类集合
      * @throws IOException 异常
      */
-    public static Collection readXls(InputStream inputStream, String type, Class entity) throws IOException {
+    public static Collection readExcel(InputStream inputStream, String type, Class entity) throws IOException {
         // InputStream is = new FileInputStream(path + fileName);//EXCEL_PATH存放路径
-        Collection dist = new ArrayList<Object>();
+        Collection dist = new ArrayList();
         try {
 
             // 得到目标目标类的所有的字段列表
@@ -174,6 +190,12 @@ public class ExcelUtils {
                             case "class java.lang.Double":
                                 Double valDouble;
                                 valDouble = new Double(cell.getStringCellValue());
+                                setMethod.invoke(tObject, valDouble);
+                                break;
+                            case "float":
+                                Float valFloat;
+                                valFloat = (float) cell.getNumericCellValue();
+                                setMethod.invoke(tObject, valFloat);
                                 break;
                         }
 
@@ -190,6 +212,185 @@ public class ExcelUtils {
         return dist;
     }
 
+    /**
+     * 将一个Collection转化成Workbook
+     *
+     * @param title   sheet名
+     * @param entity  对应的Entity类型
+     * @param dataSet Entity类型对象组成的集合
+     * @param <T>     Entity类
+     * @return 已经填充数据以及样式的Workbook
+     */
+    public static <T> XSSFWorkbook exportExcel(String title, Class<T> entity,
+                                               Collection<T> dataSet) {
+        // 声明一个工作薄
+        XSSFWorkbook workbook = null;
+        try {
+            // 声明一个工作薄
+            workbook = new XSSFWorkbook();
+            // 生成一个表格
+            Sheet sheet = workbook.createSheet(title);
+
+            // 标题
+            List<String> exportFieldTitle = new ArrayList<String>();
+            List<Integer> exportFieldWidth = new ArrayList<Integer>();
+            // 拿到所有列名，以及导出的字段的get方法
+            List<Method> methodList = new ArrayList<Method>();
+            Class superClass = null;
+            Field fields[] = new Field[0];
+            boolean flag = true;
+            while (flag) {
+                if (superClass != null) {
+                    superClass = superClass.getSuperclass();
+                } else {
+                    superClass = entity.getSuperclass();
+                }
+                if (superClass.isInstance(Object.class)) {
+                    flag = false;
+                } else {
+                    Field[] sf = superClass.getDeclaredFields();
+                    if (sf != null && sf.length > 0) {
+                        fields = (Field[]) ArrayUtils.addAll(fields, sf);
+                    }
+                }
+
+            }
+            // 得到所有字段
+            Field cfileds[] = entity.getDeclaredFields();
+            if (cfileds != null && cfileds.length > 0) {
+                fields = (Field[]) ArrayUtils.addAll(fields, cfileds);
+            }
+            // 遍历整个filed
+            for (Field field : fields) {
+                // 如果field不为final
+                if (!isFieldFinal(field)) {
+                    // 添加到标题
+                    // TODO:此处需要添加一个field name和export name之间的转换
+                    exportFieldTitle.add(field.getName());
+                    // 添加标题的列宽
+                    exportFieldWidth.add(FIELD_WIDTH);
+                    // 添加到需要导出的字段的方法
+                    String fieldname = field.getName();
+                    // System.out.println(i+"列宽"+excel.exportName()+" "+excel.exportFieldWidth());
+                    String getMethodName = "get" + fieldname.substring(0, 1)
+                            .toUpperCase() +
+                            fieldname.substring(1);
+
+                    Method getMethod = entity.getMethod(getMethodName);
+
+                    methodList.add(getMethod);
+                }
+            }
+            int index = 0;
+            // 产生表格标题行
+            Row row = sheet.createRow(index);
+            row.setHeight((short) 450);
+            CellStyle titleStyle = getTitleStyle(workbook);
+            for (int i = 0, exportFieldTitleSize = exportFieldTitle.size(); i < exportFieldTitleSize; i++) {
+                Cell cell = row.createCell(i);
+                // cell.setCellStyle(style);
+                RichTextString text = new XSSFRichTextString(exportFieldTitle
+                        .get(i));
+                cell.setCellValue(text);
+                cell.setCellStyle(titleStyle);
+            }
+
+            // 设置每行的列宽
+            for (int i = 0; i < exportFieldWidth.size(); i++) {
+                // 256=65280/255
+                sheet.setColumnWidth(i, 256 * exportFieldWidth.get(i));
+            }
+            Iterator its = dataSet.iterator();
+            // 循环插入剩下的集合
+            while (its.hasNext()) {
+                // 从第二行开始写，第一行是标题
+                index++;
+                row = sheet.createRow(index);
+                row.setHeight((short) 350);
+                Object t = its.next();
+                for (int k = 0, methodObjSize = methodList.size(); k < methodObjSize; k++) {
+                    Cell cell = row.createCell(k);
+                    Method getMethod = methodList.get(k);
+                    Object value = null;
+                    value = getMethod.invoke(t);
+                    cell.setCellValue(value == null ? "" : value.toString());
+
+                    if (index % 2 == 0)
+                        cell.setCellStyle(getTwoStyle(workbook));
+                    else
+                        cell.setCellStyle(getOneStyle(workbook));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return workbook;
+    }
+
+    /**
+     * 导出Excel的表头样式
+     *
+     * @param workbook 输入的Workbook
+     * @return Excel表头样式
+     */
+    private static XSSFCellStyle getTitleStyle(XSSFWorkbook workbook) {
+        // 产生Excel表头
+        XSSFCellStyle titleStyle = workbook.createCellStyle();
+        titleStyle.setBorderBottom(BorderStyle.DOUBLE);    //设置边框样式
+        titleStyle.setBorderLeft(BorderStyle.MEDIUM);     //左边框
+        titleStyle.setBorderRight(BorderStyle.MEDIUM);    //右边框
+        titleStyle.setBorderTop(BorderStyle.MEDIUM);     //左边框
+        titleStyle.setBorderBottom(BorderStyle.MEDIUM);    //右边框
+        titleStyle.setBorderTop(BorderStyle.DOUBLE);    //顶边框
+        titleStyle.setFillForegroundColor(new XSSFColor(new Color(0, 204, 255)));    //填充的背景颜色
+        titleStyle.setAlignment(HorizontalAlignment.CENTER);
+
+        titleStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);    //填充图案
+
+        return titleStyle;
+    }
+
+    /**
+     * 导出Excel偶数行样式
+     *
+     * @param workbook 输入的Workbook
+     * @return Excel偶数行样式
+     */
+    private static XSSFCellStyle getTwoStyle(XSSFWorkbook workbook) {
+        // 产生Excel表头
+        XSSFCellStyle style = workbook.createCellStyle();
+        style.setBorderLeft(BorderStyle.THIN);     //左边框
+        style.setBorderRight(BorderStyle.THIN);    //右边框
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderTop(BorderStyle.THIN);
+        style.setFillForegroundColor(new XSSFColor(new Color(204, 255, 255)));    //填充的背景颜色
+        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);    //填充图案
+        return style;
+    }
+
+    /**
+     * 导出Excel奇数行样式
+     *
+     * @param workbook 输入的Workbook
+     * @return Excel奇数行样式
+     */
+    private static XSSFCellStyle getOneStyle(XSSFWorkbook workbook) {
+        // 产生Excel表头
+        // 产生Excel表头
+        XSSFCellStyle style = workbook.createCellStyle();
+        style.setBorderLeft(BorderStyle.THIN);     //左边框
+        style.setBorderRight(BorderStyle.THIN);    //右边框
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderTop(BorderStyle.THIN);
+        return style;
+    }
+
+    /**
+     * 判断一个Field是否含有final修饰符
+     *
+     * @param field 输入Field
+     * @return 是否含有final
+     */
     private static boolean isFieldFinal(Field field) {
         return (field.getModifiers() & java.lang.reflect.Modifier.FINAL) == java.lang.reflect.Modifier.FINAL;
     }

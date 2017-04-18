@@ -60,12 +60,19 @@ Vue.component('data-table', {
         // Instantiate the datatable and store the reference to the instance in our dtHandle element.
         vm.dtHandle = $(this.$el).DataTable({
             // Specify whatever options you want, at a minimum these:
+            dom: 'Bfrtip',
             columns: vm.headers,
             // data: vm.rows,
             searching: false,
             paging: true,
             serverSide: true,
             info: false,
+            lengthMenu: [[10, 100, -1], [10, 100, "All"]],
+            buttons: [
+                'excelHtml5',
+                'csvHtml5',
+                'pdfHtml5'
+            ],
             ajax: function (data, callback, settings) {
                 //封装请求参数
                 let param = {};
