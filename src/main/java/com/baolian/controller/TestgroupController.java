@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.stereotype.Controller;
 
-import com.baolian.entity.TestagentEntity;
-import com.baolian.service.TestagentService;
+import com.baolian.entity.TestgroupEntity;
+import com.baolian.service.TestgroupService;
 import com.baolian.utils.PageUtils;
 import com.baolian.utils.R;
 
@@ -24,14 +24,14 @@ import com.baolian.utils.R;
  * @date 2017-04-18 17:03:59
  */
 @Controller
-@RequestMapping("testagent")
-public class TestagentController {
+@RequestMapping("testgroup")
+public class TestgroupController {
 	@Autowired
-	private TestagentService testagentService;
+	private TestgroupService testgroupService;
 	
-	@RequestMapping("/testagent.html")
+	@RequestMapping("/testgroup.html")
 	public String list(){
-		return "testagent/testagent.html";
+		return "testgroup/testgroup.html";
 	}
 	
 	/**
@@ -39,17 +39,17 @@ public class TestagentController {
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("testagent:list")
+	@RequiresPermissions("testgroup:list")
 	public R list(Integer page, Integer limit){
 		Map<String, Object> map = new HashMap<>();
 		map.put("offset", (page - 1) * limit);
 		map.put("limit", limit);
 		
 		//查询列表数据
-		List<TestagentEntity> testagentList = testagentService.queryList(map);
-		int total = testagentService.queryTotal(map);
+		List<TestgroupEntity> testgroupList = testgroupService.queryList(map);
+		int total = testgroupService.queryTotal(map);
 		
-		PageUtils pageUtil = new PageUtils(testagentList, total, limit, page);
+		PageUtils pageUtil = new PageUtils(testgroupList, total, limit, page);
 		
 		return R.ok().put("page", pageUtil);
 	}
@@ -60,11 +60,11 @@ public class TestagentController {
 	 */
 	@ResponseBody
 	@RequestMapping("/info/{id}")
-	@RequiresPermissions("testagent:info")
-	public R info(@PathVariable("id") Long id){
-		TestagentEntity testagent = testagentService.queryObject(id);
+	@RequiresPermissions("testgroup:info")
+	public R info(@PathVariable("id") Integer id){
+		TestgroupEntity testgroup = testgroupService.queryObject(id);
 		
-		return R.ok().put("testagent", testagent);
+		return R.ok().put("testgroup", testgroup);
 	}
 	
 	/**
@@ -72,9 +72,9 @@ public class TestagentController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	@RequiresPermissions("testagent:save")
-	public R save(@RequestBody TestagentEntity testagent){
-		testagentService.save(testagent);
+	@RequiresPermissions("testgroup:save")
+	public R save(@RequestBody TestgroupEntity testgroup){
+		testgroupService.save(testgroup);
 		
 		return R.ok();
 	}
@@ -84,9 +84,9 @@ public class TestagentController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	@RequiresPermissions("testagent:update")
-	public R update(@RequestBody TestagentEntity testagent){
-		testagentService.update(testagent);
+	@RequiresPermissions("testgroup:update")
+	public R update(@RequestBody TestgroupEntity testgroup){
+		testgroupService.update(testgroup);
 		
 		return R.ok();
 	}
@@ -96,9 +96,9 @@ public class TestagentController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("testagent:delete")
-	public R delete(@RequestBody Long[] ids){
-		testagentService.deleteBatch(ids);
+	@RequiresPermissions("testgroup:delete")
+	public R delete(@RequestBody Integer[] ids){
+		testgroupService.deleteBatch(ids);
 		
 		return R.ok();
 	}
