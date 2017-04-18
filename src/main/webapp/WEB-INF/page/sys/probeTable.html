@@ -114,16 +114,14 @@
                         <button type="button" class="btn btn-default " style="margin-right: 5px" v-on:click="testagentListsearch"><span
                                 class="glyphicon glyphicon-zoom-in"></span>查询
                         </button>
-                        <button type="button" class="btn btn-default "><span
+                        <button type="button" class="btn btn-default " v-on:click="reset"><span
                                 class="glyphicon glyphicon-refresh"></span>重置
                         </button>
                     </div>
                 </div>
                 <div class="ibox-content">
                     <div class="row " style="overflow-x: scroll">     <!--表格 verflow-x: scroll超出滚动-->
-                        <div id="tabledemo">
-                            <data-table :users="filteredUsers"></data-table>
-                        </div>
+                        <table class="table table-bordered " id="probedata_table"></table>
                     </div>
                 </div>
             </div>
@@ -153,10 +151,10 @@
                                     <input type="text" class="form-control" id="name" name="name"
                                            placeholder="请输入测试机名">
                                 </div>
-                                <label for="ID"
+                                <label for="ip"
                                        class="col-lg-3 col-md-3 col-sm-3 control-label form_border">IP地址:</label>
                                 <div class="col-lg-3 col-md-3 col-sm-3 form_border">
-                                    <input type="text" class="form-control" id="ID" name="ID"
+                                    <input type="text" class="form-control" id="ip" name="ip"
                                            placeholder="请输入IP地址">
                                 </div>
                             </div>
@@ -167,10 +165,10 @@
                                     <input type="text" class="form-control" id="bandwidth" name="bandwidth"
                                            placeholder="请输入带宽">
                                 </div>
-                                <label for="city_man"
+                                <label for="cityMan"
                                        class="col-lg-3 col-md-3 col-sm-3 control-label form_border">地市:</label>
                                 <div class="col-lg-3 col-md-3 col-sm-3 form_border">
-                                    <select id="city_man" class="form-control" name="city_man">  <!--VUE列表渲染-->
+                                    <select id="cityMan" class="form-control" name="cityMan">  <!--VUE列表渲染-->
                                         <option v-for="item in city_mans">
                                             {{ item.message }}
                                         </option>
@@ -187,10 +185,10 @@
                                         </option>
                                     </select>
                                 </div>
-                                <label for="testgroup_name"
+                                <label for="testgroupName"
                                        class="col-lg-3 col-md-3 col-sm-3 control-label form_border">测试任务组:</label>
                                 <div class="col-lg-3 col-md-3 col-sm-3 form_border">
-                                    <select id="testgroup_name" class="form-control" name="testgroup_name">
+                                    <select id="testgroupName" class="form-control" name="testgroupName">
                                         <option v-for="item in testgroup_names">
                                             {{ item.message }}
                                         </option>
@@ -198,9 +196,9 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="run_interval" class="col-lg-3 col-md-3 col-sm-3 control-label form_border">任务间隔:</label>
+                                <label for="runInterval" class="col-lg-3 col-md-3 col-sm-3 control-label form_border">任务间隔:</label>
                                 <div class="col-lg-3 col-md-3 col-sm-3 form_border">
-                                    <input type="text" class="form-control" id="run_interval" name="run_interval"
+                                    <input type="text" class="form-control" id="runInterval" name="runInterval"
                                            placeholder="请输入任务间隔">
                                 </div>
                                 <label for="address"
@@ -239,6 +237,27 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
     </div>
+    <!-- 删除确认模态框（Modal） -->
+    <div class="modal fade" id="myModal_delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 200px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel_delet">
+                        确认
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <b>确定删除吗?</b>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" v-on:click="cancel_delete">取消</button>
+                    <button type="button" class="btn btn-primary" v-on:click="delete_data">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
 </div>
 
 <script type="text/javascript" src="${rc.contextPath}/js/sys/probeTable.js?_${date.systemTime}"></script>

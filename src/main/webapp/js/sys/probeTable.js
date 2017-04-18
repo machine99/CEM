@@ -1,12 +1,14 @@
 /**
  * Created by yuanbaby on 2017/4/14.
  */
-
+var status;
+var idArray = new Array();
 var probedata_handle = new Vue({
     el: '#handle',
     data: {},
     methods: {
         testagentadd: function () {   /*监听录入触发事件*/
+            status = 0;/*状态0,表示录入*/
             var forms = $('#probeform_data .form-control');
 
             $('#probeform_data input[type=text]').prop("readonly", false);
@@ -22,6 +24,7 @@ var probedata_handle = new Vue({
 
         },
         testagentupdate: function () {     /*监听编辑触发事件*/
+            status = 1;/*状态1表示编辑*/
             var trs = $('#probe_table tbody').find('tr:has(:checked)');
             /*find被选中的行*/
             var forms = $('#probeform_data .form-control');
@@ -36,15 +39,15 @@ var probedata_handle = new Vue({
             } else if (trs.length == 1) {
                 var tds = trs.find("td");
                 for (var i = 0; i < 5; i++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
-                    console.log(tds.eq(i + 2).text());
-                    forms[i].value = tds.eq(i + 2).text()
+                    console.log(tds.eq(i + 3).text());
+                    forms[i].value = tds.eq(i + 3).text()
                 }
-                forms[5].value = tds.eq(9).text();
+                forms[5].value = tds.eq(10).text();
                 /*修改测试任务组*/
-                console.log(tds.eq(9).text());
+                console.log(tds.eq(10).text());
                 for (var j = 0; j < 4; j++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
-                    console.log(tds.eq(j + 14).text());
-                    forms[j + 6].value = tds.eq(j + 14).text()
+                    console.log(tds.eq(j + 15).text());
+                    forms[j + 6].value = tds.eq(j + 15).text()
                 }
                 /*tds.each(function(){
                  var td = $(this);
@@ -58,7 +61,19 @@ var probedata_handle = new Vue({
             }
         },
         testagentdelBatch: function () {   /*批量删除监听事件*/
+            status = 2;/*状态2表示删除*/
             var trs = $('#probe_table tbody').find('tr:has(:checked)');
+            if (trs.length == 0) {
+                toastr.warning('请选择删除项目！');
+            }else {
+                for(var i=0;i<trs.length;i++){       /*取得选中行的id*/
+                    var tds = trs.eq(i).find("td");
+                    idArray[i] = parseInt(tds.eq(2).text());   /*将id加入数组中*/
+                    console.log(tds.eq(2).text())
+                }
+                delete_ajax() ; /*ajax传输*/
+
+            }
             /*find被选中的行*/
 
         },
@@ -71,15 +86,15 @@ var probedata_handle = new Vue({
             } else if (trs.length == 1) {
                 var tds = trs.find("td");
                 for (var i = 0; i < 5; i++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
-                    console.log(tds.eq(i + 2).text());
-                    forms[i].value = tds.eq(i + 2).text()
+                    console.log(tds.eq(i + 3).text());
+                    forms[i].value = tds.eq(i + 3).text()
                 }
-                forms[5].value = tds.eq(9).text();
+                forms[5].value = tds.eq(10).text();
                 /*修改测试任务组*/
-                console.log(tds.eq(9).text());
+                console.log(tds.eq(10).text());
                 for (var j = 0; j < 4; j++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
-                    console.log(tds.eq(j + 14).text());
-                    forms[j + 6].value = tds.eq(j + 14).text()
+                    console.log(tds.eq(j + 15).text());
+                    forms[j + 6].value = tds.eq(j + 15).text()
                 }
                 $('#probeform_data input[type=text]').prop("readonly", true);//将input元素设置为readonly
                 $('#probeform_data select').prop("disabled", true);//将select元素设置为不可变
@@ -92,12 +107,73 @@ var probedata_handle = new Vue({
             }
         },
         testagentListsearch:function () {   /*查询监听事件*/
-            console.log($('#searchcolums').serialize())
+            var data = getFormJson($('#searchcolums'));    /*得到查询条件*/
+            /*获取表单元素的值*/
+            console.log(data);
+            probetable.probedata = data;
+            probetable.redraw();   /*根据查询条件重绘*/
+        },
+        reset:function () {    /*重置*/
+            probetable.reset();
+
         }
 
     }
 });
-var probeform_data = new Vue({
+function delete_ajax() {
+    var ids = JSON.stringify(idArray);    /*对象数组字符串*/
+
+    $.ajax({
+        type: "POST",   /*GET会乱码*/
+        url: "../testagent/delete",
+        cache: false,  //禁用缓存
+        data: ids,  //传入组装的参数
+        dataType: "json",
+        contentType:"application/json",  /*必须要,不可少*/
+        success: function (result) {
+            console.log("传递成功");
+
+            toastr.success("业务信息删除成功!");
+
+            probetable.currReset();
+
+            idArray = [];  /*清空id数组*/
+            delete_data.close_modal();  /*关闭模态框*/
+        }
+    });
+}
+function delete_this(obj) {
+    delete_data.show_deleteModal();
+    delete_data.id = parseInt(obj.id);   /*获取当前行探针数据id*/
+    console.log(delete_data.id);
+}
+
+var delete_data = new Vue({
+    el:'#myModal_delete',
+    data:{
+        id:null
+    },
+    methods:{
+        show_deleteModal:function () {
+            $(this.$el).modal('show');   /*弹出确认模态框*/
+        },
+        close_modal:function (obj) {
+            $(this.$el).modal('hide');
+
+        },
+        cancel_delete:function () {
+
+        },
+        delete_data:function () {
+            idArray = [];  /*清空id数组*/
+            idArray[0] = this.id;
+            delete_ajax() ;/*ajax传输*/
+
+        }
+    }
+});
+
+var probeform_data = new Vue({      
     el: '#myModal',
     data: {
         modaltitle: "测试机管理录入", /*定义模态框标题*/
@@ -130,12 +206,63 @@ var probeform_data = new Vue({
     // 在 `methods` 对象中定义方法
     methods: {
         submit: function () {
-            var data = $('#probeform_data').serialize();
-            /*获取表单元素的值*/
-            console.log(data)
+            var testagentJson = getFormJson($('#probeform_data'));
+            if(typeof(testagentJson["cityMan"])=="undefined"){                  /*3个select必选*/
+                toastr.warning("请录入地市信息!");
+            }else if(typeof(testagentJson["county"])=="undefined"){
+                toastr.warning("请录入区县信息!");
+            }else if(typeof(testagentJson["testgroupName"])=="undefined"){
+                toastr.warning("请录入测试任务组!");
+            }else {
+                var testagent = JSON.stringify([testagentJson]);  /*封装成json数组*/
+                /*获取表单元素的值*/
+                console.log(testagent);
+                var mapstr;
+                if(status==0){
+                    mapstr = "save";
+                }else if(status==1){
+                    mapstr = "update"
+                }
+                $.ajax({
+                    type: "POST",   /*GET会乱码*/
+                    url: "../testagent/"+mapstr,
+                    cache: false,  //禁用缓存
+                    data: testagent,  //传入组装的参数
+                    dataType: "json",
+                    contentType:"application/json",  /*必须要,不可少*/
+                    success: function (result) {
+                        console.log("传递成功");
+                        if(status==0){
+                            toastr.success("业务信息录入成功!");
+                        }else if(status==1){
+                            toastr.success("业务信息更新成功!");
+                        }
+
+                        probetable.currReset();
+                    }
+                });
+            }
+
+            
         }
     }
 });
+
+function getFormJson(form) {      /*将表单对象变为json对象*/
+    var o = {};
+    var a = $(form).serializeArray();
+    $.each(a, function () {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+}
 
 var search_data = new Vue({
     el:'#searchcolums',
@@ -180,15 +307,14 @@ $(document).ready(function () {
 
 });
 
-
-Vue.component('data-table', {
-    template: '<table class="table table-bordered " id="probe_table"></table>',
-    props: ['users'],
-    data() {
-        return {
+// 注册
+var probetable = new Vue({
+    el: '#probedata_table',
+    data:{
             headers: [
                 {title: ''},
                 {title: '<div class="checkbox"> <label> <input type="checkbox" id="checkAll"></label> </div>'},
+                {title: '<div style="display:none">id</div>'},
                 {title: '<div style="width:142px">测试机名</div>'},
                 {title: '<div style="width:142px">IP地址</div>'},
                 {title: '<div style="width:112px">带宽</div>'},
@@ -209,51 +335,35 @@ Vue.component('data-table', {
                 {title: '<div style="width:52px">操作</div>'}
             ],
             rows: [],
-            dtHandle: null
-        }
+            dtHandle: null,
+            probedata:{}
+
     },
-    watch: {
+    /*watch: {
         users(val, oldVal) {
+
+
+        }
+    },*/
+    methods: {
+        reset: function () {
             let vm = this;
-            vm.rows = [];
-            var i = 1;
-            // You should _probably_ check that this is changed data... but we'll skip that for this example.
-            val.forEach(function (item) {              /*观察user是否变化,更新表格数据*/
-                // Fish out the specific column data for each item in your data set and push it to the appropriate place.
-                // Basically we're just building a multi-dimensional array here. If the data is _already_ in the right format you could
-                // skip this loop...
-                let row = [];
-                row.push(i++);
-                row.push('<div class="checkbox"> <label> <input type="checkbox" name="selectFlag"></label> </div>');
-                row.push(item.sysuuid);
-                row.push(item.ip);
-                row.push(item.bandwidth);
-                row.push(item.city_man);
-                row.push(item.county);
-                row.push(item.useruid);
-                row.push(item.name);
-                row.push(item.testgroup_name);
-                row.push(item.onlinestatus);
-                row.push(item.online_time);
-                row.push(item.model);
-                row.push(item.version);
-                row.push(item.run_interval);
-                row.push(item.address);
-                row.push(item.brasname);
-                row.push(item.brasip);
-                row.push(item.brasport);
-                row.push('<a class="fontcolor">删除<a/>');
-
-                /*console.log(item);*/
-
-                vm.rows.push(row);
-            });
-
-            // Here's the magic to keeping the DataTable in sync.
-            // It must be cleared, new rows added, then redrawn!
+            vm.probedata = {};/*清空probedata*/
             vm.dtHandle.clear();
-            vm.dtHandle.rows.add(vm.rows);
-            vm.dtHandle.draw();
+            console.log("重置");
+            vm.dtHandle.draw();    /*重置*/
+        },
+        currReset:function () {
+            let vm = this;
+            vm.dtHandle.clear();
+            console.log("当前页面重绘");
+            vm.dtHandle.draw(false);    /*当前页面重绘*/
+        },
+        redraw:function () {
+            let vm = this;
+            vm.dtHandle.clear();
+            console.log("页面重绘");
+            vm.dtHandle.draw();    /*重绘*/
         }
     },
     mounted() {
@@ -266,8 +376,8 @@ Vue.component('data-table', {
             columns: vm.headers,
             data: vm.rows,
             searching: false,
-            /*paging: false,*/
-            //serverSide: true,
+            paging: true,
+            serverSide: true,
             info: false,
             ordering: false, /*禁用排序功能*/
             /*bInfo: false,*/
@@ -281,1058 +391,70 @@ Vue.component('data-table', {
                     sPrevious: '<i class="fa fa-chevron-left" ></i>'
                 }
             },
-            sDom: 'Rfrtlip'  /*显示在左下角*/
+            sDom: 'Rfrtlip',  /*显示在左下角*/
+            ajax: function (data, callback, settings) {
+                //封装请求参数
+                let param = {};
+                param.limit = data.length;//页面显示记录条数，在页面显示每页显示多少项的时候
+                param.start = data.start;//开始的记录序号
+                param.page = (data.start / data.length) + 1;//当前页码
+                param.probedata = JSON.stringify(vm.probedata);    /*用于查询probe数据*/
+                console.log(param);
+                //ajax请求数据
+                $.ajax({
+                    type: "POST",   /*GET会乱码*/
+                    url: "../testagent/list",
+                    cache: false,  //禁用缓存
+                    data: param,  //传入组装的参数
+                    dataType: "json",
+                    success: function (result) {
+                        console.log(result);
 
+                            //封装返回数据
+                            let returnData = {};
+                            returnData.draw = data.draw;//这里直接自行返回了draw计数器,应该由后台返回
+                            returnData.recordsTotal = result.page.totalCount;//返回数据全部记录
+                            returnData.recordsFiltered = result.page.totalCount;//后台不实现过滤功能，每次查询均视作全部结果
+                            // returnData.data = result.page.list;//返回的数据列表
+                            // 重新整理返回数据以匹配表格
+                            console.log(result.page.list);
+                            let rows = [];
+                            var i = param.start+1;
+                            result.page.list.forEach(function (item) {
+                                let row = [];
+                                row.push(i++);
+                                row.push('<div class="checkbox"> <label> <input type="checkbox" name="selectFlag"></label> </div>');
+                                row.push('<div class="probe_id">'+item.id+'</div>');
+                                row.push(item.sysuuid);
+                                row.push(item.ip);
+                                row.push(item.bandwidth);
+                                row.push(item.city_man);
+                                row.push(item.county);
+                                row.push(item.useruid);
+                                row.push(item.name);
+                                row.push(item.testgroup_name);
+                                row.push(item.onlinestatus);
+                                row.push(item.online_time);
+                                row.push(item.model);
+                                row.push(item.version);
+                                row.push(item.run_interval);
+                                row.push(item.address);
+                                row.push(item.brasname);
+                                row.push(item.brasip);
+                                row.push(item.brasport);
+                                row.push('<a class="fontcolor" onclick="delete_this(this)" id='+item.id+'>删除</a>');
+                                rows.push(row);
+                            });
+                            returnData.data = rows;
+                            //console.log(returnData);
+                            //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+                            //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+                            callback(returnData);
+                    }
+                });
+            }
         });
-
     }
 });
 
-var probe_data = new Vue({
-    el: '#tabledemo',
-    data: {
-        users: [],
-        search: ''
-    },
-    computed: {
-        filteredUsers: function () {                 /*此处可以对传入数据进行处理*/
-            let self = this;
-            return self.users;
-            /*let search = self.search.toLowerCase();
-             return self.users.filter(function (user) {
-             return user.username.toLowerCase().indexOf(search) !== -1 ||
-             user.email.toLowerCase().indexOf(search) !== -1 ||
-             user.mobile.indexOf(search) !== -1
-             })*/
-        }
-    },
-    mounted() {
-        let vm = this;
-        /*********************************************/
-        var probe_data = {
-            "total": 26,
-            "rows": [{
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "PC桌面版",
-                "location": null,
-                "city_man": "西安市",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": null,
-                "dayreport": "100",
-                "version": "PC桌面版",
-                "city": null,
-                "bandwidth": null,
-                "id": "43",
-                "online_time": null,
-                "testgroup_name": null,
-                "name": "testbj",
-                "sysuuid": null,
-                "brasname": "1",
-                "testgroup": null,
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": null,
-                "run_interval": "60",
-                "useruid": null,
-                "isp_man": null,
-                "vpnip": null,
-                "isp": null,
-                "onlinestatus": null,
-                "networkdevice": null,
-                "ip": null,
-                "address": "北京",
-                "county": "莲湖区",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "硬件版",
-                "location": "未知",
-                "city_man": "",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "blink",
-                "city": null,
-                "bandwidth": "0.0",
-                "id": "42",
-                "online_time": "2017-03-24 16:07:45",
-                "testgroup_name": "默认任务",
-                "name": "78:A3:51:22:67:4C",
-                "sysuuid": "78:A3:51:22:67:4C",
-                "brasname": "",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": "",
-                "run_interval": "60",
-                "useruid": "6XRB3Q",
-                "isp_man": "",
-                "vpnip": null,
-                "isp": null,
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "120.197.83.190",
-                "address": null,
-                "county": "",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "硬件版",
-                "location": "未知",
-                "city_man": "",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "blink",
-                "city": null,
-                "bandwidth": "0.0",
-                "id": "41",
-                "online_time": "2017-03-03 10:21:44",
-                "testgroup_name": "默认任务",
-                "name": "78:A3:51:22:59:A8",
-                "sysuuid": "78:A3:51:22:59:A8",
-                "brasname": "",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": "",
-                "run_interval": "60",
-                "useruid": "59JNB9",
-                "isp_man": "",
-                "vpnip": null,
-                "isp": null,
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "113.111.64.149",
-                "address": null,
-                "county": "",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "PC桌面版",
-                "location": "未知",
-                "city_man": "",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "PC桌面版",
-                "city": "内蒙古自治区包头市",
-                "bandwidth": "0.0",
-                "id": "37",
-                "online_time": "2017-03-02 14:05:49",
-                "testgroup_name": "默认任务",
-                "name": "APS51S",
-                "sysuuid": "28-D2-44-D6-73-A7",
-                "brasname": "",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": "",
-                "run_interval": "60",
-                "useruid": "APS51S",
-                "isp_man": "",
-                "vpnip": null,
-                "isp": "电信",
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "1.180.212.102",
-                "address": null,
-                "county": "",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "PC桌面版",
-                "location": "未知",
-                "city_man": "",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "PC桌面版",
-                "city": "陕西省西安市",
-                "bandwidth": "0.0",
-                "id": "36",
-                "online_time": "2017-01-09 11:54:50",
-                "testgroup_name": "默认任务",
-                "name": "HHFU2M",
-                "sysuuid": "0C-82-68-53-2C-74",
-                "brasname": "",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": "",
-                "run_interval": "60",
-                "useruid": "HHFU2M",
-                "isp_man": "",
-                "vpnip": null,
-                "isp": "广电网",
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "182.81.228.143",
-                "address": null,
-                "county": "",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "硬件版",
-                "location": "未知",
-                "city_man": "西安市",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "blink",
-                "city": null,
-                "bandwidth": "0.0",
-                "id": "35",
-                "online_time": "2016-12-22 16:58:57",
-                "testgroup_name": "默认任务",
-                "name": "78:A3:51:21:FB:44",
-                "sysuuid": "78:A3:51:21:FB:44",
-                "brasname": "XA-BL-BAS-1.MAN.ME60",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": null,
-                "run_interval": "60",
-                "useruid": "TGPQD8",
-                "isp_man": null,
-                "vpnip": null,
-                "isp": null,
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "182.81.205.175",
-                "address": "正街乐居场棚A4标段6号楼12层ONU-1",
-                "county": "碑林区",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "硬件版",
-                "location": "未知",
-                "city_man": "西安市",
-                "brasport": " ",
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "blink",
-                "city": null,
-                "bandwidth": "0.0",
-                "id": "34",
-                "online_time": "2016-12-22 15:51:45",
-                "testgroup_name": "默认任务",
-                "name": "78:A3:51:1E:E6:4C",
-                "sysuuid": "78:A3:51:1E:E6:4C",
-                "brasname": "XA-BL-BAS-2.MAN.ME60",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": null,
-                "run_interval": "60",
-                "useruid": "3JBTWR",
-                "isp_man": null,
-                "vpnip": null,
-                "isp": null,
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "139.148.51.241",
-                "address": "乐居场棚A4标段3号楼18层 ONU-2",
-                "county": "碑林区",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "硬件版",
-                "location": "未知",
-                "city_man": "西安市",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "blink",
-                "city": null,
-                "bandwidth": "0.0",
-                "id": "33",
-                "online_time": "2016-12-22 15:28:21",
-                "testgroup_name": "默认任务",
-                "name": "78:A3:51:22:05:78",
-                "sysuuid": "78:A3:51:22:05:78",
-                "brasname": "XA-BL-BAS-3.MAN.ME60",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": null,
-                "run_interval": "60",
-                "useruid": "FGYXCM",
-                "isp_man": null,
-                "vpnip": null,
-                "isp": null,
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "10.129.217.233",
-                "address": "蔡家巷小区ONU-3",
-                "county": "碑林区",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "硬件版",
-                "location": "未知",
-                "city_man": "西安市",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "blink",
-                "city": null,
-                "bandwidth": "0.0",
-                "id": "27",
-                "online_time": "2016-12-22 14:19:40",
-                "testgroup_name": "默认任务",
-                "name": "78:A3:51:1E:F2:D4",
-                "sysuuid": "78:A3:51:1E:F2:D4",
-                "brasname": "XA-BL-BAS-4.MAN.ME60",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": null,
-                "run_interval": "60",
-                "useruid": "QYT88B",
-                "isp_man": null,
-                "vpnip": null,
-                "isp": null,
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "10.128.166.26",
-                "address": "西安市碑林区太乙路街道办乐居场正街乐居场棚改安置A4标段6号楼6层",
-                "county": "碑林区",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "硬件版",
-                "location": "未知",
-                "city_man": "",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "blink",
-                "city": null,
-                "bandwidth": "0.0",
-                "id": "26",
-                "online_time": "2016-12-22 14:13:55",
-                "testgroup_name": "默认任务",
-                "name": "BC:AE:C5:C4:C4:2D",
-                "sysuuid": "BC:AE:C5:C4:C4:2D",
-                "brasname": "",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": "",
-                "run_interval": "60",
-                "useruid": "NH7GHH",
-                "isp_man": "",
-                "vpnip": null,
-                "isp": null,
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "123.14.31.236",
-                "address": null,
-                "county": "",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "PC桌面版",
-                "location": "未知",
-                "city_man": "",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "PC桌面版",
-                "city": "内蒙古自治区包头市",
-                "bandwidth": "0.0",
-                "id": "24",
-                "online_time": "2017-01-09 09:30:55",
-                "testgroup_name": "默认任务",
-                "name": "XTXD5P",
-                "sysuuid": "E6-02-9B-42-0E-F5",
-                "brasname": "",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": "",
-                "run_interval": "60",
-                "useruid": "XTXD5P",
-                "isp_man": "",
-                "vpnip": null,
-                "isp": "电信",
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "1.180.212.141",
-                "address": null,
-                "county": "",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "PC桌面版",
-                "location": "未知",
-                "city_man": "",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "PC桌面版",
-                "city": "内蒙古自治区包头市",
-                "bandwidth": "0.0",
-                "id": "23",
-                "online_time": "2017-04-07 15:32:57",
-                "testgroup_name": "默认任务",
-                "name": "2HPSW1",
-                "sysuuid": "50-7B-9D-B0-B7-30",
-                "brasname": "",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": "",
-                "run_interval": "60",
-                "useruid": "2HPSW1",
-                "isp_man": "",
-                "vpnip": null,
-                "isp": "电信",
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "1.180.212.190",
-                "address": null,
-                "county": "",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "PC桌面版",
-                "location": "未知",
-                "city_man": "",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "PC桌面版",
-                "city": "广东省广州市",
-                "bandwidth": "0.0",
-                "id": "22",
-                "online_time": "2016-12-14 10:28:15",
-                "testgroup_name": "默认任务",
-                "name": "S4Z8N1",
-                "sysuuid": "00-15-00-BA-AA-59",
-                "brasname": "",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": "",
-                "run_interval": "60",
-                "useruid": "S4Z8N1",
-                "isp_man": "",
-                "vpnip": null,
-                "isp": "电信",
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "119.131.76.210",
-                "address": null,
-                "county": "",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "PC桌面版",
-                "location": "未知",
-                "city_man": "",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "PC桌面版",
-                "city": "广东省广州市",
-                "bandwidth": "0.0",
-                "id": "21",
-                "online_time": "2016-12-13 09:01:23",
-                "testgroup_name": "默认任务",
-                "name": "EAXTF4",
-                "sysuuid": "A0-88-69-6B-0C-0F",
-                "brasname": "",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": "",
-                "run_interval": "60",
-                "useruid": "EAXTF4",
-                "isp_man": "",
-                "vpnip": null,
-                "isp": "电信",
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "113.111.65.138",
-                "address": null,
-                "county": "",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "PC桌面版",
-                "location": "未知",
-                "city_man": "",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "PC桌面版",
-                "city": null,
-                "bandwidth": "0.0",
-                "id": "20",
-                "online_time": "2016-12-12 16:16:23",
-                "testgroup_name": "默认任务",
-                "name": "6YNCPM",
-                "sysuuid": "08-00-27-DE-E2-BD",
-                "brasname": "",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": "",
-                "run_interval": "60",
-                "useruid": "6YNCPM",
-                "isp_man": "",
-                "vpnip": null,
-                "isp": null,
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "183.232.175.3",
-                "address": null,
-                "county": "",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "PC桌面版",
-                "location": "未知",
-                "city_man": "",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "PC桌面版",
-                "city": "广东省广州市",
-                "bandwidth": "0.0",
-                "id": "19",
-                "online_time": "2016-12-23 09:07:01",
-                "testgroup_name": "默认任务",
-                "name": "NNP2QP",
-                "sysuuid": "70-77-81-16-B2-9F",
-                "brasname": "",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": "",
-                "run_interval": "60",
-                "useruid": "NNP2QP",
-                "isp_man": "",
-                "vpnip": null,
-                "isp": "电信",
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "113.111.65.84",
-                "address": null,
-                "county": "",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "PC桌面版",
-                "location": "未知",
-                "city_man": "",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "PC桌面版",
-                "city": "广东省广州市",
-                "bandwidth": "0.0",
-                "id": "18",
-                "online_time": "2016-12-29 11:03:34",
-                "testgroup_name": "默认任务",
-                "name": "UX6SUX",
-                "sysuuid": "4C-BB-58-35-78-DD",
-                "brasname": "",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": "",
-                "run_interval": "60",
-                "useruid": "UX6SUX",
-                "isp_man": "",
-                "vpnip": null,
-                "isp": "电信",
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "121.33.175.124",
-                "address": null,
-                "county": "",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "PC桌面版",
-                "location": "未知",
-                "city_man": "",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "PC桌面版",
-                "city": "广东省广州市",
-                "bandwidth": "0.0",
-                "id": "17",
-                "online_time": "2017-01-09 15:21:54",
-                "testgroup_name": "默认任务",
-                "name": "8ZX58Y",
-                "sysuuid": "00-0C-29-74-99-5E",
-                "brasname": "",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": "",
-                "run_interval": "60",
-                "useruid": "8ZX58Y",
-                "isp_man": "",
-                "vpnip": null,
-                "isp": "电信",
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "113.111.65.166",
-                "address": null,
-                "county": "",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "硬件版",
-                "location": "未知",
-                "city_man": "",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "blink",
-                "city": null,
-                "bandwidth": "0.0",
-                "id": "16",
-                "online_time": "2016-12-07 07:50:28",
-                "testgroup_name": "默认任务",
-                "name": "78:A3:51:18:82:74",
-                "sysuuid": "78:A3:51:18:82:74",
-                "brasname": "",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": "",
-                "run_interval": "60",
-                "useruid": "Q3F1UD",
-                "isp_man": "",
-                "vpnip": null,
-                "isp": null,
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "120.197.83.180",
-                "address": null,
-                "county": "",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "硬件版",
-                "location": "未知",
-                "city_man": "西安市",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "blink",
-                "city": null,
-                "bandwidth": "0.0",
-                "id": "15",
-                "online_time": "2016-12-04 22:23:25",
-                "testgroup_name": "默认任务",
-                "name": "F4:8E:38:C5:A0:2C",
-                "sysuuid": "F4:8E:38:C5:A0:2C",
-                "brasname": null,
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": null,
-                "run_interval": "60",
-                "useruid": "5DHG5N",
-                "isp_man": null,
-                "vpnip": null,
-                "isp": null,
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "124.47.32.116",
-                "address": "北大街光辉巷-骨干探针",
-                "county": "新城区",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "硬件版",
-                "location": "未知",
-                "city_man": "西安市",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "blink",
-                "city": null,
-                "bandwidth": "0.0",
-                "id": "13",
-                "online_time": "2016-12-04 11:23:52",
-                "testgroup_name": "默认任务",
-                "name": "78:A3:51:1F:01:64",
-                "sysuuid": "78:A3:51:1F:01:64",
-                "brasname": "XA-BL-BAS-1.MAN.ME60",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": null,
-                "run_interval": "60",
-                "useruid": "QAZZRC",
-                "isp_man": null,
-                "vpnip": null,
-                "isp": null,
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "10.26.1.102",
-                "address": "太乙路乐居场正街乐居场棚A4标段6号楼",
-                "county": "碑林区",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "硬件版",
-                "location": "未知",
-                "city_man": "西安市",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "blink",
-                "city": null,
-                "bandwidth": "0.0",
-                "id": "12",
-                "online_time": "2016-12-03 20:28:35",
-                "testgroup_name": "默认任务",
-                "name": "78:A3:51:1C:02:18",
-                "sysuuid": "78:A3:51:1C:02:18",
-                "brasname": "XA-BL-BAS-3.MAN.ME60",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": null,
-                "run_interval": "60",
-                "useruid": "XGVVAB",
-                "isp_man": null,
-                "vpnip": null,
-                "isp": null,
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "182.81.226.35",
-                "address": "东关南街街道办蔡家巷小区",
-                "county": "碑林区",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "硬件版",
-                "location": "未知",
-                "city_man": "西安市",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "blink",
-                "city": null,
-                "bandwidth": "0.0",
-                "id": "11",
-                "online_time": "2016-12-02 18:32:50",
-                "testgroup_name": "默认任务",
-                "name": "78:A3:51:21:FD:7C",
-                "sysuuid": "78:A3:51:21:FD:7C",
-                "brasname": "XA-BL-BAS-2.MAN.ME60",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": null,
-                "run_interval": "60",
-                "useruid": "DKPFRS",
-                "isp_man": null,
-                "vpnip": null,
-                "isp": null,
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "111.19.57.235",
-                "address": "太乙路乐居场正街乐居场棚A4标段3号楼",
-                "county": "碑林区",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "硬件版",
-                "location": "未知",
-                "city_man": "西安市",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "blink",
-                "city": null,
-                "bandwidth": "0.0",
-                "id": "10",
-                "online_time": "2016-12-02 12:20:31",
-                "testgroup_name": "默认任务",
-                "name": "78:A3:51:1E:E7:B0",
-                "sysuuid": "78:A3:51:1E:E7:B0",
-                "brasname": "XA-BL-BAS-1.MAN.ME60",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": null,
-                "run_interval": "60",
-                "useruid": "6DRS3J",
-                "isp_man": null,
-                "vpnip": null,
-                "isp": null,
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "182.80.220.172",
-                "address": "太乙路乐居场正街乐居场棚A4标段6号楼 ",
-                "county": "碑林区",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "硬件版",
-                "location": "未知",
-                "city_man": "",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "blink",
-                "city": null,
-                "bandwidth": "0.0",
-                "id": "9",
-                "online_time": "2016-12-02 11:43:53",
-                "testgroup_name": "默认任务",
-                "name": "78:A3:51:21:FB:68",
-                "sysuuid": "78:A3:51:21:FB:68",
-                "brasname": "",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": "",
-                "run_interval": "60",
-                "useruid": "8GDJ2C",
-                "isp_man": "",
-                "vpnip": null,
-                "isp": null,
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "113.111.65.243",
-                "address": null,
-                "county": "",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }, {
-                "oltip": null,
-                "brasip": null,
-                "accesslayer": null,
-                "model": "硬件版",
-                "location": "未知",
-                "city_man": "西安市",
-                "brasport": null,
-                "networktype": null,
-                "contact": null,
-                "accesstype": null,
-                "teststatus": "任务已启动",
-                "dayreport": "100",
-                "version": "blink",
-                "city": null,
-                "bandwidth": "0.0",
-                "id": "8",
-                "online_time": "2016-12-02 19:19:42",
-                "testgroup_name": "默认任务",
-                "name": "78:A3:51:22:00:98",
-                "sysuuid": "78:A3:51:22:00:98",
-                "brasname": "XA-BL-BAS-0.MAN.ME62",
-                "testgroup": "1",
-                "dnsip": null,
-                "phonenum": null,
-                "oltname": null,
-                "run_interval": "60",
-                "useruid": "VE4B5E",
-                "isp_man": null,
-                "vpnip": null,
-                "isp": null,
-                "onlinestatus": "在线",
-                "networkdevice": null,
-                "ip": "139.148.28.226",
-                "address": "兴庆路兴庆机房",
-                "county": "碑林区",
-                "oltport": null,
-                "device": null,
-                "uplink": null
-            }]
-        };
-
-        /*页面刚加载,模拟异步数据*/
-        /********************************************************/
-
-        vm.users = probe_data.rows;
-        console.log(vm.users);
-    }
-});
 
