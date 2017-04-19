@@ -102,11 +102,11 @@ public class TestagentController {
     @ResponseBody
     @RequestMapping("/save")
     @RequiresPermissions("testagent:save")
-    public R save(@RequestBody TestagentEntity[] testagent) {    /*介绍json数组对象*/
+    public R save(@RequestBody TestagentEntity testagent) {    /*介绍json数组对象*/
         /*testagentService.save(testagent);*/
-        System.out.println(testagent[0]);
-        System.out.println(testagent[0].getCity());
-        System.out.println(testagent[0].getCityMan());
+        System.out.println(testagent);
+        System.out.println(testagent.getCounty());
+        System.out.println(testagent.getCityMan());
         return R.ok();
     }
 
@@ -116,11 +116,11 @@ public class TestagentController {
     @ResponseBody
     @RequestMapping("/update")
     @RequiresPermissions("testagent:update")
-    public R update(@RequestBody TestagentEntity[] testagent) {
+    public R update(@RequestBody TestagentEntity testagent) {
         /*testagentService.update(testagent);*/
-        System.out.println(testagent[0]);
-        System.out.println(testagent[0].getCityMan());
-        System.out.println(testagent[0].getBandwidth());
+        System.out.println(testagent);
+        System.out.println(testagent.getCityMan());
+        System.out.println(testagent.getBandwidth());
         return R.ok();
     }
 
