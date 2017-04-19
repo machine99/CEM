@@ -214,7 +214,7 @@ var probeform_data = new Vue({
             }else if(typeof(testagentJson["testgroupName"])=="undefined"){
                 toastr.warning("请录入测试任务组!");
             }else {
-                var testagent = JSON.stringify([testagentJson]);  /*封装成json数组*/
+                var testagent = JSON.stringify(testagentJson);  /*封装成json数组*/
                 /*获取表单元素的值*/
                 console.log(testagent);
                 var mapstr;
@@ -408,7 +408,7 @@ var probetable = new Vue({
                     data: param,  //传入组装的参数
                     dataType: "json",
                     success: function (result) {
-                        console.log(result);
+                        /*console.log(result);*/
 
                             //封装返回数据
                             let returnData = {};
@@ -417,7 +417,6 @@ var probetable = new Vue({
                             returnData.recordsFiltered = result.page.totalCount;//后台不实现过滤功能，每次查询均视作全部结果
                             // returnData.data = result.page.list;//返回的数据列表
                             // 重新整理返回数据以匹配表格
-                            console.log(result.page.list);
                             let rows = [];
                             var i = param.start+1;
                             result.page.list.forEach(function (item) {
