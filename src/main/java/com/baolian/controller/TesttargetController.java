@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.stereotype.Controller;
 
-import com.baolian.entity.ResultHttptestEntity;
-import com.baolian.service.ResultHttptestService;
+import com.baolian.entity.TesttargetEntity;
+import com.baolian.service.TesttargetService;
 import com.baolian.utils.PageUtils;
 import com.baolian.utils.R;
 
@@ -24,14 +24,14 @@ import com.baolian.utils.R;
  * @date 2017-04-18 17:03:59
  */
 @Controller
-@RequestMapping("resulthttptest")
-public class ResultHttptestController {
+@RequestMapping("testtarget")
+public class TesttargetController {
 	@Autowired
-	private ResultHttptestService resultHttptestService;
+	private TesttargetService testtargetService;
 	
-	@RequestMapping("/resulthttptest.html")
+	@RequestMapping("/testtarget.html")
 	public String list(){
-		return "resulthttptest/resulthttptest.html";
+		return "testtarget/testtarget.html";
 	}
 	
 	/**
@@ -39,17 +39,17 @@ public class ResultHttptestController {
 	 */
 	@ResponseBody
 	@RequestMapping("/list")
-	@RequiresPermissions("resulthttptest:list")
+	@RequiresPermissions("testtarget:list")
 	public R list(Integer page, Integer limit){
 		Map<String, Object> map = new HashMap<>();
 		map.put("offset", (page - 1) * limit);
 		map.put("limit", limit);
 		
 		//查询列表数据
-		List<ResultHttptestEntity> resultHttptestList = resultHttptestService.queryList(map);
-		int total = resultHttptestService.queryTotal(map);
+		List<TesttargetEntity> testtargetList = testtargetService.queryList(map);
+		int total = testtargetService.queryTotal(map);
 		
-		PageUtils pageUtil = new PageUtils(resultHttptestList, total, limit, page);
+		PageUtils pageUtil = new PageUtils(testtargetList, total, limit, page);
 		
 		return R.ok().put("page", pageUtil);
 	}
@@ -60,11 +60,11 @@ public class ResultHttptestController {
 	 */
 	@ResponseBody
 	@RequestMapping("/info/{id}")
-	@RequiresPermissions("resulthttptest:info")
+	@RequiresPermissions("testtarget:info")
 	public R info(@PathVariable("id") Integer id){
-		ResultHttptestEntity resultHttptest = resultHttptestService.queryObject(id);
+		TesttargetEntity testtarget = testtargetService.queryObject(id);
 		
-		return R.ok().put("resultHttptest", resultHttptest);
+		return R.ok().put("testtarget", testtarget);
 	}
 	
 	/**
@@ -72,9 +72,9 @@ public class ResultHttptestController {
 	 */
 	@ResponseBody
 	@RequestMapping("/save")
-	@RequiresPermissions("resulthttptest:save")
-	public R save(@RequestBody ResultHttptestEntity resultHttptest){
-		resultHttptestService.save(resultHttptest);
+	@RequiresPermissions("testtarget:save")
+	public R save(@RequestBody TesttargetEntity testtarget){
+		testtargetService.save(testtarget);
 		
 		return R.ok();
 	}
@@ -84,9 +84,9 @@ public class ResultHttptestController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	@RequiresPermissions("resulthttptest:update")
-	public R update(@RequestBody ResultHttptestEntity resultHttptest){
-		resultHttptestService.update(resultHttptest);
+	@RequiresPermissions("testtarget:update")
+	public R update(@RequestBody TesttargetEntity testtarget){
+		testtargetService.update(testtarget);
 		
 		return R.ok();
 	}
@@ -96,9 +96,9 @@ public class ResultHttptestController {
 	 */
 	@ResponseBody
 	@RequestMapping("/delete")
-	@RequiresPermissions("resulthttptest:delete")
+	@RequiresPermissions("testtarget:delete")
 	public R delete(@RequestBody Integer[] ids){
-		resultHttptestService.deleteBatch(ids);
+		testtargetService.deleteBatch(ids);
 		
 		return R.ok();
 	}

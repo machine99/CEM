@@ -23,9 +23,10 @@ public class SysGeneratorServiceTest {
     //zip输出路径
     String zipPath = "E://baolian//code.zip";
     //表名
-    String[] tableNames = new String[]{"result_gametest", "result_httptest", "result_pingtest", "result_youkutest", "testagent"};
+    String[] tableNames = new String[]{"result_gametest", "result_httptest", "result_pingtest", "result_speedtest",
+            "result_youkutest", "target_group", "testagent", "testgroup", "testtarget"};
 
-    // @Test
+    @Test
     public void testGeneratorCode() throws IOException {
         byte[] data = sysGeneratorService.generatorCode(tableNames);
         File file = new File(zipPath);

@@ -12,7 +12,7 @@ import java.util.Date;
  * @email ${email}
  * @date 2017-04-18 17:03:59
  */
-public class ResultYoukutestEntity implements Serializable {
+public class ResultSpeedtestEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	//id
@@ -21,16 +21,20 @@ public class ResultYoukutestEntity implements Serializable {
 	private String guid;
 	//state
 	private Integer state;
-	//失败原因
+	//errorcode
 	private String errorcode;
 	//destid
 	private Integer destid;
-	//测试目标
+	//destname
 	private String destname;
 	//测试时间
 	private Date testtime;
-	//测试花销时长
+	//elapsetime
 	private Double elapsetime;
+	//alldelay
+	private Double alldelay;
+	//screendelay
+	private Double screendelay;
 	//测试机
 	private String testagent;
 	//qoe
@@ -41,16 +45,18 @@ public class ResultYoukutestEntity implements Serializable {
 	private Double bandwidth;
 	//下载速率
 	private Double speed;
-	//停顿次数
-	private Double pausecount;
-	//停顿时长
-	private Double pausetime;
-	//缓冲区大小
-	private Double buffersize;
-	//缓冲区占满时长
-	private Double buffertime;
-	//下载总流量
-	private Double speedsize;
+	//dnsdelay
+	private Double dnsdelay;
+	//connectdelay
+	private Double connectdelay;
+	//responsedelay
+	private Double responsedelay;
+	//downloaddelay
+	private Double downloaddelay;
+	//httpsize
+	private Double httpsize;
+	//httpstatus
+	private Integer httpstatus;
 	//tcpcount
 	private Integer tcpcount;
 	//tcphead
@@ -135,13 +141,13 @@ public class ResultYoukutestEntity implements Serializable {
 		return state;
 	}
 	/**
-	 * 设置：失败原因
+	 * 设置：errorcode
 	 */
 	public void setErrorcode(String errorcode) {
 		this.errorcode = errorcode;
 	}
 	/**
-	 * 获取：失败原因
+	 * 获取：errorcode
 	 */
 	public String getErrorcode() {
 		return errorcode;
@@ -159,13 +165,13 @@ public class ResultYoukutestEntity implements Serializable {
 		return destid;
 	}
 	/**
-	 * 设置：测试目标
+	 * 设置：destname
 	 */
 	public void setDestname(String destname) {
 		this.destname = destname;
 	}
 	/**
-	 * 获取：测试目标
+	 * 获取：destname
 	 */
 	public String getDestname() {
 		return destname;
@@ -183,16 +189,40 @@ public class ResultYoukutestEntity implements Serializable {
 		return testtime;
 	}
 	/**
-	 * 设置：测试花销时长
+	 * 设置：elapsetime
 	 */
 	public void setElapsetime(Double elapsetime) {
 		this.elapsetime = elapsetime;
 	}
 	/**
-	 * 获取：测试花销时长
+	 * 获取：elapsetime
 	 */
 	public Double getElapsetime() {
 		return elapsetime;
+	}
+	/**
+	 * 设置：alldelay
+	 */
+	public void setAlldelay(Double alldelay) {
+		this.alldelay = alldelay;
+	}
+	/**
+	 * 获取：alldelay
+	 */
+	public Double getAlldelay() {
+		return alldelay;
+	}
+	/**
+	 * 设置：screendelay
+	 */
+	public void setScreendelay(Double screendelay) {
+		this.screendelay = screendelay;
+	}
+	/**
+	 * 获取：screendelay
+	 */
+	public Double getScreendelay() {
+		return screendelay;
 	}
 	/**
 	 * 设置：测试机
@@ -255,64 +285,76 @@ public class ResultYoukutestEntity implements Serializable {
 		return speed;
 	}
 	/**
-	 * 设置：停顿次数
+	 * 设置：dnsdelay
 	 */
-	public void setPausecount(Double pausecount) {
-		this.pausecount = pausecount;
+	public void setDnsdelay(Double dnsdelay) {
+		this.dnsdelay = dnsdelay;
 	}
 	/**
-	 * 获取：停顿次数
+	 * 获取：dnsdelay
 	 */
-	public Double getPausecount() {
-		return pausecount;
+	public Double getDnsdelay() {
+		return dnsdelay;
 	}
 	/**
-	 * 设置：停顿时长
+	 * 设置：connectdelay
 	 */
-	public void setPausetime(Double pausetime) {
-		this.pausetime = pausetime;
+	public void setConnectdelay(Double connectdelay) {
+		this.connectdelay = connectdelay;
 	}
 	/**
-	 * 获取：停顿时长
+	 * 获取：connectdelay
 	 */
-	public Double getPausetime() {
-		return pausetime;
+	public Double getConnectdelay() {
+		return connectdelay;
 	}
 	/**
-	 * 设置：缓冲区大小
+	 * 设置：responsedelay
 	 */
-	public void setBuffersize(Double buffersize) {
-		this.buffersize = buffersize;
+	public void setResponsedelay(Double responsedelay) {
+		this.responsedelay = responsedelay;
 	}
 	/**
-	 * 获取：缓冲区大小
+	 * 获取：responsedelay
 	 */
-	public Double getBuffersize() {
-		return buffersize;
+	public Double getResponsedelay() {
+		return responsedelay;
 	}
 	/**
-	 * 设置：缓冲区占满时长
+	 * 设置：downloaddelay
 	 */
-	public void setBuffertime(Double buffertime) {
-		this.buffertime = buffertime;
+	public void setDownloaddelay(Double downloaddelay) {
+		this.downloaddelay = downloaddelay;
 	}
 	/**
-	 * 获取：缓冲区占满时长
+	 * 获取：downloaddelay
 	 */
-	public Double getBuffertime() {
-		return buffertime;
+	public Double getDownloaddelay() {
+		return downloaddelay;
 	}
 	/**
-	 * 设置：下载总流量
+	 * 设置：httpsize
 	 */
-	public void setSpeedsize(Double speedsize) {
-		this.speedsize = speedsize;
+	public void setHttpsize(Double httpsize) {
+		this.httpsize = httpsize;
 	}
 	/**
-	 * 获取：下载总流量
+	 * 获取：httpsize
 	 */
-	public Double getSpeedsize() {
-		return speedsize;
+	public Double getHttpsize() {
+		return httpsize;
+	}
+	/**
+	 * 设置：httpstatus
+	 */
+	public void setHttpstatus(Integer httpstatus) {
+		this.httpstatus = httpstatus;
+	}
+	/**
+	 * 获取：httpstatus
+	 */
+	public Integer getHttpstatus() {
+		return httpstatus;
 	}
 	/**
 	 * 设置：tcpcount

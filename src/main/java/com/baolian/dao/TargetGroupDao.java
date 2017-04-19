@@ -1,6 +1,6 @@
 package com.baolian.dao;
 
-import com.baolian.entity.TestagentEntity;
+import com.baolian.entity.TargetGroupEntity;
 
 /**
  * 
@@ -9,6 +9,6 @@ import com.baolian.entity.TestagentEntity;
  * @email ${email}
  * @date 2017-04-18 17:03:59
  */
-public interface TestagentDao extends BaseDao<TestagentEntity> {
+public interface TargetGroupDao extends BaseDao<TargetGroupEntity> {
 	
 }
