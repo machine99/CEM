@@ -29,8 +29,6 @@ public interface BaseDao<T> {
 	T queryObject(Object id);
 	
 	List<T> queryList(Map<String, Object> map);
-
-	/*List<T> queryCountyPingList(Map<String, Object> map);*/
 	
 	List<T> queryList(Object id);
 	

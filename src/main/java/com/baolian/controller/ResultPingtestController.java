@@ -1,9 +1,13 @@
 package com.baolian.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.baolian.entity.map.CountyPingtestResult;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +36,30 @@ public class ResultPingtestController {
 	@RequestMapping("/resultpingtest.html")
 	public String list(){
 		return "resultpingtest/resultpingtest.html";
+	}
+
+	/**
+	 * 列表
+	 */
+	@ResponseBody
+	@RequestMapping("/countypinglist")
+	@RequiresPermissions("resultpingtest:countypinglist")
+	public R list(String starttime, String endtime, String area){
+		Map<String, Object> map = new HashMap<>();
+		map.put("starttime", starttime);
+		map.put("endtime", endtime);
+		map.put("county", area);
+
+		System.out.println("starttime:"+starttime);
+		System.out.println("endtime:"+endtime);
+		System.out.println("county:"+area);
+
+
+		//查询列表数据
+		List<CountyPingtestResult> resultCountyPingtestList = resultPingtestService.queryCountyPingList(map);
+
+
+		return R.ok().put("resultCountyPingtestList", resultCountyPingtestList);
 	}
 	
 	/**

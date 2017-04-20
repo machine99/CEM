@@ -14,6 +14,7 @@ import com.baolian.service.ResultPingtestService;
 
 @Service("resultPingtestService")
 public class ResultPingtestServiceImpl implements ResultPingtestService {
+
     @Autowired
     private ResultPingtestDao resultPingtestDao;
 
@@ -56,5 +57,6 @@ public class ResultPingtestServiceImpl implements ResultPingtestService {
     public void deleteBatch(Integer[] ids) {
         resultPingtestDao.deleteBatch(ids);
     }
+
 
 }

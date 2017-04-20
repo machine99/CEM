@@ -106,8 +106,8 @@ $('input[name="daterange"]').daterangepicker(
     },
     function (start, end, label) {          /*日期选择触发事件*/
         /*console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));*/
-        starttime = start.format('YYYY/MM/DD');
-        endtime = end.format('YYYY/MM/DD');
+        starttime = start.format('YYYY-MM-DD HH:mm:ss');
+        endtime = end.format('YYYY-MM-DD HH:mm:ss');
 
     });
 /*$('#datepicker').datetimepicker({
@@ -150,7 +150,7 @@ var new_search = new Vue({        /*监听查询事件*/
                 /!*改变标志位*!/
                 get_data = {
                     /!*模拟异步数据*!/
-                    guid: get_area,
+                    county: get_area,
                     rttAvg: 18,
                     rttMax: 22,
                     rttMin: 17,
@@ -163,7 +163,7 @@ var new_search = new Vue({        /*监听查询事件*/
                 flag = 0;
                 /!*********************************************!/
                 var area1 = {
-                    guid: "新城区",
+                    county: "新城区",
                     rttAvg: 18.666666,
                     rttMax: 21.2333,
                     rttMin: 17.4,
@@ -171,7 +171,7 @@ var new_search = new Vue({        /*监听查询事件*/
                     qoe: 98.6
                 };
                 var area2 = {
-                    guid: "碑林区",
+                    county: "碑林区",
                     rttAvg: 19.888888,
                     rttMax: 23.322,
                     rttMin: 18.7,
@@ -187,6 +187,23 @@ var new_search = new Vue({        /*监听查询事件*/
         }
     }
 });
+// 对Date的扩展，将 Date 转化为指定格式的String
+Date.prototype.Format = function (fmt) { //author: meizz
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+
 var Reset = new Vue({               /*重置,默认时间区间为最近4天*/
     el: '#reset',
     methods: {
@@ -194,7 +211,7 @@ var Reset = new Vue({               /*重置,默认时间区间为最近4天*/
             /****************************/
             /*重置,回到页面加载时的数据*/
             /*var area1 = {
-                guid: "新城区",
+                county: "新城区",
                 rttAvg: 18,
                 rttMax: 21,
                 rttMin: 17,
@@ -202,7 +219,7 @@ var Reset = new Vue({               /*重置,默认时间区间为最近4天*/
                 qoe: 98
             };
             var area2 = {
-                guid: "碑林区",
+                county: "碑林区",
                 rttAvg: 19,
                 rttMax: 23,
                 rttMin: 18,
@@ -212,8 +229,8 @@ var Reset = new Vue({               /*重置,默认时间区间为最近4天*/
             /**********************************/
             var postdata = {};
             postdata.area = '';
-            postdata.starttime = new Date(new Date() - 1000 * 60*60*24*4).toLocaleDateString();    /*当前日期*/
-            postdata.endtime = (new Date()).toLocaleDateString();  /*前4天日期*/
+            postdata.starttime = new Date(new Date() - 1000 * 60*60*24*4).Format("yyyy-MM-dd")+" 00:00:00"; /*前4天日期*/
+            postdata.endtime = (new Date()).Format("yyyy-MM-dd")+" 23:59:59";  /*当前日期*/
             console.log(postdata);
             $.ajax({                           /*后台取得数据,赋值给观察者*/
                 type: "POST",
@@ -393,7 +410,7 @@ Vue.component('data-table', {
             button_change.option_qoe.series_qoe[0].data = [];
 
             for (var i = 0; i <= times; i++) {                          /*观察user是否变化,重绘HighCharts图*/
-                options.xAxis.categories[i] = val[i].guid;
+                options.xAxis.categories[i] = val[i].county;
                 if (staus == 0) {                                       /*设置当前状态option*/
                     options.series[0].data[i] = val[i].rttAvg;
                     /*动态设置option*/
@@ -423,7 +440,7 @@ Vue.component('data-table', {
                 // skip this loop...
                 let row = [];
 
-                row.push(item.guid);
+                row.push(item.county);
                 row.push(item.rttAvg);
                 row.push(item.rttMax);
                 row.push(item.rttMin);
@@ -485,7 +502,7 @@ var new_data = new Vue({
        /* let vm = this;
         /!*********************************************!/
         var area1 = {
-            guid: "新城区",
+            county: "新城区",
             rttAvg: 18,
             rttMax: 21,
             rttMin: 17,
@@ -493,7 +510,7 @@ var new_data = new Vue({
             qoe: 98
         };
         var area2 = {
-            guid: "碑林区",
+            county: "碑林区",
             rttAvg: 19,
             rttMax: 23,
             rttMin: 18,

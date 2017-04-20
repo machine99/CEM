@@ -408,7 +408,7 @@ var probetable = new Vue({
                     data: param,  //传入组装的参数
                     dataType: "json",
                     success: function (result) {
-                        /*console.log(result);*/
+                        console.log(result);
 
                             //封装返回数据
                             let returnData = {};
