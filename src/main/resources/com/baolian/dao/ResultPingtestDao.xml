@@ -3,6 +3,21 @@
 
 <mapper namespace="com.baolian.dao.ResultPingtestDao">
 
+    <!--区域Ping感知返回的联表类型-->
+    <resultMap id="countyPingtestResult" type="com.baolian.entity.map.CountyPingtestResult">
+        <id property="id" column="id"/>
+        <result property="rttAvg" column="rtt_avg"/>
+        <result property="rttMax" column="rtt_max"/>
+        <result property="rttMin" column="rtt_min"/>
+        <result property="loss" column="loss"/>
+        <result property="qoe" column="qoe"/>
+        <result property="county" column="county"/>
+        <!--<association property="testagent" javaType="com.baolian.entity.TestagentEntity">-->
+        <!--<id property="id" column="testagentid"/>-->
+        <!--<result property="county" column="area"/>-->
+        <!--</association>-->
+    </resultMap>
+
     <select id="queryObject" resultType="com.baolian.entity.ResultPingtestEntity">
         SELECT *
         FROM result_pingtest
@@ -17,17 +32,25 @@
     </select>
 
     <!--通过时间范围以及区域查询区域Ping感知数据-->
-    <select id="queryAreaPingList" resultType="com.baolian.entity.ResultPingtestEntity">
-        SELECT *
+    <select id="queryCountyPingList" resultMap="countyPingtestResult">
+        SELECT
+        result_pingtest.id AS id,
+        result_pingtest.rtt_avg AS rtt_avg,
+        result_pingtest.rtt_max AS rtt_max,
+        result_pingtest.rtt_min AS rtt_min,
+        result_pingtest.loss AS loss,
+        result_pingtest.qoe AS qoe,
+        testagent.id AS testagentid,
+        testagent.county AS county
         FROM result_pingtest
         INNER JOIN testagent
-        ON result_pingtest.id = testagent.id
+        ON result_pingtest.testagentid = testagent.id
         WHERE result_pingtest.testtime BETWEEN #{starttime} AND #{endtime}
-        <if test="area != null">
-            AND testagent.county = #{area}
+        <if test="area != null and area != ''">
+            AND testagent.county = #{county}
         </if>
         <if test="area == null">
-            AND testagent.county IN (`新城区`, `碑林区`)
+            AND testagent.county IN ('新城区', '碑林区')
         </if>
     </select>
 

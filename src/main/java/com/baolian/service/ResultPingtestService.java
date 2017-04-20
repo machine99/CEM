@@ -1,6 +1,7 @@
 package com.baolian.service;
 
 import com.baolian.entity.ResultPingtestEntity;
+import com.baolian.entity.map.CountyPingtestResult;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,8 @@ public interface ResultPingtestService {
 	ResultPingtestEntity queryObject(Integer id);
 	
 	List<ResultPingtestEntity> queryList(Map<String, Object> map);
+
+	List<CountyPingtestResult> queryCountyPingList(Map<String, Object> map);
 	
 	int queryTotal(Map<String, Object> map);
 	
