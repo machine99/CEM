@@ -48,6 +48,34 @@
     <select id="queryTotal" resultType="int">
         SELECT count(*)
         FROM testagent
+        WHERE id IS NOT NULL
+        <if test="testgroup_name != null and testgroup_name != ''">
+            AND testgroup_name = #{testgroup_name}
+        </if>
+        <if test="ip != null and ip != ''">
+            AND ip = #{ip}
+        </if>
+        <if test="name != null and name != ''">
+            AND name = #{name}
+        </if>
+        <if test="county != null and county != ''">
+            AND county = #{county}
+        </if>
+        <if test="sysuuid != null and sysuuid != ''">
+            AND sysuuid = #{sysuuid}
+        </if>
+        <if test="model != null and model != ''">
+            AND model = #{model}
+        </if>
+        <if test="brasname != null and brasname != ''">
+            AND brasname = #{brasname}
+        </if>
+        <if test="city_man != null and city_man != ''">
+            AND city_man = #{city_man}
+        </if>
+        <if test="useruid != null and useruid != ''">
+            AND useruid = #{useruid}
+        </if>
     </select>
 
     <insert id="save" parameterType="com.baolian.entity.TestagentEntity" useGeneratedKeys="true" keyProperty="id">

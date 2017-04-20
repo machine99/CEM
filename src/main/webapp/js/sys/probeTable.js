@@ -408,7 +408,7 @@ var probetable = new Vue({
                     data: param,  //传入组装的参数
                     dataType: "json",
                     success: function (result) {
-                        /*console.log(result);*/
+                        console.log(result);
 
                             //封装返回数据
                             let returnData = {};
@@ -427,16 +427,16 @@ var probetable = new Vue({
                                 row.push(item.sysuuid);
                                 row.push(item.ip);
                                 row.push(item.bandwidth);
-                                row.push(item.city_man);
+                                row.push(item.cityMan);
                                 row.push(item.county);
                                 row.push(item.useruid);
                                 row.push(item.name);
-                                row.push(item.testgroup_name);
+                                row.push(item.testgroupName);
                                 row.push(item.onlinestatus);
-                                row.push(item.online_time);
+                                row.push(item.onlineTime);
                                 row.push(item.model);
                                 row.push(item.version);
-                                row.push(item.run_interval);
+                                row.push(item.runInterval);
                                 row.push(item.address);
                                 row.push(item.brasname);
                                 row.push(item.brasip);
