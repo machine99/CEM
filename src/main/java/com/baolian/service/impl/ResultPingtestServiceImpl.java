@@ -26,7 +26,12 @@ public class ResultPingtestServiceImpl implements ResultPingtestService {
 	public List<ResultPingtestEntity> queryList(Map<String, Object> map){
 		return resultPingtestDao.queryList(map);
 	}
-	
+
+	@Override
+	public List<ResultPingtestEntity> queryAreaPingList(Map<String, Object> map){
+		return resultPingtestDao.queryAreaPingList(map);
+	}
+
 	@Override
 	public int queryTotal(Map<String, Object> map){
 		return resultPingtestDao.queryTotal(map);

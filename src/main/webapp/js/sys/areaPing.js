@@ -106,8 +106,8 @@ $('input[name="daterange"]').daterangepicker(
     },
     function (start, end, label) {          /*日期选择触发事件*/
         /*console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));*/
-        starttime = start.format('YYYY/MM/DD');
-        endtime = end.format('YYYY/MM/DD');
+        starttime = start.format('YYYY-MM-DD HH:mm:ss');
+        endtime = end.format('YYYY-MM-DD HH:mm:ss');
 
     });
 /*$('#datepicker').datetimepicker({
@@ -187,6 +187,23 @@ var new_search = new Vue({        /*监听查询事件*/
         }
     }
 });
+// 对Date的扩展，将 Date 转化为指定格式的String
+Date.prototype.Format = function (fmt) { //author: meizz
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+
 var Reset = new Vue({               /*重置,默认时间区间为最近4天*/
     el: '#reset',
     methods: {
@@ -212,8 +229,8 @@ var Reset = new Vue({               /*重置,默认时间区间为最近4天*/
             /**********************************/
             var postdata = {};
             postdata.area = '';
-            postdata.starttime = new Date(new Date() - 1000 * 60*60*24*4).toLocaleDateString();    /*当前日期*/
-            postdata.endtime = (new Date()).toLocaleDateString();  /*前4天日期*/
+            postdata.starttime = new Date(new Date() - 1000 * 60*60*24*4).Format("yyyy-MM-dd")+" 00:00:00"; /*前4天日期*/
+            postdata.endtime = (new Date()).Format("yyyy-MM-dd")+" 23:59:59";  /*当前日期*/
             console.log(postdata);
             $.ajax({                           /*后台取得数据,赋值给观察者*/
                 type: "POST",

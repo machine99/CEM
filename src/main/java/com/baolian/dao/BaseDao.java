@@ -30,7 +30,7 @@ public interface BaseDao<T> {
 	
 	List<T> queryList(Map<String, Object> map);
 
-	/*List<T> queryAreaPingList(Map<String, Object> map);*/
+	List<T> queryAreaPingList(Map<String, Object> map);
 	
 	List<T> queryList(Object id);
 	
