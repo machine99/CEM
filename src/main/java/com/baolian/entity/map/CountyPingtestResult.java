@@ -22,8 +22,24 @@ public class CountyPingtestResult implements Serializable {
     //qoe
     private Double qoe;
 
+
+
     //区县
     private String county;
+
+    public CountyPingtestResult(){
+
+    }
+
+    public CountyPingtestResult(String county, Integer id, Double rttAvg, Double rttMax, Double rttMin, Double loss, Double qoe){
+        this.county = county;
+        this.id = id;
+        this.rttAvg = rttAvg;
+        this.rttMax = rttMax;
+        this.rttMin = rttMin;
+        this.loss = loss;
+        this.qoe = qoe;
+    }
 
     public String getCounty() {
         return county;
