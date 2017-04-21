@@ -40,16 +40,15 @@
         result_pingtest.rtt_min AS rtt_min,
         result_pingtest.loss AS loss,
         result_pingtest.qoe AS qoe,
-        testagent.id AS testagentid,
         testagent.county AS county
         FROM result_pingtest
         INNER JOIN testagent
         ON result_pingtest.testagentid = testagent.id
         WHERE result_pingtest.testtime BETWEEN #{starttime} AND #{endtime}
-        <if test="area != null and area != ''">
+        <if test="county != null and county != ''">
             AND testagent.county = #{county}
         </if>
-        <if test="area == null">
+        <if test="county == null">
             AND testagent.county IN ('新城区', '碑林区')
         </if>
     </select>

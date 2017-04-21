@@ -1,5 +1,7 @@
 package com.baolian.controller;
 
+import com.baolian.entity.TestagentEntity;
+import com.baolian.service.TestagentService;
 import com.baolian.utils.FileUtils;
 import com.baolian.utils.R;
 import com.baolian.utils.RRException;
@@ -7,6 +9,7 @@ import com.baolian.utils.excel.ExcelUtils;
 import com.baolian.utils.excel.Student;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +26,9 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -35,13 +41,15 @@ import java.util.Collection;
 @RestController
 @RequestMapping("sys/upload")
 public class SysUploadController extends AbstractController {
+    @Autowired
+    private TestagentService testagentService;
 
     /**
      * 上传文件
      */
     @RequestMapping("/upload")
     @RequiresPermissions("sys:upload:all")
-    public R upload(@RequestParam("file") MultipartFile file) throws Exception {
+    public R upload(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             throw new RRException("上传文件不能为空");
         }
@@ -49,9 +57,16 @@ public class SysUploadController extends AbstractController {
             throw new RRException("上传文件不能大于50MB");
         }
         String fileType = FileUtils.getFileExtension(file.getOriginalFilename());
-        InputStream is = file.getInputStream();
-        // 上传文件处理
-        Collection list = ExcelUtils.readExcel(is, fileType, Student.class);
+        InputStream is = null;
+        Collection list = null;
+        try {
+            is = file.getInputStream();
+            // 上传文件处理
+            list = ExcelUtils.readExcel(is, fileType, Student.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         if (list != null) {
             for (Object o : list) {
                 System.out.println(((Student) o).toString());
@@ -65,20 +80,23 @@ public class SysUploadController extends AbstractController {
 
     @RequestMapping("/download")
     @RequiresPermissions("sys:upload:all")
-    public void download(HttpServletResponse response) {
+    public void download(HttpServletResponse response) throws RRException {
 
+        System.out.println("download!!!!");
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<TestagentEntity> list = testagentService.queryList(map);
         InputStream is = null;
         ServletOutputStream out = null;
         try {
-            is = new FileInputStream("F://student_info.xls");
-            Collection<Student> list = ExcelUtils.readExcel(is, "xls", Student.class);
+            // is = new FileInputStream("F://student_info.xls");
+            // Collection<Student> list = ExcelUtils.readExcel(is, "xls", Student.class);
             // for (Student student : list) {
             //     System.out.println(student);
             // }
-            XSSFWorkbook workbook = ExcelUtils.<Student>exportExcel("sheet1", Student.class, list);
+            XSSFWorkbook workbook = ExcelUtils.<TestagentEntity>exportExcel("sheet1", TestagentEntity.class, list);
             response.setContentType("application/octet-stream");
             // response.setCharacterEncoding("UTF-8");
-            String fileName = "test.xlsx";
+            String fileName = "testagent_all.xlsx";
             response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
             // File outFile = new File("F://out.xlsx");
             out = response.getOutputStream();
@@ -87,6 +105,7 @@ public class SysUploadController extends AbstractController {
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
+            throw new RRException("下载文件出错");
         } finally {
             if (is != null) {
                 try {

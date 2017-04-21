@@ -1,5 +1,6 @@
 package com.baolian.utils.excel;
 
+import com.baolian.utils.excel.annotation.ExcelIgnore;
 import com.baolian.utils.excel.factory.WorkbookFactory;
 import com.baolian.utils.excel.factory.impl.HSSFWorkbookFactory;
 import com.baolian.utils.excel.factory.impl.XSSFWorkbookFactory;
@@ -262,8 +263,9 @@ public class ExcelUtils {
             }
             // 遍历整个filed
             for (Field field : fields) {
-                // 如果field不为final
-                if (!isFieldFinal(field)) {
+                ExcelIgnore ignore = field.getAnnotation(ExcelIgnore.class);
+                // 如果field不为final并且不含有ExcelIgnore注解
+                if (!isFieldFinal(field) && ignore == null) {
                     // 添加到标题
                     // TODO:此处需要添加一个field name和export name之间的转换
                     exportFieldTitle.add(field.getName());
