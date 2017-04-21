@@ -34,12 +34,12 @@
     <!--通过时间范围以及区域查询区域Ping感知数据-->
     <select id="queryCountyPingList" resultMap="countyPingtestResult">
         SELECT
-        result_pingtest.id AS id,
-        result_pingtest.rtt_avg AS rtt_avg,
-        result_pingtest.rtt_max AS rtt_max,
-        result_pingtest.rtt_min AS rtt_min,
-        result_pingtest.loss AS loss,
-        result_pingtest.qoe AS qoe,
+        MAX(result_pingtest.id) AS id,
+        AVG(result_pingtest.rtt_avg) AS rtt_avg,
+        MAX(result_pingtest.rtt_max) AS rtt_max,
+        MIN(result_pingtest.rtt_min) AS rtt_min,
+        AVG(result_pingtest.loss) AS loss,
+        AVG(result_pingtest.qoe) AS qoe,
         testagent.county AS county
         FROM result_pingtest
         INNER JOIN testagent
@@ -48,9 +48,11 @@
         <if test="county != null and county != ''">
             AND testagent.county = #{county}
         </if>
-        <if test="county == null">
+        <if test="county == null or county == ''">
             AND testagent.county IN ('新城区', '碑林区')
+            GROUP BY testagent.county;
         </if>
+
     </select>
 
     <select id="queryTotal" resultType="int">
