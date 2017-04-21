@@ -136,7 +136,7 @@ var new_search = new Vue({        /*监听查询事件*/
                     console.log("成功返回!"+typeof (result.resultCountyPingtestList));
                     console.log(result.resultCountyPingtestList);
                     console.log(result.resultCountyPingtestList.length);
-                    if(result.resultCountyPingtestList.length!=0){
+                    if(result.resultCountyPingtestList.length!=0&&result.resultCountyPingtestList[0]!=null){
                     if(result.resultCountyPingtestList.length==1){
                         flag=1;
                     }else {
@@ -452,6 +452,7 @@ var new_data = new Vue({
         }
     },
     mounted() {
+
         Reset.reset();        /*调用reset,即为页面加载状态*/
     }
 });
