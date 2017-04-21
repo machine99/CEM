@@ -214,7 +214,7 @@ var probeform_data = new Vue({
             }else if(typeof(testagentJson["testgroupName"])=="undefined"){
                 toastr.warning("请录入测试任务组!");
             }else {
-                var testagent = JSON.stringify([testagentJson]);  /*封装成json数组*/
+                var testagent = JSON.stringify(testagentJson);  /*封装成json数组*/
                 /*获取表单元素的值*/
                 console.log(testagent);
                 var mapstr;
@@ -417,7 +417,6 @@ var probetable = new Vue({
                             returnData.recordsFiltered = result.page.totalCount;//后台不实现过滤功能，每次查询均视作全部结果
                             // returnData.data = result.page.list;//返回的数据列表
                             // 重新整理返回数据以匹配表格
-                            console.log(result.page.list);
                             let rows = [];
                             var i = param.start+1;
                             result.page.list.forEach(function (item) {
@@ -428,16 +427,16 @@ var probetable = new Vue({
                                 row.push(item.sysuuid);
                                 row.push(item.ip);
                                 row.push(item.bandwidth);
-                                row.push(item.city_man);
+                                row.push(item.cityMan);
                                 row.push(item.county);
                                 row.push(item.useruid);
                                 row.push(item.name);
-                                row.push(item.testgroup_name);
+                                row.push(item.testgroupName);
                                 row.push(item.onlinestatus);
-                                row.push(item.online_time);
+                                row.push(item.onlineTime);
                                 row.push(item.model);
                                 row.push(item.version);
-                                row.push(item.run_interval);
+                                row.push(item.runInterval);
                                 row.push(item.address);
                                 row.push(item.brasname);
                                 row.push(item.brasip);
@@ -446,7 +445,7 @@ var probetable = new Vue({
                                 rows.push(row);
                             });
                             returnData.data = rows;
-                            //console.log(returnData);
+                            console.log(returnData);
                             //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
                             //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
                             callback(returnData);
