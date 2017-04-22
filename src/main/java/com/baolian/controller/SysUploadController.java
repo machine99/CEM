@@ -49,7 +49,7 @@ public class SysUploadController extends AbstractController {
      */
     @RequestMapping("/upload")
     @RequiresPermissions("sys:upload:all")
-    public R upload(@RequestParam("file") MultipartFile file) {
+    public R upload(@RequestParam("file") MultipartFile file) throws RRException {
         if (file.isEmpty()) {
             throw new RRException("上传文件不能为空");
         }
@@ -62,14 +62,14 @@ public class SysUploadController extends AbstractController {
         try {
             is = file.getInputStream();
             // 上传文件处理
-            list = ExcelUtils.readExcel(is, fileType, Student.class);
+            list = ExcelUtils.readExcel(is, fileType, TestagentEntity.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         if (list != null) {
             for (Object o : list) {
-                System.out.println(((Student) o).toString());
+                testagentService.save((TestagentEntity) o);
             }
         } else {
             throw new RRException("上传文件出错");
