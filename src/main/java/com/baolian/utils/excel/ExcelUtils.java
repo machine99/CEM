@@ -1,5 +1,6 @@
 package com.baolian.utils.excel;
 
+import com.baolian.utils.excel.annotation.ExcelIgnore;
 import com.baolian.utils.excel.factory.WorkbookFactory;
 import com.baolian.utils.excel.factory.impl.HSSFWorkbookFactory;
 import com.baolian.utils.excel.factory.impl.XSSFWorkbookFactory;
@@ -63,8 +64,9 @@ public class ExcelUtils {
             Field fields[] = entity.getDeclaredFields();
             Map<String, Method> fieldSetMap = new HashMap<String, Method>();
             for (Field f : fields) {
-                // 去除由序列化导致的serialVersionUID
-                if (!isFieldFinal(f)) {
+                ExcelIgnore ignore = f.getAnnotation(ExcelIgnore.class);
+                // 去除由序列化导致的serialVersionUID以及含有ExcelIgnore注解的field
+                if (!isFieldFinal(f) && ignore == null) {
                     // 构造Setter方法
                     String fieldName = f.getName();
                     String setMethodName = "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
@@ -161,40 +163,55 @@ public class ExcelUtils {
                                 setMethod.invoke(tObject, valBool);
                                 break;
                             case "class java.lang.Integer":
-                                Integer valInt;
-                                if (CellType.NUMERIC == cell.getCellTypeEnum()) {
-                                    valInt = (new Double(cell.getNumericCellValue())).intValue();
-                                } else {// 全认为是  Cell.CELL_TYPE_STRING
-                                    valInt = new Integer(cell.getStringCellValue());
+                                Integer valInt = null;
+                                try {
+                                    if (CellType.NUMERIC == cell.getCellTypeEnum()) {
+                                        valInt = (new Double(cell.getNumericCellValue())).intValue();
+                                    } else {// 全认为是  Cell.CELL_TYPE_STRING
+                                        valInt = new Integer(cell.getStringCellValue());
+                                    }
+                                } catch (NumberFormatException ignored) {
                                 }
                                 setMethod.invoke(tObject, valInt);
                                 break;
                             case "class java.lang.Long":
-                                Long valLong;
-                                if (CellType.NUMERIC == cell.getCellTypeEnum()) {
-                                    valLong = (new Double(cell.getNumericCellValue())).longValue();
-                                } else {// 全认为是  Cell.CELL_TYPE_STRING
-                                    valLong = new Long(cell.getStringCellValue());
+                                Long valLong = null;
+                                try {
+                                    if (CellType.NUMERIC == cell.getCellTypeEnum()) {
+                                        valLong = (new Double(cell.getNumericCellValue())).longValue();
+                                    } else {// 全认为是  Cell.CELL_TYPE_STRING
+                                        valLong = new Long(cell.getStringCellValue());
+                                    }
+                                } catch (NumberFormatException ignored) {
                                 }
                                 setMethod.invoke(tObject, valLong);
                                 break;
                             case "class java.math.BigDecimal":
-                                BigDecimal valDecimal;
-                                if (CellType.NUMERIC == cell.getCellTypeEnum()) {
-                                    valDecimal = new BigDecimal(cell.getNumericCellValue());
-                                } else {// 全认为是  Cell.CELL_TYPE_STRING
-                                    valDecimal = new BigDecimal(cell.getStringCellValue());
+                                BigDecimal valDecimal = null;
+                                try {
+                                    if (CellType.NUMERIC == cell.getCellTypeEnum()) {
+                                        valDecimal = new BigDecimal(cell.getNumericCellValue());
+                                    } else {// 全认为是  Cell.CELL_TYPE_STRING
+                                        valDecimal = new BigDecimal(cell.getStringCellValue());
+                                    }
+                                } catch (NumberFormatException ignored) {
                                 }
                                 setMethod.invoke(tObject, valDecimal);
                                 break;
                             case "class java.lang.Double":
-                                Double valDouble;
-                                valDouble = new Double(cell.getStringCellValue());
+                                Double valDouble = null;
+                                try {
+                                    valDouble = new Double(cell.getStringCellValue());
+                                } catch (NumberFormatException ignored) {
+                                }
                                 setMethod.invoke(tObject, valDouble);
                                 break;
                             case "float":
-                                Float valFloat;
-                                valFloat = (float) cell.getNumericCellValue();
+                                Float valFloat = null;
+                                try {
+                                    valFloat = (float) cell.getNumericCellValue();
+                                } catch (NumberFormatException ignored) {
+                                }
                                 setMethod.invoke(tObject, valFloat);
                                 break;
                         }
@@ -260,10 +277,11 @@ public class ExcelUtils {
             if (cfileds != null && cfileds.length > 0) {
                 fields = (Field[]) ArrayUtils.addAll(fields, cfileds);
             }
-            // 遍历整个filed
+            // 遍历整个field
             for (Field field : fields) {
-                // 如果field不为final
-                if (!isFieldFinal(field)) {
+                ExcelIgnore ignore = field.getAnnotation(ExcelIgnore.class);
+                // 如果field不为final并且不含有ExcelIgnore注解
+                if (!isFieldFinal(field) && ignore == null) {
                     // 添加到标题
                     // TODO:此处需要添加一个field name和export name之间的转换
                     exportFieldTitle.add(field.getName());

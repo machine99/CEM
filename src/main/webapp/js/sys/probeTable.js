@@ -453,6 +453,25 @@ var probetable = new Vue({
                 });
             }
         });
+        new AjaxUpload('#excel_import', {
+            action: '../sys/upload/upload',
+            name: 'file',
+            autoSubmit: true,
+            responseType: "json",
+            onSubmit: function (file, extension) {
+                if (!(extension && /^(xls|xlsx)$/.test(extension.toLowerCase()))) {
+                    alert('请上传xls或xlsx格式的Excel文件！');
+                    return false;
+                }
+            },
+            onComplete: function (file, r) {
+                if (r.code == 0) {
+                    alert(r.msg);
+                } else {
+                    alert(r.msg);
+                }
+            }
+        });
     }
 });
 
