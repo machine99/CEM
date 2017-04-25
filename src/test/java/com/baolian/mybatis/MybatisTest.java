@@ -36,7 +36,7 @@ public class MybatisTest {
         // for (CountyPingtestResult result : results) {
         //     System.out.println(result);
         // }
-        List<TestagentEntity> results = testagentService.queryList(map);
-        System.out.println(results.size());
+        int total = resultPingtestService.queryTotal(map);
+        System.out.println(total);
     }
 }

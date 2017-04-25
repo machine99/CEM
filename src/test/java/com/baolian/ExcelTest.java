@@ -51,7 +51,7 @@ public class ExcelTest {
         workbookFactories.add(new XSSFWorkbookFactory());
     }
 
-    // @Test
+    @Test
     public void RunExcelTest() {
         Class<Student> c = Student.class;
         InputStream is = null;

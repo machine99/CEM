@@ -1,5 +1,6 @@
 package com.baolian.service.impl;
 
+import com.baolian.dao.datasouce.annotation.DataSource;
 import com.baolian.service.SysRoleMenuService;
 import com.baolian.dao.SysRoleMenuDao;
 
@@ -12,38 +13,36 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-
 /**
  * 角色与菜单对应关系
- * 
- *
  *
  * @date 2016年9月18日 上午9:44:35
  */
+@DataSource("db_local")
 @Service("sysRoleMenuService")
 public class SysRoleMenuServiceImpl implements SysRoleMenuService {
-	@Autowired
-	private SysRoleMenuDao sysRoleMenuDao;
+    @Autowired
+    private SysRoleMenuDao sysRoleMenuDao;
 
-	@Override
-	@Transactional
-	public void saveOrUpdate(Long roleId, List<Long> menuIdList) {
-		if(menuIdList.size() == 0){
-			return ;
-		}
-		//先删除角色与菜单关系
-		sysRoleMenuDao.delete(roleId);
-		
-		//保存角色与菜单关系
-		Map<String, Object> map = new HashMap<>();
-		map.put("roleId", roleId);
-		map.put("menuIdList", menuIdList);
-		sysRoleMenuDao.save(map);
-	}
+    @Override
+    @Transactional
+    public void saveOrUpdate(Long roleId, List<Long> menuIdList) {
+        if (menuIdList.size() == 0) {
+            return;
+        }
+        //先删除角色与菜单关系
+        sysRoleMenuDao.delete(roleId);
 
-	@Override
-	public List<Long> queryMenuIdList(Long roleId) {
-		return sysRoleMenuDao.queryMenuIdList(roleId);
-	}
+        //保存角色与菜单关系
+        Map<String, Object> map = new HashMap<>();
+        map.put("roleId", roleId);
+        map.put("menuIdList", menuIdList);
+        sysRoleMenuDao.save(map);
+    }
+
+    @Override
+    public List<Long> queryMenuIdList(Long roleId) {
+        return sysRoleMenuDao.queryMenuIdList(roleId);
+    }
 
 }

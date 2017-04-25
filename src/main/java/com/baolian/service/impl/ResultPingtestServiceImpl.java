@@ -1,5 +1,6 @@
 package com.baolian.service.impl;
 
+import com.baolian.dao.datasouce.annotation.DataSource;
 import com.baolian.entity.map.CountyPingtestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import com.baolian.dao.ResultPingtestDao;
 import com.baolian.entity.ResultPingtestEntity;
 import com.baolian.service.ResultPingtestService;
 
-
+@DataSource("db_remote")
 @Service("resultPingtestService")
 public class ResultPingtestServiceImpl implements ResultPingtestService {
 

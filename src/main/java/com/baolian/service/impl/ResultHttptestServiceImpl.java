@@ -1,6 +1,8 @@
 package com.baolian.service.impl;
 
+
 import com.baolian.entity.map.CountyHttptestResult;
+import com.baolian.dao.datasouce.annotation.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +14,10 @@ import com.baolian.entity.ResultHttptestEntity;
 import com.baolian.service.ResultHttptestService;
 
 
-
+@DataSource("db_remote")
 @Service("resultHttptestService")
 public class ResultHttptestServiceImpl implements ResultHttptestService {
+
 	@Autowired
 	private ResultHttptestDao resultHttptestDao;
 	
@@ -58,4 +61,5 @@ public class ResultHttptestServiceImpl implements ResultHttptestService {
 		resultHttptestDao.deleteBatch(ids);
 	}
 	
+
 }
