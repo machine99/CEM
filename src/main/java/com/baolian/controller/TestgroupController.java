@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,18 +41,21 @@ public class TestgroupController {
 	@ResponseBody
 	@RequestMapping("/list")
 	@RequiresPermissions("testgroup:list")
-	public R list(Integer page, Integer limit){
+	public void list(Integer page, Integer limit){
 		Map<String, Object> map = new HashMap<>();
 		map.put("offset", (page - 1) * limit);
 		map.put("limit", limit);
+
+		System.out.println(page);
+		System.out.println(limit);
 		
 		//查询列表数据
-		List<TestgroupEntity> testgroupList = testgroupService.queryList(map);
+		/*List<TestgroupEntity> testgroupList = testgroupService.queryList(map);
 		int total = testgroupService.queryTotal(map);
 		
 		PageUtils pageUtil = new PageUtils(testgroupList, total, limit, page);
 		
-		return R.ok().put("page", pageUtil);
+		return R.ok().put("page", pageUtil);*/
 	}
 	
 	

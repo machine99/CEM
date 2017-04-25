@@ -58,7 +58,7 @@ a:link {
 }
 
 .modal-body {
-    padding: 0px 30px 30px 30px
+    padding: 0px 30px 0px 30px
 }
 
 #probeform_data .row {
@@ -94,6 +94,13 @@ a:link {
     font-weight: bold;
     height: 30px;
 }
+#probetesttarget_title{
+    margin: 10px 0 0 0 !important;
+    background-color: #dddddd;
+    font-size: 14px;
+    font-weight: bold;
+    height: 30px;
+ }
 
 .probeformtitle_border {
     margin: 7px 0 0 0;
@@ -107,3 +114,13 @@ a:link {
 #myModalLabel {
     color: #ffffff;
 }
+
+/******测试任务组相关样式*****/
+.testtargetbutton{
+    margin: 0 10px 10px 20px ;
+}
+#handle_button{
+    margin: 0 0 0 0 !important;
+    background-color: #dddddd;
+}
+
