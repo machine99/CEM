@@ -21,16 +21,14 @@ public class CountyHttptestResult implements Serializable {
     //qoe
     private Double qoe;
 
-
-
     //区县
     private String county;
 
-    public CountyHttptestResult(){
+    public CountyHttptestResult() {
 
     }
 
-    public CountyHttptestResult(String county, Integer id, Double connectDelay, Double responseDelay, Double dnsDelay, Double speed, Double qoe){
+    public CountyHttptestResult(String county, Integer id, Double connectDelay, Double responseDelay, Double dnsDelay, Double speed, Double qoe) {
         this.county = county;
         this.id = id;
         this.connectDelay = connectDelay;
@@ -38,14 +36,6 @@ public class CountyHttptestResult implements Serializable {
         this.dnsDelay = dnsDelay;
         this.speed = speed;
         this.qoe = qoe;
-    }
-
-    public String getCounty() {
-        return county;
-    }
-
-    public void setCounty(String county) {
-        this.county = county;
     }
 
     public Integer getId() {
@@ -56,35 +46,35 @@ public class CountyHttptestResult implements Serializable {
         this.id = id;
     }
 
-    public Double getconnectDelay() {
+    public Double getConnectDelay() {
         return connectDelay;
     }
 
-    public void setconnectDelay(Double connectDelay) {
+    public void setConnectDelay(Double connectDelay) {
         this.connectDelay = connectDelay;
     }
 
-    public Double getdnsDelay() {
+    public Double getDnsDelay() {
         return dnsDelay;
     }
 
-    public void setdnsDelay(Double dnsDelay) {
+    public void setDnsDelay(Double dnsDelay) {
         this.dnsDelay = dnsDelay;
     }
 
-    public Double getresponseDelay() {
+    public Double getResponseDelay() {
         return responseDelay;
     }
 
-    public void setresponseDelay(Double responseDelay) {
+    public void setResponseDelay(Double responseDelay) {
         this.responseDelay = responseDelay;
     }
 
-    public Double getspeed() {
+    public Double getSpeed() {
         return speed;
     }
 
-    public void setspeed(Double speed) {
+    public void setSpeed(Double speed) {
         this.speed = speed;
     }
 
@@ -94,6 +84,14 @@ public class CountyHttptestResult implements Serializable {
 
     public void setQoe(Double qoe) {
         this.qoe = qoe;
+    }
+
+    public String getCounty() {
+        return county;
+    }
+
+    public void setCounty(String county) {
+        this.county = county;
     }
 
     @Override

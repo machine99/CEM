@@ -182,9 +182,6 @@ var Reset = new Vue({
                 dataType: "json",
                 success: function (result) {
                     console.log(result);
-                    console.log("成功返回!" + typeof (result.resultCountyHttptestList));
-                    console.log(result.resultCountyHttptestList[0]);
-                    console.log(result.resultCountyHttptestList.length);
                     if (result.resultCountyHttptestList.length == 2) {
                         staus = 0;
                         flag = 0;
@@ -388,7 +385,7 @@ Vue.component('data-table', {
                 row.push(item.speed);
                 row.push(item.qoe);
 
-                // console.log(item);
+                console.log(item);
 
                 vm.rows.push(row);
             });
