@@ -70,7 +70,6 @@ public class ResultHttptestController {
 				resultCountyHttptestList.add(0,new CountyHttptestResult("新城区",0,0.0,0.0,0.0,0.0,0.0));
 			}
 		}
-
 		return R.ok().put("resultCountyHttptestList", resultCountyHttptestList);
 	}
 	

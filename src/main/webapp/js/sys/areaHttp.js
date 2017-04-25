@@ -160,7 +160,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
     return fmt;
 };
 
-new Vue({
+var Reset = new Vue({
     el: '#reset',
     methods: {
         reset: function () {
@@ -183,7 +183,7 @@ new Vue({
                 success: function (result) {
                     console.log(result);
                     console.log("成功返回!" + typeof (result.resultCountyHttptestList));
-                    console.log(result.resultCountyHttptestList);
+                    console.log(result.resultCountyHttptestList[0]);
                     console.log(result.resultCountyHttptestList.length);
                     if (result.resultCountyHttptestList.length == 2) {
                         staus = 0;
@@ -351,25 +351,25 @@ Vue.component('data-table', {
             button_change.option_qoe.series_qoe[0].data = [];
 
             for (var i = 0; i <= times; i++) {                          /*观察user是否变化,重绘HighCharts图*/
-                options.xAxis.categories[i] = val[i].myarea;
+                options.xAxis.categories[i] = val[i].county;
                 if (staus == 0) {                                       /*设置当前状态option*/
-                    options.series[0].data[i] = val[i].DnsDelay;
+                    options.series[0].data[i] = val[i].dnsDelay;
                     /*动态设置option*/
-                    options.series[1].data[i] = val[i].TcpDelay;
-                    options.series[2].data[i] = val[i].ServerDelay;
+                    options.series[1].data[i] = val[i].connectDelay;
+                    options.series[2].data[i] = val[i].responseDelay;
                 } else if (staus == 1) {
-                    options.series[0].data[i] = val[i].Speed;
+                    options.series[0].data[i] = val[i].speed;
                 } else {
-                    options.series[0].data[i] = val[i].Qoe;
+                    options.series[0].data[i] = val[i].qoe;
                 }
 
-                button_change.option_delay.series_delay[0].data[i] = val[i].DnsDelay;
+                button_change.option_delay.series_delay[0].data[i] = val[i].dnsDelay;
                 /*设置监听事件所有option*/
                 /*动态设置button_change.option*/
-                button_change.option_delay.series_delay[1].data[i] = val[i].TcpDelay;
-                button_change.option_delay.series_delay[2].data[i] = val[i].ServerDelay;
-                button_change.option_speed.series_speed[0].data[i] = val[i].Speed;
-                button_change.option_qoe.series_qoe[0].data[i] = val[i].Qoe;
+                button_change.option_delay.series_delay[1].data[i] = val[i].connectDelay;
+                button_change.option_delay.series_delay[2].data[i] = val[i].responseDelay;
+                button_change.option_speed.series_speed[0].data[i] = val[i].speed;
+                button_change.option_qoe.series_qoe[0].data[i] = val[i].qoe;
             }
             var chart = new Highcharts.Chart('container', options);
 
@@ -381,14 +381,14 @@ Vue.component('data-table', {
                 // skip this loop...
                 let row = [];
 
-                row.push(item.myarea);
-                row.push(item.DnsDelay);
-                row.push(item.TcpDelay);
-                row.push(item.ServerDelay);
-                row.push(item.Speed);
-                row.push(item.Qoe);
+                row.push(item.county);
+                row.push(item.dnsDelay);
+                row.push(item.connectDelay);
+                row.push(item.responseDelay);
+                row.push(item.speed);
+                row.push(item.qoe);
 
-                console.log(item);
+                // console.log(item);
 
                 vm.rows.push(row);
             });
