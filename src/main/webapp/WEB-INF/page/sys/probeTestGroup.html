@@ -1,10 +1,191 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>测试任务组</title>
+    #parse("sys/areaHeader.html")  <!--导入CSS和js文件-->
+    <link href="${rc.contextPath}/statics/css/probe.css" rel="stylesheet">  <!--自定义CSS-->
 </head>
 <body>
-<h1>测试任务组</h1>
-</body>
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 class="fontcolor">测试任务组</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="probe_table">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title fontcolor" id="handle" style="padding-bottom: 0px !important;">
+                    <button type="button" class="btn btn-default " v-on:click="testagentadd"><span
+                            class="glyphicon glyphicon-plus"></span>录入
+                    </button>
+                    <button type="button" class="btn btn-default " v-on:click="testagentupdate"><span
+                            class="glyphicon glyphicon-pencil"></span>编辑
+                    </button>
+                    <button type="button" class="btn btn-default " v-on:click="testagentdelBatch"><span
+                            class="glyphicon glyphicon-trash"></span>批量删除
+                    </button>
+                    <button type="button" class="btn btn-default "
+                            v-on:click="testagentview"><span
+                            class="glyphicon glyphicon-zoom-in"></span>查看
+                    </button>
+                    <button id="excel_import" type="button" class="btn btn-default "><span
+                            class="glyphicon glyphicon-save"></span>Excel数据导入
+                    </button>
+                    <button type="button" class="btn btn-default "><a href="../sys/upload/download"
+                                                                      class="fontcolor"><span
+                            class="glyphicon glyphicon-open"></span>Excel导出</a>
+                    </button>
+                </div>
+                <div class="ibox-content">
+                    <div class="row " style="overflow-x: scroll">     <!--表格 verflow-x: scroll超出滚动-->
+                        <table class="table table-bordered " id="probedata_table"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 768px"> <!--修改bootstrap modal模态框的宽度-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">{{modaltitle}}</h4>
+                </div>
+                <div class="row" id="probeform_title">
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <h4 class="fontcolor probeformtitle_border">表单信息管理</h4>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form class="form-horizontal" id="probeform_data" role="form">
+                            <div class="form-group row">
+                                <label for="name"
+                                       class="col-lg-3 col-md-3 col-sm-3 control-label form_border">组名:</label>
+                                <div class="col-lg-3 col-md-3 col-sm-3 form_border">
+                                    <input type="text" class="form-control" id="name" name="name"
+                                           placeholder="组名">
+                                </div>
+                                <label for="more"
+                                       class="col-lg-3 col-md-3 col-sm-3 control-label form_border">IP地址:</label>
+                                <div class="col-lg-3 col-md-3 col-sm-3 form_border">
+                                    <input type="text" class="form-control" id="more" name="more"
+                                           placeholder="请输入IP地址">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--相关测试目标-->
+                <div class="row" id="probetesttarget_title">
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <h4 class="fontcolor probeformtitle_border">相关测试目标</h4>
+                    </div>
+                </div>
+                <div class="row" id="handle_button">
+                    <div class="btn-group btn-group-sm fontcolor col-lg-3 col-md-3 col-sm-3">
+                        <button type="button" class="btn btn-default testtargetbutton">添加</button>
+                        <button type="button" class="btn btn-default testtargetbutton">删除</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <table id="target_group_table" class="table table-bordered table-hover"
+                               style="margin-bottom: 0;">
+                            <thead>
+                            <tr>
+                                <th style="white-space:nowrap;width:50px;">序号</th>
+                                <th style="white-space:nowrap;width:50px;">操作</th>
+                                <th>目标id</th>
+                                <th>分组id</th>
+                            </tr>
+                            </thead>
+                            <tbody id="add_target_group_table">
+                            <tr>
+                                <th scope="row">
+                                    <div name="xh">1</div>
+                                </th>
+                                <td>
+                                    <input style="width:20px;" type="checkbox" name="0ck">
+                                    <input type="hidden" name="target_group[0].id" id="target_group[0].id">
+                                </td>
+                                <td>
+                                    <select id="target_group[0].target_id" class="form-control"
+                                            name="target_group[0].target_id" datatype="*">
+                                        <option value="1">
+                                            和讯
+                                        </option>
+                                        <option value="2">
+                                            搜房
+                                        </option>
+                                    </select>
+
+                                    <label class="Validform_label" style="display: none;">目标id</label>
+                                </td>
+                                <td>
+                                    <select id="target_group[0].group_id" class="form-control"
+                                            name="target_group[0].group_id" datatype="*">
+                                        <option value="1">
+                                            标准测试任务
+                                        </option>
+                                        <option value="2">
+                                            视频类测试
+                                        </option>
+                                        <option value="3">
+                                            网站应用
+                                        </option>
+                                        <option value="4">
+                                            他网测试
+                                        </option>
+                                    </select>
+
+                                    <label class="Validform_label" style="display: none;">分组id</label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" v-on:click="submit">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <!-- 删除确认模态框（Modal） -->
+    <div class="modal fade" id="myModal_delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="width: 200px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel_delet">
+                        确认
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <b>确定删除吗?</b>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" v-on:click="cancel_delete">取消
+                    </button>
+                    <button type="button" class="btn btn-primary" v-on:click="delete_data">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+</div>
+<script type="text/javascript" src="${rc.contextPath}/js/sys/probeTestGroup.js?_${date.systemTime}"></script></body>
 </html>

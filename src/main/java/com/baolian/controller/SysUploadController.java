@@ -47,9 +47,60 @@ public class SysUploadController extends AbstractController {
     /**
      * 上传文件
      */
-    @RequestMapping("/upload")
+    @RequestMapping("/upload/testagent")
     @RequiresPermissions("sys:upload:all")
-    public R upload(@RequestParam("file") MultipartFile file) throws RRException {
+    public R uploadTestagentExcel(@RequestParam("file") MultipartFile file) throws RRException {
+        Collection list = excelToCollection(file, TestagentEntity.class);
+        if (list != null) {
+            for (Object o : list) {
+                testagentService.save((TestagentEntity) o);
+            }
+        } else {
+            throw new RRException("上传文件出错");
+        }
+
+        return R.ok().put("msg", "上传文件成功");
+    }
+
+    @RequestMapping("/download/testagent")
+    @RequiresPermissions("sys:upload:all")
+    public void download(HttpServletResponse response) throws RRException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<TestagentEntity> list = testagentService.queryList(map);
+        collectionToFile(response, list, TestagentEntity.class);
+        // InputStream is = null;
+        // ServletOutputStream out = null;
+        // try {
+        //     // is = new FileInputStream("F://student_info.xls");
+        //     // Collection<Student> list = ExcelUtils.readExcel(is, "xls", Student.class);
+        //     // for (Student student : list) {
+        //     //     System.out.println(student);
+        //     // }
+        //     XSSFWorkbook workbook = ExcelUtils.<TestagentEntity>exportExcel("sheet1", TestagentEntity.class, list);
+        //     response.setContentType("application/octet-stream");
+        //     // response.setCharacterEncoding("UTF-8");
+        //     String fileName = "testagent_all.xlsx";
+        //     response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
+        //     // File outFile = new File("F://out.xlsx");
+        //     out = response.getOutputStream();
+        //     workbook.write(out);
+        //     out.flush();
+        //     out.close();
+        // } catch (IOException e) {
+        //     e.printStackTrace();
+        //     throw new RRException("下载文件出错");
+        // } finally {
+        //     if (is != null) {
+        //         try {
+        //             is.close();
+        //         } catch (IOException e) {
+        //             e.printStackTrace();
+        //         }
+        //     }
+        // }
+    }
+
+    private Collection excelToCollection(MultipartFile file, Class c) throws RRException {
         if (file.isEmpty()) {
             throw new RRException("上传文件不能为空");
         }
@@ -62,41 +113,21 @@ public class SysUploadController extends AbstractController {
         try {
             is = file.getInputStream();
             // 上传文件处理
-            list = ExcelUtils.readExcel(is, fileType, TestagentEntity.class);
+            list = ExcelUtils.readExcel(is, fileType, c);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        if (list != null) {
-            for (Object o : list) {
-                testagentService.save((TestagentEntity) o);
-            }
-        } else {
-            throw new RRException("上传文件出错");
-        }
-
-        return R.ok().put("msg", "上传文件成功");
+        return list;
     }
 
-    @RequestMapping("/download")
-    @RequiresPermissions("sys:upload:all")
-    public void download(HttpServletResponse response) throws RRException {
-
-        System.out.println("download!!!!");
-        Map<String, Object> map = new HashMap<String, Object>();
-        List<TestagentEntity> list = testagentService.queryList(map);
+    private <T> void collectionToFile(HttpServletResponse response, List<T> list, Class<T> c) throws RRException {
         InputStream is = null;
         ServletOutputStream out = null;
         try {
-            // is = new FileInputStream("F://student_info.xls");
-            // Collection<Student> list = ExcelUtils.readExcel(is, "xls", Student.class);
-            // for (Student student : list) {
-            //     System.out.println(student);
-            // }
-            XSSFWorkbook workbook = ExcelUtils.<TestagentEntity>exportExcel("sheet1", TestagentEntity.class, list);
+            XSSFWorkbook workbook = ExcelUtils.<T>exportExcel("sheet1", c, list);
             response.setContentType("application/octet-stream");
             // response.setCharacterEncoding("UTF-8");
-            String fileName = "testagent_all.xlsx";
+            String fileName = c.getSimpleName().toLowerCase().replaceAll("entity", "") + "_all.xlsx";
             response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
             // File outFile = new File("F://out.xlsx");
             out = response.getOutputStream();

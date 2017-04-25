@@ -454,7 +454,7 @@ var probetable = new Vue({
             }
         });
         new AjaxUpload('#excel_import', {
-            action: '../sys/upload/upload',
+            action: '../sys/upload/upload/testagent',
             name: 'file',
             autoSubmit: true,
             responseType: "json",

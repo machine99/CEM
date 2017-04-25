@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.baolian.dao.TestgroupDao">
+
+	<select id="queryObject" resultType="com.baolian.entity.TestgroupEntity">
+		select * from testgroup where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.baolian.entity.TestgroupEntity">
+		select * from testgroup 
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from testgroup 
+	</select>
+	 
+	<insert id="save" parameterType="com.baolian.entity.TestgroupEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into testgroup
+		(
+			`name`, 
+			`more`
+		)
+		values
+		(
+			#{name}, 
+			#{more}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.baolian.entity.TestgroupEntity">
+		update testgroup 
+		<set>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="more != null">`more` = #{more}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from testgroup where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from testgroup where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
