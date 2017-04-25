@@ -1,6 +1,6 @@
-package com.baolian.factory.impl;
+package com.baolian.excel.factory.impl;
 
-import com.baolian.factory.WorkbookFactory;
+import com.baolian.excel.factory.WorkbookFactory;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import java.io.IOException;
