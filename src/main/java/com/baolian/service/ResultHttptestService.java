@@ -1,6 +1,7 @@
 package com.baolian.service;
 
 import com.baolian.entity.ResultHttptestEntity;
+import com.baolian.entity.map.CountyHttptestResult;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,8 @@ public interface ResultHttptestService {
 	ResultHttptestEntity queryObject(Integer id);
 	
 	List<ResultHttptestEntity> queryList(Map<String, Object> map);
+
+	List<CountyHttptestResult> queryCountyHttpList(Map<String, Object> map);
 	
 	int queryTotal(Map<String, Object> map);
 	

@@ -1,5 +1,6 @@
 package com.baolian.service.impl;
 
+import com.baolian.entity.map.CountyHttptestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,12 @@ public class ResultHttptestServiceImpl implements ResultHttptestService {
 	public List<ResultHttptestEntity> queryList(Map<String, Object> map){
 		return resultHttptestDao.queryList(map);
 	}
-	
+
+	@Override
+	public List<CountyHttptestResult> queryCountyHttpList(Map<String, Object> map) {
+		return resultHttptestDao.queryCountyHttpList(map);
+	}
+
 	@Override
 	public int queryTotal(Map<String, Object> map){
 		return resultHttptestDao.queryTotal(map);

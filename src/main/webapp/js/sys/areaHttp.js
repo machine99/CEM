@@ -6,7 +6,6 @@ var flag = 0;
 /*标志位,判断highcharts绘图Vue点击时间更新的series*/
 
 var staus = 0;
-/*引入status表示当前状态option,解决bug 0:ping 1:speed 2:qoe*/
 
 var get_data;
 
@@ -97,54 +96,69 @@ $('input[name="daterange"]').daterangepicker(
             daysOfWeek: "一_二_三_四_五_六_日".split("_"),
 
         },
-        startDate: '2013-01-01',
-        endDate: '2013-12-31'
+        startDate: new Date(new Date() - 1000 * 60 * 60 * 24 * 4).toLocaleDateString(), /*前4天日期*/
+        endDate: (new Date()).toLocaleDateString(), /*当前日期*/
     },
     function (start, end, label) {          /*日期选择触发事件*/
-        console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-        console.log("地区选择:" + typeof(get_area) == "undefined");
-        if (typeof(get_area) != "undefined" && $('#area').val() != '') {   /*此时应该判断输入框里内容不为空*/
-
-            flag = 1;
-            /*改变标志位*/
-            get_data = {
-                /*模拟异步数据*/
-                myarea: get_area,
-                DnsDelay: 18,
-                TcpDelay: 22,
-                ServerDelay: 17,
-                Speed: 50,
-                Qoe: 98
-            };
-            new_data.users = [get_data];
-            /*观察者,更新user数据*/
-        } else {          /*如果不选择地区,默认按照日期更新新城区和碑林区的数据*/
-            flag = 0;
-            /*********************************************/
-            var area1 = {
-                myarea: "新城区",
-                DnsDelay: 18,
-                TcpDelay: 22,
-                ServerDelay: 17,
-                Speed: 50,
-                Qoe: 98
-            };
-            var area2 = {
-                myarea: "碑林区",
-                DnsDelay: 18,
-                TcpDelay: 22,
-                ServerDelay: 17,
-                Speed: 30,
-                Qoe: 98
-            };
-            new_area_data = [area1, area2];
-            /*页面刚加载,模拟异步数据*/
-            /********************************************************/
-            new_data.users = new_area_data;
-            /*观察者,更新highcharts表和表格*/
-            console.log(new_data.users);
-        }
+        /*console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));*/
+        starttime = start.format('YYYY-MM-DD HH:mm:ss');
+        endtime = end.format('YYYY-MM-DD HH:mm:ss');
     });
+
+var new_search = new Vue({
+    /*监听查询事件*/
+    el: '#search',
+    methods: {
+        search: function () {
+            console.log("你选择了时间区间" + starttime + "to" + endtime);
+            var postdata = {};
+            postdata.area = $('#area').val();
+            postdata.starttime = starttime;
+            postdata.endtime = endtime;
+            $.ajax({
+                /*后台取得数据,赋值给观察者*/
+                type: "POST",
+                url: "../resulthttptest/countyhttplist",
+                cache: false,  //禁用缓存
+                data: postdata,  //传入组装的参数
+                dataType: "json",
+                success: function (result) {
+                    console.log(result);
+                    console.log("成功返回!" + typeof (result.resultCountyHttptestList));
+                    console.log(result.resultCountyHttptestList);
+                    console.log(result.resultCountyHttptestList.length);
+                    if (result.resultCountyHttptestList.length != 0 && result.resultCountyHttptestList[0] != null) {
+                        if (result.resultCountyHttptestList.length == 1) {
+                            flag = 1;
+                        } else {
+                            flag = 0;
+                        }
+                        new_data.users = result.resultCountyHttptestList;
+                    } else {
+                        toastr.warning('该时间区间没有对应数据！');
+                    }
+                }
+            });
+
+        }
+    }
+});
+// 对Date的扩展，将 Date 转化为指定格式的String
+Date.prototype.Format = function (fmt) { //author: meizz
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+};
 
 new Vue({
     el: '#reset',
@@ -152,28 +166,36 @@ new Vue({
         reset: function () {
             /****************************/
             /*重置,回到页面加载时的数据*/
-            var area1 = {
-                myarea: "新城区",
-                DnsDelay: 18,
-                TcpDelay: 22,
-                ServerDelay: 17,
-                Speed: 50,
-                Qoe: 98
-            };
-            var area2 = {
-                myarea: "碑林区",
-                DnsDelay: 18,
-                TcpDelay: 22,
-                ServerDelay: 17,
-                Speed: 30,
-                Qoe: 98
-            };
-            /**********************************/
-            staus = 0;
-            flag = 0;
-            button_change.delay();
-            /*option先回到状态0,注意,不然会出错*/
-            new_data.users = [area1, area2];
+            var postdata = {};
+            postdata.area = '';
+            postdata.starttime = new Date(new Date() - 1000 * 60 * 60 * 24 * 4).Format("yyyy-MM-dd") + " 00:00:00";
+            /*前4天日期*/
+            postdata.endtime = (new Date()).Format("yyyy-MM-dd") + " 23:59:59";
+            /*当前日期*/
+            console.log(postdata);
+            $.ajax({
+                /*后台取得数据,赋值给观察者*/
+                type: "POST",
+                url: "../resulthttptest/countyhttplist",
+                cache: false,  //禁用缓存
+                data: postdata,  //传入组装的参数
+                dataType: "json",
+                success: function (result) {
+                    console.log(result);
+                    console.log("成功返回!" + typeof (result.resultCountyHttptestList));
+                    console.log(result.resultCountyHttptestList);
+                    console.log(result.resultCountyHttptestList.length);
+                    if (result.resultCountyHttptestList.length == 2) {
+                        staus = 0;
+                        flag = 0;
+                        button_change.delay();
+                        /*option先回到状态0,注意,不然会出错*/
+                        new_data.users = result.resultCountyHttptestList;
+                    } else {
+                        toastr.warning('最近4天没有对应数据！');
+                    }
+                }
+            });
         }
     }
 });
@@ -425,60 +447,19 @@ var new_data = new Vue({
         }
     },
     mounted() {
-        let vm = this;
-        /*********************************************/
-        var area1 = {
-            myarea: "新城区",
-            DnsDelay: 18,
-            TcpDelay: 22,
-            ServerDelay: 17,
-            Speed: 50,
-            Qoe: 98
-        };
-        var area2 = {
-            myarea: "碑林区",
-            DnsDelay: 18,
-            TcpDelay: 22,
-            ServerDelay: 17,
-            Speed: 30,
-            Qoe: 98
-        };
-        data_fitst = [area1, area2];
-        /*页面刚加载,模拟异步数据*/
-        /********************************************************/
-
-        vm.users = data_fitst;
-        console.log(vm.users);
-        /*$.ajax({
-         url: '../sys/user/list',
-         dataType: 'json',
-         data: {
-         username: null,
-         page: 1,
-         limit: 10
-         },
-         success(r) {
-         vm.users = r.page.list;
-         console.log(vm.users)
-         }
-         });*/
+        Reset.reset();
+        /*调用reset,即为页面加载状态*/
     }
 });
 
 
 /*导出表格到excel*/
 function exportExcel() {
-    alasql('SELECT * INTO XLSX("区县Ping对比.xlsx",{headers:true}) \
+    alasql('SELECT * INTO XLSX("区县Http对比.xlsx",{headers:true}) \
                     FROM HTML("#area_table",{headers:true})');
 
 }
 
-/*$(document).ready(function() {
- alasql('SELECT * INTO HTML("#res",{headers:true}) \
- FROM XLSX("C:/Users/yuanbaby/Downloads/Ping.xlsx",\
- {headers:true})');
- alert("end of function")
- });*/
 
 
 

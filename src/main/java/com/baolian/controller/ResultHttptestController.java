@@ -1,9 +1,13 @@
 package com.baolian.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.baolian.entity.map.CountyHttptestResult;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +41,39 @@ public class ResultHttptestController {
 	/**
 	 * 列表
 	 */
+
+	@ResponseBody
+	@RequestMapping("/countyhttplist")
+	@RequiresPermissions("resulthttptest:countyhttplist")
+	public R list(String starttime, String endtime, String area){
+		Map<String, Object> map = new HashMap<>();
+		map.put("starttime", starttime);
+		map.put("endtime", endtime);
+		map.put("county", area);
+
+		System.out.println("starttime:"+starttime);
+		System.out.println("endtime:"+endtime);
+		System.out.println("county:"+area);
+
+
+		//查询列表数据
+		List<CountyHttptestResult> resultCountyHttptestList = resultHttptestService.queryCountyHttpList(map);
+
+		for (CountyHttptestResult result : resultCountyHttptestList) {
+			System.out.println(result);
+		}
+
+		if(resultCountyHttptestList.size()==1&&"".equals(area)){
+			if (resultCountyHttptestList.get(0).getCounty().equals("新城区")){
+				resultCountyHttptestList.add(new CountyHttptestResult("碑林区",0,0.0,0.0,0.0,0.0,0.0));
+			}else if(resultCountyHttptestList.get(0).getCounty().equals("碑林区")){
+				resultCountyHttptestList.add(0,new CountyHttptestResult("新城区",0,0.0,0.0,0.0,0.0,0.0));
+			}
+		}
+
+		return R.ok().put("resultCountyHttptestList", resultCountyHttptestList);
+	}
+	
 	@ResponseBody
 	@RequestMapping("/list")
 	@RequiresPermissions("resulthttptest:list")

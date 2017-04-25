@@ -56,17 +56,6 @@ public class ResultPingtestController {
 		//查询列表数据
 		List<CountyPingtestResult> resultCountyPingtestList = resultPingtestService.queryCountyPingList(map);
 
-		for (CountyPingtestResult result : resultCountyPingtestList) {
-			System.out.println(result);
-		}
-
-		if(resultCountyPingtestList.size()==1&&"".equals(area)){
-			if (resultCountyPingtestList.get(0).getCounty().equals("新城区")){
-				resultCountyPingtestList.add(new CountyPingtestResult("碑林区",0,0.0,0.0,0.0,0.0,0.0));
-			}else if(resultCountyPingtestList.get(0).getCounty().equals("碑林区")){
-				resultCountyPingtestList.add(0,new CountyPingtestResult("新城区",0,0.0,0.0,0.0,0.0,0.0));
-			}
-		}
 
 		return R.ok().put("resultCountyPingtestList", resultCountyPingtestList);
 	}
