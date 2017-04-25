@@ -1,6 +1,7 @@
 package com.baolian.service.impl;
 
 import com.baolian.dao.SysRoleDao;
+import com.baolian.dao.datasouce.annotation.DataSource;
 import com.baolian.entity.SysRoleEntity;
 import com.baolian.service.SysRoleMenuService;
 import com.baolian.service.SysRoleService;
@@ -15,61 +16,59 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-
 /**
  * 角色
- * 
- *
  *
  * @date 2016年9月18日 上午9:45:12
  */
+@DataSource("db_local")
 @Service("sysRoleService")
 public class SysRoleServiceImpl implements SysRoleService {
-	@Autowired
-	private SysRoleDao sysRoleDao;
-	@Autowired
-	private SysRoleMenuService sysRoleMenuService;
-	@Autowired
-	private SysUserRoleService sysUserRoleService;
+    @Autowired
+    private SysRoleDao sysRoleDao;
+    @Autowired
+    private SysRoleMenuService sysRoleMenuService;
+    @Autowired
+    private SysUserRoleService sysUserRoleService;
 
-	@Override
-	public SysRoleEntity queryObject(Long roleId) {
-		return sysRoleDao.queryObject(roleId);
-	}
+    @Override
+    public SysRoleEntity queryObject(Long roleId) {
+        return sysRoleDao.queryObject(roleId);
+    }
 
-	@Override
-	public List<SysRoleEntity> queryList(Map<String, Object> map) {
-		return sysRoleDao.queryList(map);
-	}
+    @Override
+    public List<SysRoleEntity> queryList(Map<String, Object> map) {
+        return sysRoleDao.queryList(map);
+    }
 
-	@Override
-	public int queryTotal(Map<String, Object> map) {
-		return sysRoleDao.queryTotal(map);
-	}
+    @Override
+    public int queryTotal(Map<String, Object> map) {
+        return sysRoleDao.queryTotal(map);
+    }
 
-	@Override
-	@Transactional
-	public void save(SysRoleEntity role) {
-		role.setCreateTime(new Date());
-		sysRoleDao.save(role);
-		
-		//保存角色与菜单关系
-		sysRoleMenuService.saveOrUpdate(role.getRoleId(), role.getMenuIdList());
-	}
+    @Override
+    @Transactional
+    public void save(SysRoleEntity role) {
+        role.setCreateTime(new Date());
+        sysRoleDao.save(role);
 
-	@Override
-	@Transactional
-	public void update(SysRoleEntity role) {
-		sysRoleDao.update(role);
-		
-		//更新角色与菜单关系
-		sysRoleMenuService.saveOrUpdate(role.getRoleId(), role.getMenuIdList());
-	}
+        //保存角色与菜单关系
+        sysRoleMenuService.saveOrUpdate(role.getRoleId(), role.getMenuIdList());
+    }
 
-	@Override
-	@Transactional
-	public void deleteBatch(Long[] roleIds) {
-		sysRoleDao.deleteBatch(roleIds);
-	}
+    @Override
+    @Transactional
+    public void update(SysRoleEntity role) {
+        sysRoleDao.update(role);
+
+        //更新角色与菜单关系
+        sysRoleMenuService.saveOrUpdate(role.getRoleId(), role.getMenuIdList());
+    }
+
+    @Override
+    @Transactional
+    public void deleteBatch(Long[] roleIds) {
+        sysRoleDao.deleteBatch(roleIds);
+    }
 
 }
