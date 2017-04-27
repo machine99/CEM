@@ -7,6 +7,7 @@ import com.baolian.utils.R;
 import com.baolian.utils.RRException;
 import com.baolian.utils.excel.ExcelUtils;
 import com.baolian.utils.excel.Student;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;

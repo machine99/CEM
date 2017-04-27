@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baolian.utils.JSONUtils;
 import com.baolian.utils.RRException;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.velocity.app.event.implement.EscapeXmlReference;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,9 +104,6 @@ public class TestagentController {
     @RequiresPermissions("testagent:delete")
     public R delete(@RequestBody Long[] ids) {
         testagentService.deleteBatch(ids);
-        // for (Long id : ids) {
-        //     System.out.println(id);
-        // }
         return R.ok();
     }
 }
