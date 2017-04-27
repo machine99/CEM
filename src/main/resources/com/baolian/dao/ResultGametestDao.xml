@@ -3,6 +3,15 @@
 
 <mapper namespace="com.baolian.dao.ResultGametestDao">
 
+    <resultMap id="countyGametestResult" type="com.baolian.entity.map.CountyGametestResult">
+        <id property="id" column="id"/>
+        <result property="rtt_avg" column="rtt_avg"/>
+        <result property="tcpConnect" column="tcpconnect"/>
+        <result property="loss" column="loss"/>
+        <result property="qoe" column="qoe"/>
+        <result property="county" column="county"/>
+    </resultMap>
+
     <select id="queryObject" resultType="com.baolian.entity.ResultGametestEntity">
         SELECT *
         FROM result_gametest
@@ -14,6 +23,28 @@
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>
+    </select>
+
+    <select id="queryCountyGameList" resultMap="countyGametestResult">
+        SELECT
+        MAX(result_gametest.id) AS id,
+        AVG(result_gametest.rtt_avg) AS rtt_avg,
+        AVG(result_gametest.tcpconnect) AS tcpconnect,
+        AVG(result_gametest.loss) AS loss,
+        AVG(result_gametest.qoe) AS qoe,
+        testagent.county AS county
+        FROM result_gametest
+        INNER JOIN testagent
+        ON result_gametest.testagentid = testagent.id
+        WHERE result_gametest.testtime BETWEEN #{starttime} AND #{endtime}
+        <if test="county != null and county != ''">
+            AND testagent.county = #{county}
+        </if>
+        <if test="county == null or county == ''">
+            AND testagent.county IN ('新城区', '碑林区')
+            GROUP BY testagent.county;
+        </if>
+
     </select>
 
     <select id="queryTotal" resultType="int">

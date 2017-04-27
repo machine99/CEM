@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +20,6 @@ import com.baolian.utils.R;
 
 
 /**
- * 
- *
  * @date 2017-04-18 17:03:59
  */
 @Controller
@@ -104,4 +103,5 @@ public class TesttargetController {
 		return R.ok();
 	}
 	
+
 }

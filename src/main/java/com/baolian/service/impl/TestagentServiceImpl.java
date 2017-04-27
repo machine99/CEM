@@ -1,6 +1,7 @@
 package com.baolian.service.impl;
 
 import com.baolian.dao.datasouce.annotation.DataSource;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

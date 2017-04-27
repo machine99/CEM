@@ -16,20 +16,18 @@ var probedata_handle = new Vue({
             dataType: "json",
             /* contentType:"application/json",  /!*必须要,不可少*!/*/
             success: function (result) {
-                console.log("测试任务组取值成功");
-                console.log(result.page.list);
                 for(var i=0;i<result.page.list.length;i++){
                     testGroupNames[i] = {message: result.page.list[i].name}
                 }
                 probeform_data.testgroup_names = testGroupNames;    /*注意,这个js执行放在probeform_data和search_data之前才行*/
                 search_data.testgroup_names = testGroupNames;
-                console.log(search_data.testgroup_names);
             }
         });
     },
     methods: {
         testagentadd: function () {   /*监听录入触发事件*/
-            status = 0;/*状态0,表示录入*/
+            status = 0;
+            /*状态0,表示录入*/
             var forms = $('#probeform_data .form-control');
 
             $('#probeform_data input[type=text]').prop("readonly", false);
@@ -45,7 +43,8 @@ var probedata_handle = new Vue({
 
         },
         testagentupdate: function () {     /*监听编辑触发事件*/
-            status = 1;/*状态1表示编辑*/
+            status = 1;
+            /*状态1表示编辑*/
             var trs = $('#probe_table tbody').find('tr:has(:checked)');
             /*find被选中的行*/
             var forms = $('#probeform_data .form-control');
@@ -82,17 +81,20 @@ var probedata_handle = new Vue({
             }
         },
         testagentdelBatch: function () {   /*批量删除监听事件*/
-            status = 2;/*状态2表示删除*/
+            status = 2;
+            /*状态2表示删除*/
             var trs = $('#probe_table tbody').find('tr:has(:checked)');
             if (trs.length == 0) {
                 toastr.warning('请选择删除项目！');
-            }else {
-                for(var i=0;i<trs.length;i++){       /*取得选中行的id*/
+            } else {
+                for (var i = 0; i < trs.length; i++) {       /*取得选中行的id*/
                     var tds = trs.eq(i).find("td");
-                    idArray[i] = parseInt(tds.eq(2).text());   /*将id加入数组中*/
+                    idArray[i] = parseInt(tds.eq(2).text());
+                    /*将id加入数组中*/
                     console.log(tds.eq(2).text())
                 }
-                delete_ajax() ; /*ajax传输*/
+                delete_ajax();
+                /*ajax传输*/
 
             }
             /*find被选中的行*/
@@ -127,14 +129,16 @@ var probedata_handle = new Vue({
                 toastr.warning('请选择一条记录再查看！');
             }
         },
-        testagentListsearch:function () {   /*查询监听事件*/
-            var data = getFormJson($('#searchcolums'));    /*得到查询条件*/
+        testagentListsearch: function () {   /*查询监听事件*/
+            var data = getFormJson($('#searchcolums'));
+            /*得到查询条件*/
             /*获取表单元素的值*/
             console.log(data);
             probetable.probedata = data;
-            probetable.redraw();   /*根据查询条件重绘*/
+            probetable.redraw();
+            /*根据查询条件重绘*/
         },
-        reset:function () {    /*重置*/
+        reset: function () {    /*重置*/
             probetable.reset();
 
         }
@@ -142,53 +146,59 @@ var probedata_handle = new Vue({
     }
 });
 function delete_ajax() {
-    var ids = JSON.stringify(idArray);    /*对象数组字符串*/
+    var ids = JSON.stringify(idArray);
+    /*对象数组字符串*/
 
     $.ajax({
-        type: "POST",   /*GET会乱码*/
+        type: "POST", /*GET会乱码*/
         url: "../testagent/delete",
         cache: false,  //禁用缓存
         data: ids,  //传入组装的参数
         dataType: "json",
-        contentType:"application/json",  /*必须要,不可少*/
+        contentType: "application/json", /*必须要,不可少*/
         success: function (result) {
-            console.log("传递成功");
 
             toastr.success("业务信息删除成功!");
 
             probetable.currReset();
 
-            idArray = [];  /*清空id数组*/
-            delete_data.close_modal();  /*关闭模态框*/
+            idArray = [];
+            /*清空id数组*/
+            delete_data.close_modal();
+            /*关闭模态框*/
         }
     });
 }
 function delete_this(obj) {
     delete_data.show_deleteModal();
-    delete_data.id = parseInt(obj.id);   /*获取当前行探针数据id*/
+    delete_data.id = parseInt(obj.id);
+    /*获取当前行探针数据id*/
     console.log(delete_data.id);
 }
 
 var delete_data = new Vue({
-    el:'#myModal_delete',
-    data:{
-        id:null
+    el: '#myModal_delete',
+    data: {
+        id: null
     },
-    methods:{
-        show_deleteModal:function () {
-            $(this.$el).modal('show');   /*弹出确认模态框*/
+    methods: {
+        show_deleteModal: function () {
+            $(this.$el).modal('show');
+            /*弹出确认模态框*/
         },
-        close_modal:function (obj) {
+        close_modal: function (obj) {
             $(this.$el).modal('hide');
 
         },
-        cancel_delete:function () {
+        cancel_delete: function () {
 
         },
-        delete_data:function () {
-            idArray = [];  /*清空id数组*/
+        delete_data: function () {
+            idArray = [];
+            /*清空id数组*/
             idArray[0] = this.id;
-            delete_ajax() ;/*ajax传输*/
+            delete_ajax();
+            /*ajax传输*/
 
         }
     }
@@ -222,35 +232,58 @@ var probeform_data = new Vue({
     methods: {
         submit: function () {
             var testagentJson = getFormJson($('#probeform_data'));
-            if(typeof(testagentJson["cityMan"])=="undefined"){                  /*3个select必选*/
+            if (typeof(testagentJson["cityMan"]) == "undefined") {                  /*3个select必选*/
                 toastr.warning("请录入地市信息!");
-            }else if(typeof(testagentJson["county"])=="undefined"){
+            } else if (typeof(testagentJson["county"]) == "undefined") {
                 toastr.warning("请录入区县信息!");
-            }else if(typeof(testagentJson["testgroupName"])=="undefined"){
+            } else if (typeof(testagentJson["testgroupName"]) == "undefined") {
                 toastr.warning("请录入测试任务组!");
-            }else {
-                var testagent = JSON.stringify(testagentJson);  /*封装成json数组*/
+            } else {
+                var testagent = JSON.stringify(testagentJson);
+                /*封装成json数组*/
                 /*获取表单元素的值*/
                 console.log(testagent);
                 var mapstr;
-                if(status==0){
+                if (status == 0) {
                     mapstr = "save";
-                }else if(status==1){
+                } else if (status == 1) {
                     mapstr = "update"
                 }
                 $.ajax({
-                    type: "POST",   /*GET会乱码*/
-                    url: "../testagent/"+mapstr,
+                    type: "POST", /*GET会乱码*/
+                    url: "../testagent/" + mapstr,
                     cache: false,  //禁用缓存
                     data: testagent,  //传入组装的参数
                     dataType: "json",
-                    contentType:"application/json",  /*必须要,不可少*/
+                    contentType: "application/json", /*必须要,不可少*/
                     success: function (result) {
-                        console.log("传递成功");
-                        if(status==0){
-                            toastr.success("业务信息录入成功!");
-                        }else if(status==1){
-                            toastr.success("业务信息更新成功!");
+                        let code = result.code;
+                        let msg = result.msg;
+                        console.log(result);
+                        if (status == 0) {
+                            switch (code) {
+                                case 0:
+                                    toastr.success("业务信息录入成功!");
+                                    break;
+                                case 403:
+                                    toastr.error(msg);
+                                    break;
+                                default:
+                                    toastr.error("未知错误");
+                                    break
+                            }
+                        } else if (status == 1) {
+                            switch (code) {
+                                case 0:
+                                    toastr.success("业务信息更新成功!");
+                                    break;
+                                case 403:
+                                    toastr.error(msg);
+                                    break;
+                                default:
+                                    toastr.error("未知错误");
+                                    break
+                            }
                         }
 
                         probetable.currReset();
@@ -280,11 +313,13 @@ function getFormJson(form) {      /*将表单对象变为json对象*/
 }
 
 var search_data = new Vue({
+
     el:'#searchcolums',
     data:{
         countys:probeform_data.countys,
         city_mans:probeform_data.city_mans,
         testgroup_names:[]
+
     }
 });
 /*选中表格事件*/
@@ -325,60 +360,64 @@ $(document).ready(function () {
 // 注册
 var probetable = new Vue({
     el: '#probedata_table',
-    data:{
-            headers: [
-                {title: ''},
-                {title: '<div class="checkbox"> <label> <input type="checkbox" id="checkAll"></label> </div>'},
-                {title: '<div style="display:none">id</div>'},
-                {title: '<div style="width:142px">测试机名</div>'},
-                {title: '<div style="width:142px">IP地址</div>'},
-                {title: '<div style="width:112px">带宽</div>'},
-                {title: '<div style="width:67px">地市</div>'},
-                {title: '<div style="width:67px">区县</div>'},
-                {title: '<div style="width:92px">软件标识</div>'},
-                {title: '<div style="width:112px">硬件编码</div>'},
-                {title: '<div style="width:112px">测试任务组</div>'},
-                {title: '<div style="width:52px">在线状态</div>'},
-                {title: '<div style="width:112px">在线时间</div>'},
-                {title: '<div style="width:112px">探针类型</div>'},
-                {title: '<div style="width:112px">版本号</div>'},
-                {title: '<div style="width:67px">任务间隔</div>'},
-                {title: '<div style="width:167px">装机地址</div>'},
-                {title: '<div style="width:142px">BRAS名称</div>'},
-                {title: '<div style="width:112px">BRAS_IP</div>'},
-                {title: '<div style="width:112px">BRAS端口</div>'},
-                {title: '<div style="width:52px">操作</div>'}
-            ],
-            rows: [],
-            dtHandle: null,
-            probedata:{}
+    data: {
+        headers: [
+            {title: ''},
+            {title: '<div class="checkbox"> <label> <input type="checkbox" id="checkAll"></label> </div>'},
+            {title: '<div style="display:none">id</div>'},
+            {title: '<div style="width:142px">测试机名</div>'},
+            {title: '<div style="width:142px">IP地址</div>'},
+            {title: '<div style="width:112px">带宽</div>'},
+            {title: '<div style="width:67px">地市</div>'},
+            {title: '<div style="width:67px">区县</div>'},
+            {title: '<div style="width:92px">软件标识</div>'},
+            {title: '<div style="width:112px">硬件编码</div>'},
+            {title: '<div style="width:112px">测试任务组</div>'},
+            {title: '<div style="width:52px">在线状态</div>'},
+            {title: '<div style="width:112px">在线时间</div>'},
+            {title: '<div style="width:112px">探针类型</div>'},
+            {title: '<div style="width:112px">版本号</div>'},
+            {title: '<div style="width:67px">任务间隔</div>'},
+            {title: '<div style="width:167px">装机地址</div>'},
+            {title: '<div style="width:142px">BRAS名称</div>'},
+            {title: '<div style="width:112px">BRAS_IP</div>'},
+            {title: '<div style="width:112px">BRAS端口</div>'},
+            {title: '<div style="width:52px">操作</div>'}
+        ],
+        rows: [],
+        dtHandle: null,
+        probedata: {}
 
     },
     /*watch: {
-        users(val, oldVal) {
+     users(val, oldVal) {
 
 
-        }
-    },*/
+     }
+     },*/
     methods: {
         reset: function () {
             let vm = this;
-            vm.probedata = {};/*清空probedata*/
+            vm.probedata = {};
+            /*清空probedata*/
             vm.dtHandle.clear();
             console.log("重置");
-            vm.dtHandle.draw();    /*重置*/
+            vm.dtHandle.draw();
+            /*重置*/
         },
-        currReset:function () {
+        currReset: function () {
             let vm = this;
             vm.dtHandle.clear();
             console.log("当前页面重绘");
-            vm.dtHandle.draw(false);    /*当前页面重绘*/
+            vm.dtHandle.draw(false);
+            /*当前页面重绘*/
         },
-        redraw:function () {
+        redraw: function () {
             let vm = this;
             vm.dtHandle.clear();
             console.log("页面重绘");
-            vm.dtHandle.draw();    /*重绘*/
+            vm.dtHandle.draw();
+            /*重绘*/
         }
     },
     mounted() {
@@ -402,22 +441,23 @@ var probetable = new Vue({
             oLanguage: {
                 sLengthMenu: "每页 _MENU_ 行数据",
                 oPaginate: {
-                    sNext: '<i class="fa fa-chevron-right" ></i>',  /*图标替换上一页,下一页*/
+                    sNext: '<i class="fa fa-chevron-right" ></i>', /*图标替换上一页,下一页*/
                     sPrevious: '<i class="fa fa-chevron-left" ></i>'
                 }
             },
-            sDom: 'Rfrtlip',  /*显示在左下角*/
+            sDom: 'Rfrtlip', /*显示在左下角*/
             ajax: function (data, callback, settings) {
                 //封装请求参数
                 let param = {};
                 param.limit = data.length;//页面显示记录条数，在页面显示每页显示多少项的时候
                 param.start = data.start;//开始的记录序号
                 param.page = (data.start / data.length) + 1;//当前页码
-                param.probedata = JSON.stringify(vm.probedata);    /*用于查询probe数据*/
+                param.probedata = JSON.stringify(vm.probedata);
+                /*用于查询probe数据*/
                 console.log(param);
                 //ajax请求数据
                 $.ajax({
-                    type: "POST",   /*GET会乱码*/
+                    type: "POST", /*GET会乱码*/
                     url: "../testagent/list",
                     cache: false,  //禁用缓存
                     data: param,  //传入组装的参数

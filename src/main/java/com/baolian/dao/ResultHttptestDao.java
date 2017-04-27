@@ -1,6 +1,10 @@
 package com.baolian.dao;
 
 import com.baolian.entity.ResultHttptestEntity;
+import com.baolian.entity.map.CountyHttptestResult;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -10,5 +14,7 @@ import com.baolian.entity.ResultHttptestEntity;
  * @date 2017-04-18 17:03:59
  */
 public interface ResultHttptestDao extends BaseDao<ResultHttptestEntity> {
-	
+
+    List<CountyHttptestResult> queryCountyHttpList(Map<String, Object> map);
+    
 }

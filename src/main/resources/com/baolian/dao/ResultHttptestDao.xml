@@ -3,6 +3,17 @@
 
 <mapper namespace="com.baolian.dao.ResultHttptestDao">
 
+    <!--区域Ping感知返回的联表类型-->
+    <resultMap id="countyHttptestResult" type="com.baolian.entity.map.CountyHttptestResult">
+        <id property="id" column="id"/>
+        <result property="dnsDelay" column="dnsdelay"/>
+        <result property="connectDelay" column="connectdelay"/>
+        <result property="responseDelay" column="responsedelay"/>
+        <result property="speed" column="speed"/>
+        <result property="qoe" column="qoe"/>
+        <result property="county" column="county"/>
+    </resultMap>
+
     <select id="queryObject" resultType="com.baolian.entity.ResultHttptestEntity">
         SELECT *
         FROM result_httptest
@@ -14,6 +25,29 @@
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>
+    </select>
+
+    <select id="queryCountyHttpList" resultMap="countyHttptestResult">
+        SELECT
+        MAX(result_httptest.id) AS id,
+        AVG(result_httptest.connectdelay) AS connectdelay,
+        AVG(result_httptest.dnsdelay) AS dnsdelay,
+        AVG(result_httptest.responsedelay) AS responsedelay,
+        AVG(result_httptest.speed) AS speed,
+        AVG(result_httptest.qoe) AS qoe,
+        testagent.county AS county
+        FROM result_httptest
+        INNER JOIN testagent
+        ON result_httptest.testagentid = testagent.id
+        WHERE result_httptest.testtime BETWEEN #{starttime} AND #{endtime}
+        <if test="county != null and county != ''">
+            AND testagent.county = #{county}
+        </if>
+        <if test="county == null or county == ''">
+            AND testagent.county IN ('新城区', '碑林区')
+            GROUP BY testagent.county;
+        </if>
+
     </select>
 
     <select id="queryTotal" resultType="int">
