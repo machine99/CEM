@@ -72,8 +72,8 @@
                     <div class="ibox-content">
                         <div class="row">     <!--切换按钮-->
                             <div class="btn-group" id="charts_button">                   <!--Vue事件监听-->
-                                <button type="button" class="btn btn-default" v-on:click="pingDelay">ping时延</button>
-                                <button type="button" class="btn btn-default" v-on:click="connectDelay">连接时延</button>
+                                <button type="button" class="btn btn-default" v-on:click="rtt_avg">ping时延</button>
+                                <button type="button" class="btn btn-default" v-on:click="tcpDelay">连接时延</button>
                                 <button type="button" class="btn btn-default" v-on:click="loss">丢包</button>
                                 <button type="button" class="btn btn-default" v-on:click="qoe">qoe</button>
                             </div>

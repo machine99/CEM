@@ -1,5 +1,6 @@
 package com.baolian.service.impl;
 
+import com.baolian.entity.map.CountyGametestResult;
 import com.baolian.dao.datasouce.annotation.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,11 @@ public class ResultGametestServiceImpl implements ResultGametestService {
     @Override
     public List<ResultGametestEntity> queryList(Map<String, Object> map) {
         return resultGametestDao.queryList(map);
+    }
+
+    @Override
+    public List<CountyGametestResult> queryCountyGameList(Map<String, Object> map) {
+        return resultGametestDao.queryCountyGameList(map);
     }
 
     @Override
