@@ -13,7 +13,7 @@ import java.util.Map;
  * @date 2017-04-18 17:03:59
  */
 public interface TestgroupService {
-	
+
 	TestgroupEntity queryObject(Integer id);
 	
 	List<TestgroupEntity> queryList(Map<String, Object> map);

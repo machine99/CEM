@@ -3,9 +3,30 @@
  */
 var status;
 var idArray = new Array();
+var testGroupNames = new Array();
+
 var probedata_handle = new Vue({
     el: '#handle',
     data: {},
+    mounted(){         /*动态加载测试任务组数据*/
+        $.ajax({
+            type: "POST",   /*GET会乱码*/
+            url: "../testgroup/list",
+            cache: false,  //禁用缓存
+            dataType: "json",
+            /* contentType:"application/json",  /!*必须要,不可少*!/*/
+            success: function (result) {
+                console.log("测试任务组取值成功");
+                console.log(result.page.list);
+                for(var i=0;i<result.page.list.length;i++){
+                    testGroupNames[i] = {message: result.page.list[i].name}
+                }
+                probeform_data.testgroup_names = testGroupNames;    /*注意,这个js执行放在probeform_data和search_data之前才行*/
+                search_data.testgroup_names = testGroupNames;
+                console.log(search_data.testgroup_names);
+            }
+        });
+    },
     methods: {
         testagentadd: function () {   /*监听录入触发事件*/
             status = 0;/*状态0,表示录入*/
@@ -15,7 +36,7 @@ var probedata_handle = new Vue({
             /*去除只读状态*/
             $('#probeform_data select').prop("disabled", false);
 
-            for (var i = 0; i < 10; i++) {
+            for (var i = 0; i < 11; i++) {
                 forms[i].value = ""
             }
             probeform_data.modaltitle = "测试机管理录入";
@@ -38,16 +59,16 @@ var probedata_handle = new Vue({
                 toastr.warning('请选择编辑项目！');
             } else if (trs.length == 1) {
                 var tds = trs.find("td");
-                for (var i = 0; i < 5; i++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
+                for (var i = 0; i < 6; i++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
                     console.log(tds.eq(i + 3).text());
-                    forms[i].value = tds.eq(i + 3).text()
+                    forms[i].value = tds.eq(i + 2).text()
                 }
-                forms[5].value = tds.eq(10).text();
+                forms[6].value = tds.eq(10).text();
                 /*修改测试任务组*/
                 console.log(tds.eq(10).text());
                 for (var j = 0; j < 4; j++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
                     console.log(tds.eq(j + 15).text());
-                    forms[j + 6].value = tds.eq(j + 15).text()
+                    forms[j + 7].value = tds.eq(j + 15).text()
                 }
                 /*tds.each(function(){
                  var td = $(this);
@@ -85,16 +106,16 @@ var probedata_handle = new Vue({
                 toastr.warning('请选择查看项目！');
             } else if (trs.length == 1) {
                 var tds = trs.find("td");
-                for (var i = 0; i < 5; i++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
-                    console.log(tds.eq(i + 3).text());
-                    forms[i].value = tds.eq(i + 3).text()
+                for (var i = 0; i < 6; i++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
+                    console.log(tds.eq(i + 2).text());
+                    forms[i].value = tds.eq(i + 2).text()
                 }
-                forms[5].value = tds.eq(10).text();
+                forms[6].value = tds.eq(10).text();
                 /*修改测试任务组*/
                 console.log(tds.eq(10).text());
                 for (var j = 0; j < 4; j++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
                     console.log(tds.eq(j + 15).text());
-                    forms[j + 6].value = tds.eq(j + 15).text()
+                    forms[j + 7].value = tds.eq(j + 15).text()
                 }
                 $('#probeform_data input[type=text]').prop("readonly", true);//将input元素设置为readonly
                 $('#probeform_data select').prop("disabled", true);//将select元素设置为不可变
@@ -173,7 +194,7 @@ var delete_data = new Vue({
     }
 });
 
-var probeform_data = new Vue({      
+var probeform_data = new Vue({
     el: '#myModal',
     data: {
         modaltitle: "测试机管理录入", /*定义模态框标题*/
@@ -195,13 +216,7 @@ var probeform_data = new Vue({
         city_mans: [
             {message: '西安市'}
         ],
-        testgroup_names: [
-            {message: '标准测试任务'},
-            {message: '视频类测试'},
-            {message: '网站应用'},
-            {message: '他网测试'},
-            {message: '默认任务'}
-        ]
+        testgroup_names: []
     },
     // 在 `methods` 对象中定义方法
     methods: {
@@ -243,7 +258,7 @@ var probeform_data = new Vue({
                 });
             }
 
-            
+
         }
     }
 });
@@ -269,10 +284,10 @@ var search_data = new Vue({
     data:{
         countys:probeform_data.countys,
         city_mans:probeform_data.city_mans,
-        testgroup_names:probeform_data.testgroup_names
+        testgroup_names:[]
     }
 });
-        /*选中表格事件*/
+/*选中表格事件*/
 $(document).ready(function () {
     $('#probe_table tbody').on('click', 'tr', function () {   /*表格某一行选中状态*/
         if ($(this).hasClass('selected')) {
@@ -424,13 +439,13 @@ var probetable = new Vue({
                                 row.push(i++);
                                 row.push('<div class="checkbox"> <label> <input type="checkbox" name="selectFlag"></label> </div>');
                                 row.push('<div class="probe_id">'+item.id+'</div>');
-                                row.push(item.sysuuid);
+                                row.push(item.name);
                                 row.push(item.ip);
                                 row.push(item.bandwidth);
                                 row.push(item.cityMan);
                                 row.push(item.county);
                                 row.push(item.useruid);
-                                row.push(item.name);
+                                row.push(item.sysuuid);
                                 row.push(item.testgroupName);
                                 row.push(item.onlinestatus);
                                 row.push(item.onlineTime);

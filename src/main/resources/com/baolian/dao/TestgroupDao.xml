@@ -3,8 +3,11 @@
 
 <mapper namespace="com.baolian.dao.TestgroupDao">
 
+
+
 	<select id="queryObject" resultType="com.baolian.entity.TestgroupEntity">
 		select * from testgroup where id = #{value}
+
 	</select>
 
 	<select id="queryList" resultType="com.baolian.entity.TestgroupEntity">
@@ -13,7 +16,7 @@
 			limit #{offset}, #{limit}
 		</if>
 	</select>
-	
+
  	<select id="queryTotal" resultType="int">
 		select count(*) from testgroup 
 	</select>

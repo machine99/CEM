@@ -17,7 +17,7 @@ public interface TesttargetService {
 	TesttargetEntity queryObject(Integer id);
 	
 	List<TesttargetEntity> queryList(Map<String, Object> map);
-	
+
 	int queryTotal(Map<String, Object> map);
 	
 	void save(TesttargetEntity testtarget);

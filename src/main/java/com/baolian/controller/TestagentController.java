@@ -103,9 +103,9 @@ public class TestagentController {
     @RequiresPermissions("testagent:delete")
     public R delete(@RequestBody Long[] ids) {
         testagentService.deleteBatch(ids);
-        // for (Long id : ids) {
-        //     System.out.println(id);
-        // }
+         for (Long id : ids) {
+             System.out.println(id);
+         }
         return R.ok();
     }
 }

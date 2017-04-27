@@ -28,6 +28,7 @@ public class TesttargetServiceImpl implements TesttargetService {
         return testtargetDao.queryList(map);
     }
 
+
     @Override
     public int queryTotal(Map<String, Object> map) {
         return testtargetDao.queryTotal(map);
