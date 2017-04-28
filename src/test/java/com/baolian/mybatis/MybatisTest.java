@@ -1,9 +1,11 @@
 package com.baolian.mybatis;
 
 import com.baolian.entity.TestagentEntity;
+import com.baolian.entity.TesttargetEntity;
 import com.baolian.entity.map.CountyPingtestResult;
 import com.baolian.service.ResultPingtestService;
 import com.baolian.service.TestagentService;
+import com.baolian.service.TesttargetService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class MybatisTest {
     private ResultPingtestService resultPingtestService;
     @Autowired
     private TestagentService testagentService;
+    @Autowired
+    private TesttargetService testtargetService;
 
     @Test
     public void RunMybatisTest() {
@@ -36,7 +40,10 @@ public class MybatisTest {
         // for (CountyPingtestResult result : results) {
         //     System.out.println(result);
         // }
-        int total = resultPingtestService.queryTotal(map);
-        System.out.println(total);
+        List<TesttargetEntity> list = testtargetService.queryList(map);
+        System.out.println(testtargetService.queryTotal(map));
+        for (TesttargetEntity entity : list) {
+            System.out.println(entity.getId());
+        }
     }
 }
