@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,23 +40,32 @@ public class TestgroupController {
 	@ResponseBody
 	@RequestMapping("/list")
 	@RequiresPermissions("testgroup:list")
-	public void list(Integer page, Integer limit){
+	public R list(Integer page, Integer limit){
 		Map<String, Object> map = new HashMap<>();
-		map.put("offset", (page - 1) * limit);
-		map.put("limit", limit);
+		int total = 0;
 
 		System.out.println(page);
 		System.out.println(limit);
+        if(page==null) {              /*没有传入page,则取全部值*/
+			map.put("offset", null);
+			map.put("limit", null);
+			page = 0;
+			limit = 0;
+		}else {
+			map.put("offset", (page - 1) * limit);
+			map.put("limit", limit);
+			total = testgroupService.queryTotal(map);
+		}
 		
 		//查询列表数据
-		/*List<TestgroupEntity> testgroupList = testgroupService.queryList(map);
-		int total = testgroupService.queryTotal(map);
+		List<TestgroupEntity> testgroupList = testgroupService.queryList(map);
+
 		
 		PageUtils pageUtil = new PageUtils(testgroupList, total, limit, page);
 		
-		return R.ok().put("page", pageUtil);*/
+		return R.ok().put("page", pageUtil);
 	}
-	
+
 	
 	/**
 	 * 信息
@@ -66,6 +74,7 @@ public class TestgroupController {
 	@RequestMapping("/info/{id}")
 	@RequiresPermissions("testgroup:info")
 	public R info(@PathVariable("id") Integer id){
+		System.out.println("取得id值:"+id);
 		TestgroupEntity testgroup = testgroupService.queryObject(id);
 		
 		return R.ok().put("testgroup", testgroup);
@@ -79,7 +88,7 @@ public class TestgroupController {
 	@RequiresPermissions("testgroup:save")
 	public R save(@RequestBody TestgroupEntity testgroup){
 		testgroupService.save(testgroup);
-		
+		System.out.println("录入:"+testgroup);
 		return R.ok();
 	}
 	
@@ -91,7 +100,7 @@ public class TestgroupController {
 	@RequiresPermissions("testgroup:update")
 	public R update(@RequestBody TestgroupEntity testgroup){
 		testgroupService.update(testgroup);
-		
+		System.out.println("更新:"+testgroup);
 		return R.ok();
 	}
 	
@@ -103,7 +112,9 @@ public class TestgroupController {
 	@RequiresPermissions("testgroup:delete")
 	public R delete(@RequestBody Integer[] ids){
 		testgroupService.deleteBatch(ids);
-		
+		for(Integer id:ids){
+			System.out.println("要删除的:"+id);
+		}
 		return R.ok();
 	}
 	

@@ -3,9 +3,27 @@
  */
 var status;
 var idArray = new Array();
+var testGroupNames = new Array();
+
 var probedata_handle = new Vue({
     el: '#handle',
     data: {},
+    mounted(){         /*动态加载测试任务组数据*/
+        $.ajax({
+            type: "POST",   /*GET会乱码*/
+            url: "../testgroup/list",
+            cache: false,  //禁用缓存
+            dataType: "json",
+            /* contentType:"application/json",  /!*必须要,不可少*!/*/
+            success: function (result) {
+                for(var i=0;i<result.page.list.length;i++){
+                    testGroupNames[i] = {message: result.page.list[i]}
+                }
+                probeform_data.testgroup_names = testGroupNames;    /*注意,这个js执行放在probeform_data和search_data之前才行*/
+                search_data.testgroup_names = testGroupNames;
+            }
+        });
+    },
     methods: {
         testagentadd: function () {   /*监听录入触发事件*/
             status = 0;
@@ -16,7 +34,7 @@ var probedata_handle = new Vue({
             /*去除只读状态*/
             $('#probeform_data select').prop("disabled", false);
 
-            for (var i = 0; i < 10; i++) {
+            for (var i = 0; i < 11; i++) {
                 forms[i].value = ""
             }
             probeform_data.modaltitle = "测试机管理录入";
@@ -40,16 +58,16 @@ var probedata_handle = new Vue({
                 toastr.warning('请选择编辑项目！');
             } else if (trs.length == 1) {
                 var tds = trs.find("td");
-                for (var i = 0; i < 5; i++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
+                for (var i = 0; i < 6; i++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
                     console.log(tds.eq(i + 3).text());
-                    forms[i].value = tds.eq(i + 3).text()
+                    forms[i].value = tds.eq(i + 2).text()
                 }
-                forms[5].value = tds.eq(10).text();
+                forms[6].value = tds.eq(10).text();
                 /*修改测试任务组*/
                 console.log(tds.eq(10).text());
                 for (var j = 0; j < 4; j++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
                     console.log(tds.eq(j + 15).text());
-                    forms[j + 6].value = tds.eq(j + 15).text()
+                    forms[j + 7].value = tds.eq(j + 15).text()
                 }
                 /*tds.each(function(){
                  var td = $(this);
@@ -90,16 +108,16 @@ var probedata_handle = new Vue({
                 toastr.warning('请选择查看项目！');
             } else if (trs.length == 1) {
                 var tds = trs.find("td");
-                for (var i = 0; i < 5; i++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
-                    console.log(tds.eq(i + 3).text());
-                    forms[i].value = tds.eq(i + 3).text()
+                for (var i = 0; i < 6; i++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
+                    console.log(tds.eq(i + 2).text());
+                    forms[i].value = tds.eq(i + 2).text()
                 }
-                forms[5].value = tds.eq(10).text();
+                forms[6].value = tds.eq(10).text();
                 /*修改测试任务组*/
                 console.log(tds.eq(10).text());
                 for (var j = 0; j < 4; j++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
                     console.log(tds.eq(j + 15).text());
-                    forms[j + 6].value = tds.eq(j + 15).text()
+                    forms[j + 7].value = tds.eq(j + 15).text()
                 }
                 $('#probeform_data input[type=text]').prop("readonly", true);//将input元素设置为readonly
                 $('#probeform_data select').prop("disabled", true);//将select元素设置为不可变
@@ -139,7 +157,6 @@ function delete_ajax() {
         dataType: "json",
         contentType: "application/json", /*必须要,不可少*/
         success: function (result) {
-            console.log("传递成功");
 
             toastr.success("业务信息删除成功!");
 
@@ -209,13 +226,7 @@ var probeform_data = new Vue({
         city_mans: [
             {message: '西安市'}
         ],
-        testgroup_names: [
-            {message: '标准测试任务'},
-            {message: '视频类测试'},
-            {message: '网站应用'},
-            {message: '他网测试'},
-            {message: '默认任务'}
-        ]
+        testgroup_names: []
     },
     // 在 `methods` 对象中定义方法
     methods: {
@@ -246,7 +257,6 @@ var probeform_data = new Vue({
                     dataType: "json",
                     contentType: "application/json", /*必须要,不可少*/
                     success: function (result) {
-                        console.log("传递成功");
                         let code = result.code;
                         let msg = result.msg;
                         console.log(result);
@@ -303,11 +313,13 @@ function getFormJson(form) {      /*将表单对象变为json对象*/
 }
 
 var search_data = new Vue({
-    el: '#searchcolums',
-    data: {
-        countys: probeform_data.countys,
-        city_mans: probeform_data.city_mans,
-        testgroup_names: probeform_data.testgroup_names
+
+    el:'#searchcolums',
+    data:{
+        countys:probeform_data.countys,
+        city_mans:probeform_data.city_mans,
+        testgroup_names:[]
+
     }
 });
 /*选中表格事件*/
@@ -453,45 +465,45 @@ var probetable = new Vue({
                     success: function (result) {
                         console.log(result);
 
-                        //封装返回数据
-                        let returnData = {};
-                        returnData.draw = data.draw;//这里直接自行返回了draw计数器,应该由后台返回
-                        returnData.recordsTotal = result.page.totalCount;//返回数据全部记录
-                        returnData.recordsFiltered = result.page.totalCount;//后台不实现过滤功能，每次查询均视作全部结果
-                        // returnData.data = result.page.list;//返回的数据列表
-                        // 重新整理返回数据以匹配表格
-                        let rows = [];
-                        var i = param.start + 1;
-                        result.page.list.forEach(function (item) {
-                            let row = [];
-                            row.push(i++);
-                            row.push('<div class="checkbox"> <label> <input type="checkbox" name="selectFlag"></label> </div>');
-                            row.push('<div class="probe_id">' + item.id + '</div>');
-                            row.push(item.sysuuid);
-                            row.push(item.ip);
-                            row.push(item.bandwidth);
-                            row.push(item.cityMan);
-                            row.push(item.county);
-                            row.push(item.useruid);
-                            row.push(item.name);
-                            row.push(item.testgroupName);
-                            row.push(item.onlinestatus);
-                            row.push(item.onlineTime);
-                            row.push(item.model);
-                            row.push(item.version);
-                            row.push(item.runInterval);
-                            row.push(item.address);
-                            row.push(item.brasname);
-                            row.push(item.brasip);
-                            row.push(item.brasport);
-                            row.push('<a class="fontcolor" onclick="delete_this(this)" id=' + item.id + '>删除</a>');
-                            rows.push(row);
-                        });
-                        returnData.data = rows;
-                        console.log(returnData);
-                        //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
-                        //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
-                        callback(returnData);
+                            //封装返回数据
+                            let returnData = {};
+                            returnData.draw = data.draw;//这里直接自行返回了draw计数器,应该由后台返回
+                            returnData.recordsTotal = result.page.totalCount;//返回数据全部记录
+                            returnData.recordsFiltered = result.page.totalCount;//后台不实现过滤功能，每次查询均视作全部结果
+                            // returnData.data = result.page.list;//返回的数据列表
+                            // 重新整理返回数据以匹配表格
+                            let rows = [];
+                            var i = param.start+1;
+                            result.page.list.forEach(function (item) {
+                                let row = [];
+                                row.push(i++);
+                                row.push('<div class="checkbox"> <label> <input type="checkbox" name="selectFlag"></label> </div>');
+                                row.push('<div class="probe_id">'+item.id+'</div>');
+                                row.push(item.name);
+                                row.push(item.ip);
+                                row.push(item.bandwidth);
+                                row.push(item.cityMan);
+                                row.push(item.county);
+                                row.push(item.useruid);
+                                row.push(item.sysuuid);
+                                row.push(item.testgroupName);
+                                row.push(item.onlinestatus);
+                                row.push(item.onlineTime);
+                                row.push(item.model);
+                                row.push(item.version);
+                                row.push(item.runInterval);
+                                row.push(item.address);
+                                row.push(item.brasname);
+                                row.push(item.brasip);
+                                row.push(item.brasport);
+                                row.push('<a class="fontcolor" onclick="delete_this(this)" id='+item.id+'>删除</a>');
+                                rows.push(row);
+                            });
+                            returnData.data = rows;
+                            console.log(returnData);
+                            //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+                            //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+                            callback(returnData);
                     }
                 });
             }

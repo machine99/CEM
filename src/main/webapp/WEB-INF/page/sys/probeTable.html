@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -66,11 +66,10 @@
                             <div class="input-group searchspan">
                                 <span class="searchname" title="测试任务组">测试任务组：</span>
                                 <select class="form-control" name="testgroup_name" style="width: 110px">
-                                    <option value="">---请选择---</option>
-                                    <option v-for="item in testgroup_names">{{ item.message }}</option>
+                                    <option value="">---请选择---</option>                       <!--vue 绑定value属性    重要！！！！-->
+                                    <option v-for="item in testgroup_names" v-bind:value="item.message.name">{{ item.message.name }}</option>
                                 </select>
                             </div>
-
 
                             <div class="input-group searchspan">
                                 <span class="searchname" title="探针类型">探针类型：</span>
@@ -150,6 +149,12 @@
                     <div class="row">
                         <form class="form-horizontal" id="probeform_data" role="form">
                             <div class="form-group row">
+                                <label for="id"
+                                       class="col-lg-3 col-md-3 col-sm-3 control-label form_border" style="display: none">id:</label>
+                                <div class="col-lg-3 col-md-3 col-sm-3 form_border" style="display: none">
+                                    <input type="text" class="form-control" id="id" name="id"
+                                           placeholder="请输入id">
+                                </div>
                                 <label for="name"
                                        class="col-lg-3 col-md-3 col-sm-3 control-label form_border">测试机名:</label>
                                 <div class="col-lg-3 col-md-3 col-sm-3 form_border">
@@ -195,7 +200,7 @@
                                 <div class="col-lg-3 col-md-3 col-sm-3 form_border">
                                     <select id="testgroupName" class="form-control" name="testgroupName">
                                         <option v-for="item in testgroup_names">
-                                            {{ item.message }}
+                                            {{ item.message.name }}
                                         </option>
                                     </select>
                                 </div>

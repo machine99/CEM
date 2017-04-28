@@ -13,17 +13,19 @@ import java.util.Map;
  */
 public interface TesttargetService {
 
-    TesttargetEntity queryObject(Integer id);
+	
+	TesttargetEntity queryObject(Integer id);
+	
+	List<TesttargetEntity> queryList(Map<String, Object> map);
 
-    List<TesttargetEntity> queryList(Map<String, Object> map);
+	int queryTotal(Map<String, Object> map);
+	
+	void save(TesttargetEntity testtarget);
+	
+	void update(TesttargetEntity testtarget);
+	
+	void delete(Integer id);
+	
+	void deleteBatch(Integer[] ids);
 
-    int queryTotal(Map<String, Object> map);
-
-    void save(TesttargetEntity testtarget);
-
-    void update(TesttargetEntity testtarget);
-
-    void delete(Integer id);
-
-    void deleteBatch(Integer[] ids);
 }

@@ -1,9 +1,13 @@
 package com.baolian.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.baolian.entity.map.CountyGametestResult;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +41,38 @@ public class ResultGametestController {
 	/**
 	 * 列表
 	 */
+
+	@ResponseBody
+	@RequestMapping("/countygamelist")
+	@RequiresPermissions("resultgametest:countygamelist")
+	public R list(String starttime, String endtime, String area){
+		Map<String, Object> map = new HashMap<>();
+		map.put("starttime", starttime);
+		map.put("endtime", endtime);
+		map.put("county", area);
+
+		System.out.println("starttime:"+starttime);
+		System.out.println("endtime:"+endtime);
+		System.out.println("county:"+area);
+
+
+		//查询列表数据
+		List<CountyGametestResult> resultCountyGametestList = resultGametestService.queryCountyGameList(map);
+
+		for (CountyGametestResult result : resultCountyGametestList) {
+			System.out.println(result);
+		}
+
+		if(resultCountyGametestList.size()==1&&"".equals(area)){
+			if (resultCountyGametestList.get(0).getCounty().equals("新城区")){
+				resultCountyGametestList.add(new CountyGametestResult("碑林区",0,0.0,0.0,0.0,0.0));
+			}else if(resultCountyGametestList.get(0).getCounty().equals("碑林区")){
+				resultCountyGametestList.add(0,new CountyGametestResult("新城区",0,0.0,0.0,0.0,0.0));
+			}
+		}
+		return R.ok().put("resultCountyGametestList", resultCountyGametestList);
+	}
+
 	@ResponseBody
 	@RequestMapping("/list")
 	@RequiresPermissions("resultgametest:list")
@@ -44,17 +80,16 @@ public class ResultGametestController {
 		Map<String, Object> map = new HashMap<>();
 		map.put("offset", (page - 1) * limit);
 		map.put("limit", limit);
-		
+
 		//查询列表数据
 		List<ResultGametestEntity> resultGametestList = resultGametestService.queryList(map);
 		int total = resultGametestService.queryTotal(map);
-		
+
 		PageUtils pageUtil = new PageUtils(resultGametestList, total, limit, page);
-		
+
 		return R.ok().put("page", pageUtil);
 	}
-	
-	
+
 	/**
 	 * 信息
 	 */

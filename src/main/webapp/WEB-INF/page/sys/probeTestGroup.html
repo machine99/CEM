@@ -69,6 +69,12 @@
                     <div class="row">
                         <form class="form-horizontal" id="probeform_data" role="form">
                             <div class="form-group row">
+                                <label for="id"
+                                       class="col-lg-3 col-md-3 col-sm-3 control-label form_border" style="display: none">组名:</label>
+                                <div class="col-lg-3 col-md-3 col-sm-3 form_border" style="display: none">
+                                    <input type="text" class="form-control" id="id" name="id"
+                                           placeholder="id">
+                                </div>
                                 <label for="name"
                                        class="col-lg-3 col-md-3 col-sm-3 control-label form_border">组名:</label>
                                 <div class="col-lg-3 col-md-3 col-sm-3 form_border">
@@ -76,10 +82,10 @@
                                            placeholder="组名">
                                 </div>
                                 <label for="more"
-                                       class="col-lg-3 col-md-3 col-sm-3 control-label form_border">IP地址:</label>
+                                       class="col-lg-3 col-md-3 col-sm-3 control-label form_border">描述:</label>
                                 <div class="col-lg-3 col-md-3 col-sm-3 form_border">
                                     <input type="text" class="form-control" id="more" name="more"
-                                           placeholder="请输入IP地址">
+                                           placeholder="请输入描述">
                                 </div>
                             </div>
                         </form>
@@ -99,7 +105,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <table id="target_group_table" class="table table-bordered table-hover"
+                        <table class="table table-bordered table-hover" id="target_group_table"></table>
+                        <!--<table id="target_group_table" class="table table-bordered table-hover"
                                style="margin-bottom: 0;">
                             <thead>
                             <tr>
@@ -152,7 +159,7 @@
                                 </td>
                             </tr>
                             </tbody>
-                        </table>
+                        </table>-->
                     </div>
                 </div>
                 <div class="modal-footer">

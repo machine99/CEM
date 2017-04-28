@@ -3,6 +3,8 @@
  */
 var get_area;
 var flag = 0;
+var starttime;
+var endtime;
 /*标志位,判断highcharts绘图Vue点击时间更新的series*/
 
 var staus = 0;
@@ -254,7 +256,6 @@ var button_change = new Vue({
                 title: {
                     text: '结果(Mbps)'
                 },
-                max: 100
             },
         }
 
@@ -435,12 +436,6 @@ var new_data = new Vue({
         filteredUsers: function () {                 /*此处可以对传入数据进行处理*/
             let self = this;
             return self.users;
-            /*let search = self.search.toLowerCase();
-             return self.users.filter(function (user) {
-             return user.username.toLowerCase().indexOf(search) !== -1 ||
-             user.email.toLowerCase().indexOf(search) !== -1 ||
-             user.mobile.indexOf(search) !== -1
-             })*/
         }
     },
     mounted() {
