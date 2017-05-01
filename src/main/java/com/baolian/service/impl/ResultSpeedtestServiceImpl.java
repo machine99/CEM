@@ -1,6 +1,7 @@
 package com.baolian.service.impl;
 
 import com.baolian.dao.datasouce.annotation.DataSource;
+import com.baolian.entity.map.CountySpeedtestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,10 @@ public class ResultSpeedtestServiceImpl implements ResultSpeedtestService {
         return resultSpeedtestDao.queryList(map);
     }
 
+    @Override
+    public List<CountySpeedtestResult> queryCountySpeedList(Map<String, Object> map) {
+        return resultSpeedtestDao.queryCountySpeedList(map);
+    }
     @Override
     public int queryTotal(Map<String, Object> map) {
         return resultSpeedtestDao.queryTotal(map);
