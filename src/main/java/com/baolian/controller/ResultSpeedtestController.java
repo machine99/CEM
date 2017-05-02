@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.baolian.entity.map.CountySpeedtestResult;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +34,37 @@ public class ResultSpeedtestController {
 	public String list(){
 		return "resultspeedtest/resultspeedtest.html";
 	}
-	
+
+	@ResponseBody
+	@RequestMapping("/countyspeedlist")
+	@RequiresPermissions("resultspeedtest:countyspeedlist")
+	public R list(String starttime, String endtime, String area) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("starttime", starttime);
+		map.put("endtime", endtime);
+		map.put("county", area);
+
+		System.out.println("starttime:" + starttime);
+		System.out.println("endtime:" + endtime);
+		System.out.println("county:" + area);
+
+
+		//查询列表数据
+		List<CountySpeedtestResult> resultCountySpeedtestList = resultSpeedtestService.queryCountySpeedList(map);
+
+		for (CountySpeedtestResult result : resultCountySpeedtestList) {
+			System.out.println(result);
+		}
+
+		if (resultCountySpeedtestList.size() == 1 && "".equals(area)) {
+			if (resultCountySpeedtestList.get(0).getCounty().equals("新城区")) {
+				resultCountySpeedtestList.add(new CountySpeedtestResult("碑林区", 0, 0.0, 0.0));
+			} else if (resultCountySpeedtestList.get(0).getCounty().equals("碑林区")) {
+				resultCountySpeedtestList.add(0, new CountySpeedtestResult("新城区", 0, 0.0, 0.0));
+			}
+		}
+		return R.ok().put("resultCountySpeedtestList", resultCountySpeedtestList);
+	}
 	/**
 	 * 列表
 	 */
