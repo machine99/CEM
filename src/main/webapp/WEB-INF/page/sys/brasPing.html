@@ -1,33 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>BRASping感知对比</title>
-    <!--<meta charset="UTF-8">-->
-    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
-    <!--<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">-->
-    <link rel="stylesheet" href="${rc.contextPath}/statics/css/bootstrap.min.css">
-    <link rel="stylesheet" href="${rc.contextPath}/statics/css/font-awesome.min.css">
-    <link rel="stylesheet" href="${rc.contextPath}/statics/css/dataTables/jquery.dataTables.min.css">
-    <script src="${rc.contextPath}/statics/libs/jquery.min.js"></script>
-    <script src="${rc.contextPath}/statics/libs/bootstrap.min.js"></script>
-    <script src="${rc.contextPath}/statics/libs/vue.min.js"></script>
-    <script src="${rc.contextPath}/js/plugins/dataTables/jquery.dataTables.min.js"></script>
-    <script src="${rc.contextPath}/statics/libs/ajaxupload.js"></script>
-    <script src="${rc.contextPath}/js/customalert.js"></script>
-
+    <title>BRASPing感知对比</title>
+    #parse("sys/areaHeader.html")  <!--导入CSS和js文件-->
+    <link href="${rc.contextPath}/statics/css/area.css" rel="stylesheet">  <!--自定义CSS-->
 </head>
 <body>
-<h1>BRASping感知对比</h1>
-<button type="button" id="upload">上传文件</button>
-<br/>
-<a href="../sys/upload/download" download>下载文件</a>
-<div id="tabledemo">
-    <h3>Vue Datatable example</h3>
-    Filter by anything: <input v-model="search">
-    <hr>
-    <data-table :users="filteredUsers"></data-table>
+<div id="wrapper">
+    <div class="wrapper wrapper-content">
+        <div class="row">
+
+            <form class="bs-example bs-example-form" role="form">
+                <div class="row" id="first_row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"></div>    <!--自适应分辨率-->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                        <!--<div class="input-daterange input-group" id="datepicker">
+                            <input type="text" class="input-sm form-control" name="start" value="05/14/2014">
+                            <span class="input-group-addon">to</span>
+                            <input type="text" class="input-sm form-control" name="end" value="05/22/2014">
+                        </div>-->
+                        <form class="bs-example bs-example-form" role="form">
+                            <div class="input-daterange input-group" id="datepicker">
+                                <span class="input-group-addon">时间:</span>
+                                <input type="text" class="form-control" name="daterange"
+                                       value="01/01/2015 - 01/31/2015"/>
+                            </div>
+                        </form>
+                    </div>
+
+
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <div class="btn-toolbar" role="toolbar">
+                            <div class="btn-group" id="min_button">
+                                <button type="button" class="btn btn-default" v-on:click="search" id="search">
+                                    <span class="fa fa-search"></span>查询
+                                </button>
+                                <button type="button" class="btn btn-default" v-on:click="reset" id="reset">
+                                    <span class="glyphicon glyphicon-repeat"></span>重置
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /.row -->
+            </form>
+
+        </div><!-- /.row -->
+
+        <div class="row"> <!-- /.row -->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-primary pull-right">Today</span>
+                        <h3>BRASPing对比</h3>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">     <!--切换按钮-->
+                            <div class="btn-group" id="charts_button">                   <!--Vue事件监听-->
+                                <button type="button" class="btn btn-default" v-on:click="delay">时延</button>
+                                <button type="button" class="btn btn-default" v-on:click="loss">丢包</button>
+                                <button type="button" class="btn btn-default" v-on:click="qoe">qoe</button>
+                            </div>
+                        </div>
+                        <div class="row">     <!--highcharts图-->
+                            <div id="container" style="height: 400px; margin: 0 auto"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div><!-- /.row -->
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <button type="button" class="btn btn-primary btn-sm pull-right" onclick="exportExcel()">导出
+                        </button>  <!--模板按钮,导出表格excel-->
+                        <h3>数据明细</h3>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row pre-scrollable">     <!--表格-->
+                            <div id="tabledemo">
+                                <data-table :users="filteredUsers"></data-table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 <script type="text/javascript" src="${rc.contextPath}/js/sys/brasPing.js?_${date.systemTime}"></script>
 
 
