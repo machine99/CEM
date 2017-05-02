@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.baolian.entity.map.BrasPingtestResult;
+import com.baolian.entity.map.BrasYoukutestResult;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,6 +54,22 @@ public class ResultYoukutestController {
 		PageUtils pageUtil = new PageUtils(resultYoukutestList, total, limit, page);
 		
 		return R.ok().put("page", pageUtil);
+	}
+
+	/**
+	 * BRASPing感知列表
+	 */
+	@ResponseBody
+	@RequestMapping("/brasyoukulist")
+	@RequiresPermissions("resultyoukutest:brasyoukulist")
+	public R brasList(String starttime, String endtime) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("starttime", starttime);
+		map.put("endtime", endtime);
+
+		//查询列表数据
+		List<BrasYoukutestResult> resultBRASYoukutestList = resultYoukutestService.queryBRASYoukuList(map);
+		return R.ok().put("resultBRASYoukutestList", resultBRASYoukutestList);
 	}
 	
 	

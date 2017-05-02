@@ -1,6 +1,7 @@
 package com.baolian.service;
 
 import com.baolian.entity.ResultSpeedtestEntity;
+import com.baolian.entity.map.BrasSpeedtestResult;
 import com.baolian.entity.map.CountySpeedtestResult;
 
 import java.util.List;
@@ -18,7 +19,10 @@ public interface ResultSpeedtestService {
 	ResultSpeedtestEntity queryObject(Integer id);
 	
 	List<ResultSpeedtestEntity> queryList(Map<String, Object> map);
+
 	List<CountySpeedtestResult> queryCountySpeedList(Map<String, Object> map);
+
+	List<BrasSpeedtestResult> queryBRASSpeedList(Map<String, Object> map);
 	
 	int queryTotal(Map<String, Object> map);
 	

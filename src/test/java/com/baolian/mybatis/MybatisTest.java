@@ -2,10 +2,7 @@ package com.baolian.mybatis;
 
 import com.baolian.entity.TestagentEntity;
 import com.baolian.entity.TesttargetEntity;
-import com.baolian.entity.map.BrasGametestResult;
-import com.baolian.entity.map.BrasHttptestResult;
-import com.baolian.entity.map.BrasPingtestResult;
-import com.baolian.entity.map.CountyPingtestResult;
+import com.baolian.entity.map.*;
 import com.baolian.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +28,10 @@ public class MybatisTest {
     @Autowired
     private ResultGametestService resultGametestService;
     @Autowired
+    private ResultYoukutestService resultYoukutestService;
+    @Autowired
+    private ResultSpeedtestService resultSpeedtestService;
+    @Autowired
     private TestagentService testagentService;
     @Autowired
     private TesttargetService testtargetService;
@@ -38,10 +39,10 @@ public class MybatisTest {
     @Test
     public void RunMybatisTest() {
         Map<String, Object> map = new HashMap<>();
-        map.put("starttime", "2016-10-21 00:00:00");
-        map.put("endtime", "2017-04-25 00:00:00");
-        List<BrasGametestResult> results = resultGametestService.queryBRASGameList(map);
-        for (BrasGametestResult result : results) {
+        map.put("starttime", "2016-04-01 00:00:00");
+        map.put("endtime", "2017-04-30 00:00:00");
+        List<BrasSpeedtestResult> results = resultSpeedtestService.queryBRASSpeedList(map);
+        for (BrasSpeedtestResult result : results) {
             System.out.println(result);
         }
         // List<TesttargetEntity> list = testtargetService.queryList(map);

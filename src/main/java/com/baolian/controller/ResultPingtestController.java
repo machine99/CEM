@@ -62,7 +62,7 @@ public class ResultPingtestController {
     }
 
     /**
-     * 区域Ping感知列表
+     * BRASPing感知列表
      */
     @ResponseBody
     @RequestMapping("/braspinglist")

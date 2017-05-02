@@ -3,6 +3,16 @@
 
 <mapper namespace="com.baolian.dao.ResultYoukutestDao">
 
+    <resultMap id="brasYoukutestResult" type="com.baolian.entity.map.BrasYoukutestResult">
+        <id property="id" column="id"/>
+        <result property="pauseCount" column="pausecount"/>
+        <result property="pauseTime" column="pausetime"/>
+        <result property="bufferTime" column="buffertime"/>
+        <result property="speed" column="speed"/>
+        <result property="qoe" column="qoe"/>
+        <result property="brasName" column="brasname"/>
+    </resultMap>
+
     <select id="queryObject" resultType="com.baolian.entity.ResultYoukutestEntity">
         SELECT *
         FROM result_youkutest
@@ -14,6 +24,23 @@
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>
+    </select>
+
+    <select id="queryBRASYoukuList" resultMap="brasYoukutestResult">
+        SELECT
+        MAX(result_youkutest.id) AS id,
+        AVG(result_youkutest.pausecount) AS pausecount,
+        AVG(result_youkutest.pausetime) AS pausetime,
+        AVG(result_youkutest.buffertime) AS buffertime,
+        AVG(result_youkutest.speed) AS speed,
+        AVG(result_youkutest.qoe) AS qoe,
+        testagent.brasname AS brasname
+        FROM result_youkutest
+        INNER JOIN testagent
+        ON result_youkutest.testagentid = testagent.id
+        WHERE result_youkutest.testtime BETWEEN #{starttime} AND #{endtime}
+        GROUP BY testagent.brasname;
+
     </select>
 
     <select id="queryTotal" resultType="int">

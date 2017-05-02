@@ -1,6 +1,7 @@
 package com.baolian.service;
 
 import com.baolian.entity.ResultYoukutestEntity;
+import com.baolian.entity.map.BrasYoukutestResult;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,8 @@ public interface ResultYoukutestService {
 	ResultYoukutestEntity queryObject(Integer id);
 	
 	List<ResultYoukutestEntity> queryList(Map<String, Object> map);
+
+	List<BrasYoukutestResult> queryBRASYoukuList(Map<String, Object> map);
 	
 	int queryTotal(Map<String, Object> map);
 	
