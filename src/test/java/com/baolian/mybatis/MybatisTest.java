@@ -1,9 +1,9 @@
 package com.baolian.mybatis;
 
 import com.baolian.entity.TestagentEntity;
-import com.baolian.entity.map.CountyPingtestResult;
-import com.baolian.service.ResultPingtestService;
-import com.baolian.service.TestagentService;
+import com.baolian.entity.TesttargetEntity;
+import com.baolian.entity.map.*;
+import com.baolian.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +24,31 @@ public class MybatisTest {
     @Autowired
     private ResultPingtestService resultPingtestService;
     @Autowired
+    private ResultHttptestService resultHttptestService;
+    @Autowired
+    private ResultGametestService resultGametestService;
+    @Autowired
+    private ResultYoukutestService resultYoukutestService;
+    @Autowired
+    private ResultSpeedtestService resultSpeedtestService;
+    @Autowired
     private TestagentService testagentService;
+    @Autowired
+    private TesttargetService testtargetService;
 
     @Test
     public void RunMybatisTest() {
         Map<String, Object> map = new HashMap<>();
-        // map.put("county", "新城区");
-        // map.put("starttime", "2016-12-07 00:00:00");
-        // map.put("endtime", "2017-04-07 00:00:00");
-        // List<CountyPingtestResult> results = resultPingtestService.queryCountyPingList(map);
-        // for (CountyPingtestResult result : results) {
-        //     System.out.println(result);
+        map.put("starttime", "2016-04-01 00:00:00");
+        map.put("endtime", "2017-04-30 00:00:00");
+        List<BrasSpeedtestResult> results = resultSpeedtestService.queryBRASSpeedList(map);
+        for (BrasSpeedtestResult result : results) {
+            System.out.println(result);
+        }
+        // List<TesttargetEntity> list = testtargetService.queryList(map);
+        // System.out.println(testtargetService.queryTotal(map));
+        // for (TesttargetEntity entity : list) {
+        //     System.out.println(entity.getId());
         // }
-        int total = resultPingtestService.queryTotal(map);
-        System.out.println(total);
     }
 }

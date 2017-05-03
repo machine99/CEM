@@ -2,7 +2,7 @@
 <html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>BRAS网页感知对比</title>
+    <title>BRAS下载感知对比</title>
     #parse("sys/areaHeader.html")  <!--导入CSS和js文件-->
     <link href="${rc.contextPath}/statics/css/area.css" rel="stylesheet">  <!--自定义CSS-->
 </head>
@@ -45,12 +45,11 @@
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
                         <span class="label label-primary pull-right">Today</span>
-                        <h3>BRAS网页感知对比</h3>
+                        <h3>区域http对比</h3>
                     </div>
                     <div class="ibox-content">
                         <div class="row">     <!--切换按钮-->
                             <div class="btn-group" id="charts_button">                   <!--Vue事件监听-->
-                                <button type="button" class="btn btn-default" v-on:click="delay">时延</button>
                                 <button type="button" class="btn btn-default" v-on:click="speed">速率</button>
                                 <button type="button" class="btn btn-default" v-on:click="qoe">qoe</button>
                             </div>
@@ -86,7 +85,7 @@
 </div>
 
 
-<script type="text/javascript" src="${rc.contextPath}/js/sys/brasHttp.js?_${date.systemTime}"></script>
+<script type="text/javascript" src="${rc.contextPath}/js/sys/brasSpeed.js?_${date.systemTime}"></script>
 
 
 </body>

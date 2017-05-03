@@ -1,5 +1,6 @@
 /**
- * BRASPing感知对应的js
+ * BRAS下载感知对应的js
+ * Created by tomxie on 2017/5/2.
  */
 var get_area;
 var flag = 0;
@@ -8,52 +9,35 @@ var endtime;
 /*标志位,判断highcharts绘图Vue点击时间更新的series*/
 
 var staus = 0;
-/*引入status表示当前状态option,解决bug 0:ping 1:loss 2:qoe*/
 
 var get_data;
 
-// $(document).on("click", ".dropdown-menu li a", function () {
-//     get_area = $(this).text().trim();
-//     /*trim()去除空格*/
-//     /*获取下拉值*/
-//     $('#area').val(get_area);
-//     /*区域选择框赋值*/
-//     console.log(get_area);
-// });
 
 var data_fitst = [];
 
-// var area_choose = new Vue({
-//     el: '#area_choose',
-//     data: {
-//         items: [
-//             {message: '新城区'},
-//             {message: '碑林区'},
-//             {message: '莲湖区'},
-//             {message: '雁塔区'},
-//             {message: '未央区'},
-//             {message: '灞桥区'},
-//             {message: '长安区'},
-//             {message: '阎良区'}
-//         ]
-//     }
-// });
-var new_data1 = ['新城区', '碑林区', '莲湖区', '雁塔区', '未央区', '灞桥区', '长安区', '阎良区']
-// $('#area').typeahead({
-//     /*输入提示框*/
-//     source: new_data1,
-//     items: 7        /*下拉菜单中显示的最大的条目数。*/
-//
-// });
+var area_choose = new Vue({
+    el: '#area_choose',
+    data: {
+        items: [
+            {message: '新城区'},
+            {message: '碑林区'},
+            {message: '莲湖区'},
+            {message: '雁塔区'},
+            {message: '未央区'},
+            {message: '灞桥区'},
+            {message: '长安区'},
+            {message: '阎良区'}
+        ]
+    }
+});
+var new_data1 = ['新城区', '碑林区', '莲湖区', '雁塔区', '未央区', '灞桥区', '长安区', '阎良区'];
 
-
-var json = {};
 var options = {
     chart: {
         type: 'column'
     },
     title: {
-        text: 'ping时延对比'
+        text: ''
     },
     xAxis: {
 
@@ -69,20 +53,14 @@ var options = {
         enabled: false
     },
     series: [{
-        name: '平均时延',
+        name: '速率',
         data: []
-    }, {
-        name: '最大时延',
-        data: []
-    }, {
-        name: '最小时延',
-        data: []
-    }
-    ]
+    }]
 };
 $(document).ready(function () {
     var chart = new Highcharts.Chart('container', options)
 });
+
 
 $('input[name="daterange"]').daterangepicker(
     {
@@ -100,7 +78,6 @@ $('input[name="daterange"]').daterangepicker(
             daysOfWeek: "一_二_三_四_五_六_日".split("_"),
 
         },
-        /*页面刚加载时,默认时间区间为最近4天*/
         startDate: new Date(new Date() - 1000 * 60 * 60 * 24 * 4).toLocaleDateString(), /*前4天日期*/
         endDate: (new Date()).toLocaleDateString(), /*当前日期*/
     },
@@ -108,14 +85,8 @@ $('input[name="daterange"]').daterangepicker(
         /*console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));*/
         starttime = start.format('YYYY-MM-DD HH:mm:ss');
         endtime = end.format('YYYY-MM-DD HH:mm:ss');
-
     });
-/*$('#datepicker').datetimepicker({
- minView: "month", //选择日期后，不会再跳转去选择时分秒
- format: "yyyy-mm-dd", //选择日期后，文本框显示的日期格式
- language: 'zh-CN', //汉化
- autoclose:true //选择日期后自动关闭
- });*/
+
 var new_search = new Vue({
     /*监听查询事件*/
     el: '#search',
@@ -129,22 +100,22 @@ var new_search = new Vue({
             $.ajax({
                 /*后台取得数据,赋值给观察者*/
                 type: "POST",
-                url: "../resultpingtest/braspinglist",
+                url: "../resultspeedtest/brasspeedlist",
                 cache: false,  //禁用缓存
                 data: postdata,  //传入组装的参数
                 dataType: "json",
                 success: function (result) {
                     console.log(result);
-                    console.log("成功返回!" + typeof (result.resultBRASPingtestList));
-                    console.log(result.resultBRASPingtestList);
-                    console.log(result.resultBRASPingtestList.length);
-                    if (result.resultBRASPingtestList.length != 0 && result.resultBRASPingtestList[0] != null) {
-                        if (result.resultBRASPingtestList.length == 1) {
+                    console.log("成功返回!" + typeof (result.resultBRASSpeedtestList));
+                    console.log(result.resultBRASSpeedtestList);
+                    console.log(result.resultBRASSpeedtestList.length);
+                    if (result.resultBRASSpeedtestList.length != 0 && result.resultBRASSpeedtestList[0] != null) {
+                        if (result.resultBRASSpeedtestList.length == 1) {
                             flag = 1;
                         } else {
                             flag = 0;
                         }
-                        new_data.users = result.resultBRASPingtestList;
+                        new_data.users = result.resultBRASSpeedtestList;
                     } else {
                         toastr.warning('该时间区间没有对应数据！');
                     }
@@ -172,13 +143,11 @@ Date.prototype.Format = function (fmt) { //author: meizz
 };
 
 var Reset = new Vue({
-    /*重置,默认时间区间为最近4天*/
     el: '#reset',
     methods: {
         reset: function () {
             /****************************/
             /*重置,回到页面加载时的数据*/
-            /**********************************/
             var postdata = {};
             // postdata.area = '';
             postdata.starttime = new Date(new Date() - 1000 * 60 * 60 * 24 * 4).Format("yyyy-MM-dd") + " 00:00:00";
@@ -189,21 +158,18 @@ var Reset = new Vue({
             $.ajax({
                 /*后台取得数据,赋值给观察者*/
                 type: "POST",
-                url: "../resultpingtest/braspinglist",
+                url: "../resultspeedtest/brasspeedlist",
                 cache: false,  //禁用缓存
                 data: postdata,  //传入组装的参数
                 dataType: "json",
                 success: function (result) {
                     console.log(result);
-                    console.log("成功返回!" + typeof (result.resultBRASPingtestList));
-                    console.log(result.resultBRASPingtestList);
-                    console.log(result.resultBRASPingtestList.length);
-                    if (result.resultBRASPingtestList.length == 2) {
+                    if (result.resultBRASSpeedtestList.length == 2) {
                         staus = 0;
                         flag = 0;
-                        button_change.delay();
+                        button_change.speed();
                         /*option先回到状态0,注意,不然会出错*/
-                        new_data.users = result.resultBRASPingtestList;
+                        new_data.users = result.resultBRASSpeedtestList;
                     } else {
                         toastr.warning('最近4天没有对应数据！');
                     }
@@ -217,32 +183,10 @@ var button_change = new Vue({
     /*实例化Vue*/
     el: '#charts_button',
     data: {
-        option_delay: {
-            /*设置时延option*/
-            title: {
-                text: 'ping时延对比'
-            },
-            series_delay: [{
-                name: '平均时延',
-                data: []
-            }, {
-                name: '最大时延',
-                data: []
-            }, {
-                name: '最小时延',
-                data: []
-            }
-            ],
-            yAxis: {
-                title: {
-                    text: '结果(ms)'
-                }
-            }
-        },
         option_qoe: {
             /*设置qoe option*/
             title: {
-                text: 'qoe对比'
+                text: 'qoe'
             },
             series_qoe: [{
                 name: 'qoe',
@@ -256,26 +200,21 @@ var button_change = new Vue({
                 max: 100
             }
         },
-        option_loss: {
-            /*设置丢包option*/
+        option_speed: {
+            /*设置速率option*/
             title: {
-                text: '丢包率'
+                text: '速率'
             },
-            series_loss: [{
-                name: '丢包',
+            series_speed: [{
+                name: '速率',
                 data: []
             }
             ],
             yAxis: {
                 title: {
-                    text: '结果(%)'
+                    text: '结果(Mbps)'
                 },
-                max: 100
             },
-            tooltip: {
-                /*数据提示框*/
-                valueSuffix: '%'    /* y值后缀字符串*/
-            }
         }
 
 
@@ -283,30 +222,13 @@ var button_change = new Vue({
     // 在 `methods` 对象中定义方法
     methods: {
         /*事件监听*/
-        delay: function () {
-            staus = 0;
-            console.log("时延");
-            options.title = this.option_delay.title;
-            /*设置标题*/
-
-            options.series = this.option_delay.series_delay;
-            /*设置数据*/
-
-            options.yAxis = this.option_delay.yAxis;
-            /*设置y轴*/
-            options.tooltip = {};
-            /*设置数据提示框*/
-            var chart = new Highcharts.Chart('container', options)
-            /*重新绘图*/
-        },
-        loss: function () {
+        speed: function () {
             staus = 1;
-            console.log("丢包");
-            options.title = this.option_loss.title;
-
-            options.series = this.option_loss.series_loss;
-            options.yAxis = this.option_loss.yAxis;
-            options.tooltip = this.option_loss.tooltip;
+            console.log("速率");
+            options.title = this.option_speed.title;
+            options.series = this.option_speed.series_speed;
+            options.yAxis = this.option_speed.yAxis;
+            options.tooltip = {};
             var chart = new Highcharts.Chart('container', options)
         },
         qoe: function () {
@@ -329,10 +251,7 @@ Vue.component('data-table', {
         return {
             headers: [
                 {title: 'BRAS'},
-                {title: '平均时延(ms)', class: 'some-special-class'},
-                {title: '最大时延(ms)'},
-                {title: '最小时延(ms)'},
-                {title: '丢包(%)'},
+                {title: '速率(Mbps)'},
                 {title: 'qoe(分)'}
             ],
             rows: [],
@@ -349,44 +268,18 @@ Vue.component('data-table', {
             }
 
             options.xAxis.categories = [];
-            if (staus == 0) {                       /*先清空当前状态option的data*/
-                options.series[0].data = [];
-                /*动态设置option*/
-                options.series[1].data = [];
-                options.series[2].data = [];
-            } else if (staus == 1) {
-                options.series[0].data = [];
-            } else {
-                options.series[0].data = [];
-            }
-
-            button_change.option_delay.series_delay[0].data = [];
-            /*清空所有监听事件的option数据*/
-            /*动态设置button_change.option*/
-            button_change.option_delay.series_delay[1].data = [];
-            button_change.option_delay.series_delay[2].data = [];
-            button_change.option_loss.series_loss[0].data = [];
+            options.series[0].data = [];
+            button_change.option_speed.series_speed[0].data = [];
             button_change.option_qoe.series_qoe[0].data = [];
 
             for (var i = 0; i <= times; i++) {                          /*观察user是否变化,重绘HighCharts图*/
                 options.xAxis.categories[i] = val[i].brasName;
-                if (staus == 0) {                                       /*设置当前状态option*/
-                    options.series[0].data[i] = val[i].rttAvg;
-                    /*动态设置option*/
-                    options.series[1].data[i] = val[i].rttMax;
-                    options.series[2].data[i] = val[i].rttMin;
-                } else if (staus == 1) {
-                    options.series[0].data[i] = val[i].loss;
+                if (staus == 1) {
+                    options.series[0].data[i] = val[i].speed;
                 } else {
                     options.series[0].data[i] = val[i].qoe;
                 }
-
-                button_change.option_delay.series_delay[0].data[i] = val[i].rttAvg;
-                /*设置监听事件所有option*/
-                /*动态设置button_change.option*/
-                button_change.option_delay.series_delay[1].data[i] = val[i].rttMax;
-                button_change.option_delay.series_delay[2].data[i] = val[i].rttMin;
-                button_change.option_loss.series_loss[0].data[i] = val[i].loss;
+                button_change.option_speed.series_speed[0].data[i] = val[i].speed;
                 button_change.option_qoe.series_qoe[0].data[i] = val[i].qoe;
             }
             var chart = new Highcharts.Chart('container', options);
@@ -400,13 +293,10 @@ Vue.component('data-table', {
                 let row = [];
 
                 row.push(item.brasName);
-                row.push(item.rttAvg);
-                row.push(item.rttMax);
-                row.push(item.rttMin);
-                row.push(item.loss);
+                row.push(item.speed);
                 row.push(item.qoe);
 
-                /*console.log(item);*/
+                console.log(item);
 
                 vm.rows.push(row);
             });
@@ -431,11 +321,18 @@ Vue.component('data-table', {
             info: false,
             ordering: false, /*禁用排序功能*/
             /*bInfo: false,*/
-
             bLengthChange: false, /*禁用Show entries*/
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'excel', 'pdf'
+            ]
         });
 
-
+        /*new $.fn.dataTable.Buttons( vm.dtHandle, {
+         buttons: [
+         'copy', 'excel', 'pdf'
+         ]
+         } );*/
     }
 });
 
@@ -449,16 +346,9 @@ var new_data = new Vue({
         filteredUsers: function () {                 /*此处可以对传入数据进行处理*/
             let self = this;
             return self.users;
-            /*let search = self.search.toLowerCase();
-             return self.users.filter(function (user) {
-             return user.username.toLowerCase().indexOf(search) !== -1 ||
-             user.email.toLowerCase().indexOf(search) !== -1 ||
-             user.mobile.indexOf(search) !== -1
-             })*/
         }
     },
     mounted() {
-
         Reset.reset();
         /*调用reset,即为页面加载状态*/
     }
@@ -467,14 +357,7 @@ var new_data = new Vue({
 
 /*导出表格到excel*/
 function exportExcel() {
-    alasql('SELECT * INTO XLSX("BRASPing感知对比.xlsx",{headers:true}) \
+    alasql('SELECT * INTO XLSX("BRAS下载对比.xlsx",{headers:true}) \
                     FROM HTML("#bras_table",{headers:true})');
 
 }
-
-
-
-
-
-
-

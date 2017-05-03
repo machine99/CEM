@@ -3,9 +3,10 @@ package com.baolian.entity.map;
 import java.io.Serializable;
 
 /**
- * Created by apple on 2017/5/1.
+ * BRAS下载测试返回结果对应类，用于resultMap
+ * Created by tomxie on 2017/5/2 21:15.
  */
-public class CountySpeedtestResult implements Serializable {
+public class BrasSpeedtestResult implements Serializable {
     private static final long serialVersionUID = 1L;
 
     //id
@@ -14,20 +15,8 @@ public class CountySpeedtestResult implements Serializable {
     private Double speed;
     //qoe
     private Double qoe;
-    //区县
-    private String county;
-
-
-    public CountySpeedtestResult(){
-
-    }
-
-    public CountySpeedtestResult(String county, Integer id, Double speed, Double qoe) {
-        this.county = county;
-        this.id = id;
-        this.speed = speed;
-        this.qoe = qoe;
-    }
+    //BRAS
+    private String brasName;
 
     public Integer getId() {
         return id;
@@ -53,17 +42,16 @@ public class CountySpeedtestResult implements Serializable {
         this.qoe = qoe;
     }
 
-    public String getCounty() {
-        return county;
+    public String getBrasName() {
+        return brasName;
     }
 
-    public void setCounty(String county) {
-        this.county = county;
+    public void setBrasName(String brasName) {
+        this.brasName = brasName;
     }
 
     @Override
     public String toString() {
-        return String.format("%d,%f,%f,%s", id, speed, qoe, county);
+        return String.format("%d,%f,%f,%s", id, speed, qoe, brasName);
     }
 }
-

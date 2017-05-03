@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.baolian.entity.map.BrasHttptestResult;
 import com.baolian.entity.map.CountyHttptestResult;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,20 @@ public class ResultHttptestController {
             }
         }
         return R.ok().put("resultCountyHttptestList", resultCountyHttptestList);
+    }
+
+    @ResponseBody
+    @RequestMapping("/brashttplist")
+    @RequiresPermissions("resulthttptest:brashttplist")
+    public R brasList(String starttime, String endtime) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("starttime", starttime);
+        map.put("endtime", endtime);
+
+        //查询列表数据
+        List<BrasHttptestResult> resultBRASHttptestList = resultHttptestService.queryBRASHttpList(map);
+
+        return R.ok().put("resultBRASHttptestList", resultBRASHttptestList);
     }
 
     @ResponseBody

@@ -1,6 +1,7 @@
 package com.baolian.dao;
 
 import com.baolian.entity.ResultPingtestEntity;
+import com.baolian.entity.map.BrasPingtestResult;
 import com.baolian.entity.map.CountyPingtestResult;
 
 import java.util.List;
@@ -19,4 +20,12 @@ public interface ResultPingtestDao extends BaseDao<ResultPingtestEntity> {
      * @return 返回自定义resultMap列表
      */
     List<CountyPingtestResult> queryCountyPingList(Map<String, Object> map);
+
+    /**
+     * 通过时间范围查询BRASPing感知数据
+     *
+     * @param map 输入参数：包含开始结束时间
+     * @return 返回自定义resultMap列表
+     */
+    List<BrasPingtestResult> queryBRASPingList(Map<String, Object> map);
 }
