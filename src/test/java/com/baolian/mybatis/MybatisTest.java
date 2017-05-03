@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Mybatis测试类
@@ -41,14 +42,54 @@ public class MybatisTest {
         Map<String, Object> map = new HashMap<>();
         map.put("starttime", "2016-04-01 00:00:00");
         map.put("endtime", "2017-04-30 00:00:00");
-        List<BrasSpeedtestResult> results = resultSpeedtestService.queryBRASSpeedList(map);
-        for (BrasSpeedtestResult result : results) {
-            System.out.println(result);
+
+        //查询列表数据
+        List<BrasPingtestResult> brasPingtestResults = resultPingtestService.queryBRASPingList(map);
+        List<BrasHttptestResult> brasHttptestResults = resultHttptestService.queryBRASHttpList(map);
+        List<BrasSpeedtestResult> brasSpeedtestResults = resultSpeedtestService.queryBRASSpeedList(map);
+        List<BrasGametestResult> brasGametestResults = resultGametestService.queryBRASGameList(map);
+        List<BrasYoukutestResult> brasYoukutestResults = resultYoukutestService.queryBRASYoukuList(map);
+
+        Map<String, TotalBRASQoeResult> resultMap = new HashMap<>();
+
+        for (BrasPingtestResult result : brasPingtestResults) {
+            String brasName = result.getBrasName();
+            if (!resultMap.containsKey(brasName)) {
+                resultMap.put(brasName, new TotalBRASQoeResult(brasName));
+            }
+            resultMap.get(brasName).setPingAvgQoe(result.getQoe());
         }
-        // List<TesttargetEntity> list = testtargetService.queryList(map);
-        // System.out.println(testtargetService.queryTotal(map));
-        // for (TesttargetEntity entity : list) {
-        //     System.out.println(entity.getId());
-        // }
+        for (BrasHttptestResult result : brasHttptestResults) {
+            String brasName = result.getBrasName();
+            if (!resultMap.containsKey(brasName)) {
+                resultMap.put(brasName, new TotalBRASQoeResult(brasName));
+            }
+            resultMap.get(brasName).setHttpAvgQoe(result.getQoe());
+        }
+        for (BrasSpeedtestResult result : brasSpeedtestResults) {
+            String brasName = result.getBrasName();
+            if (!resultMap.containsKey(brasName)) {
+                resultMap.put(brasName, new TotalBRASQoeResult(brasName));
+            }
+            resultMap.get(brasName).setSpeedAvgQoe(result.getQoe());
+        }
+        for (BrasGametestResult result : brasGametestResults) {
+            String brasName = result.getBrasName();
+            if (!resultMap.containsKey(brasName)) {
+                resultMap.put(brasName, new TotalBRASQoeResult(brasName));
+            }
+            resultMap.get(brasName).setGameAvgQoe(result.getQoe());
+        }
+        for (BrasYoukutestResult result : brasYoukutestResults) {
+            String brasName = result.getBrasName();
+            if (!resultMap.containsKey(brasName)) {
+                resultMap.put(brasName, new TotalBRASQoeResult(brasName));
+            }
+            resultMap.get(brasName).setYoukuAvgQoe(result.getQoe());
+        }
+        Set<Map.Entry<String, TotalBRASQoeResult>> entries = resultMap.entrySet();
+        for (Map.Entry<String, TotalBRASQoeResult> entry : entries) {
+            System.out.println(entry.getValue());
+        }
     }
 }

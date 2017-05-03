@@ -7,6 +7,8 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baolian.entity.map.*;
+import com.baolian.service.*;
 import com.baolian.utils.JSONUtils;
 import com.baolian.utils.RRException;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.stereotype.Controller;
 
 import com.baolian.entity.TestagentEntity;
-import com.baolian.service.TestagentService;
 import com.baolian.utils.PageUtils;
 import com.baolian.utils.R;
 
@@ -33,6 +34,16 @@ import com.baolian.utils.R;
 public class TestagentController {
     @Autowired
     private TestagentService testagentService;
+    @Autowired
+    private ResultPingtestService resultPingtestService;
+    @Autowired
+    private ResultHttptestService resultHttptestService;
+    @Autowired
+    private ResultSpeedtestService resultSpeedtestService;
+    @Autowired
+    private ResultGametestService resultGametestService;
+    @Autowired
+    private ResultYoukutestService resultYoukutestService;
 
     @RequestMapping("/testagent.html")
     public String list() {
@@ -59,6 +70,63 @@ public class TestagentController {
         int total = testagentService.queryTotal(map);
         PageUtils pageUtil = new PageUtils(testagentList, total, limit, page);
         return R.ok().put("page", pageUtil);
+    }
+
+    @ResponseBody
+    @RequestMapping("/brasavgqoelist")
+    @RequiresPermissions("testagent:brasavgqoelist")
+    public R brasAvgQoeList(String starttime, String endtime) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("starttime", starttime);
+        map.put("endtime", endtime);
+
+        // 查询列表数据
+        List<BrasPingtestResult> brasPingtestResults = resultPingtestService.queryBRASPingList(map);
+        List<BrasHttptestResult> brasHttptestResults = resultHttptestService.queryBRASHttpList(map);
+        List<BrasSpeedtestResult> brasSpeedtestResults = resultSpeedtestService.queryBRASSpeedList(map);
+        List<BrasGametestResult> brasGametestResults = resultGametestService.queryBRASGameList(map);
+        List<BrasYoukutestResult> brasYoukutestResults = resultYoukutestService.queryBRASYoukuList(map);
+
+        Map<String, TotalBRASQoeResult> resultMap = new HashMap<>();
+        // 合并
+        for (BrasPingtestResult result : brasPingtestResults) {
+            String brasName = result.getBrasName();
+            if (!resultMap.containsKey(brasName)) {
+                resultMap.put(brasName, new TotalBRASQoeResult(brasName));
+            }
+            resultMap.get(brasName).setPingAvgQoe(result.getQoe());
+        }
+        for (BrasHttptestResult result : brasHttptestResults) {
+            String brasName = result.getBrasName();
+            if (!resultMap.containsKey(brasName)) {
+                resultMap.put(brasName, new TotalBRASQoeResult(brasName));
+            }
+            resultMap.get(brasName).setHttpAvgQoe(result.getQoe());
+        }
+        for (BrasSpeedtestResult result : brasSpeedtestResults) {
+            String brasName = result.getBrasName();
+            if (!resultMap.containsKey(brasName)) {
+                resultMap.put(brasName, new TotalBRASQoeResult(brasName));
+            }
+            resultMap.get(brasName).setSpeedAvgQoe(result.getQoe());
+        }
+        for (BrasGametestResult result : brasGametestResults) {
+            String brasName = result.getBrasName();
+            if (!resultMap.containsKey(brasName)) {
+                resultMap.put(brasName, new TotalBRASQoeResult(brasName));
+            }
+            resultMap.get(brasName).setGameAvgQoe(result.getQoe());
+        }
+        for (BrasYoukutestResult result : brasYoukutestResults) {
+            String brasName = result.getBrasName();
+            if (!resultMap.containsKey(brasName)) {
+                resultMap.put(brasName, new TotalBRASQoeResult(brasName));
+            }
+            resultMap.get(brasName).setYoukuAvgQoe(result.getQoe());
+        }
+
+        List<TotalBRASQoeResult> resultBRASAvgQoeList = new ArrayList<>(resultMap.values());
+        return R.ok().put("resultBRASAvgQoeList", resultBRASAvgQoeList);
     }
 
 
