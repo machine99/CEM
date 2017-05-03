@@ -342,7 +342,7 @@ var button_change = new Vue({
         },
         buffertime: function () {
             status = 4;
-            console.log("qoe");
+            console.log("buffertime");
             options.title = this.option_buffertime.title;
             options.series = this.option_buffertime.series_buffertime;
             options.yAxis = this.option_buffertime.yAxis;
