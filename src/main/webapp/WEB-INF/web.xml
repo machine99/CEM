@@ -20,8 +20,12 @@
 		<param-name>webAppRootKey</param-name>
 		<param-value>webPath</param-value>
 	</context-param>
-	
-	<listener>
+    <context-param>
+        <param-name/>
+        <param-value/>
+    </context-param>
+
+    <listener>
 		<listener-class>org.springframework.web.util.WebAppRootListener</listener-class>
 	</listener>
 	

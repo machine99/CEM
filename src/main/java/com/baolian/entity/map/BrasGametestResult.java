@@ -3,10 +3,10 @@ package com.baolian.entity.map;
 import java.io.Serializable;
 
 /**
- * Created by apple on 2017/4/27.
+ * BRAS游戏测试返回结果对应类，用于resultMap
+ * Created by tomxie on 2017/5/2 14:25.
  */
-public class CountyGametestResult implements Serializable {
-
+public class BrasGametestResult implements Serializable {
     private static final long serialVersionUID = 1L;
 
     //id
@@ -19,21 +19,8 @@ public class CountyGametestResult implements Serializable {
     private Double loss;
     //qoe
     private Double qoe;
-    //区县
-    private String county;
-
-    public CountyGametestResult(){
-
-    }
-
-    public CountyGametestResult(String county, Integer id, Double rtt_avg, Double tcpConnect, Double loss, Double qoe) {
-        this.county = county;
-        this.id = id;
-        this.rtt_avg = rtt_avg;
-        this.tcpConnect = tcpConnect;
-        this.loss = loss;
-        this.qoe = qoe;
-    }
+    //BRAS
+    private String brasName;
 
     public Integer getId() {
         return id;
@@ -75,16 +62,16 @@ public class CountyGametestResult implements Serializable {
         this.qoe = qoe;
     }
 
-    public String getCounty() {
-        return county;
+    public String getBrasName() {
+        return brasName;
     }
 
-    public void setCounty(String county) {
-        this.county = county;
+    public void setBrasName(String brasName) {
+        this.brasName = brasName;
     }
 
     @Override
     public String toString() {
-        return String.format("%d,%f,%f,%f,%f,%s", id, rtt_avg, tcpConnect, loss, qoe, county);
+        return String.format("%d,%f,%f,%f,%f,%s", id, rtt_avg, tcpConnect, loss, qoe, brasName);
     }
 }

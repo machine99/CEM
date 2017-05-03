@@ -1,5 +1,6 @@
 /**
- * Created by apple on 2017/4/300.
+ * BRAS游戏感知对应的js
+ * Created by tomxie on 2017/5/2.
  */
 
 var get_area;
@@ -9,18 +10,9 @@ var endtime;
 /*标志位,判断highcharts绘图Vue点击时间更新的series*/
 
 var status = 0;
-/*引入status表示当前状态option,解决bug 0:speed 1:pausecount 2:pausetime 3:qoe 4:缓冲时长*/
+/*引入status表示当前状态option,解决bug 0:rtt_avg 1:tcpDelay 2:loss 3:qoe*/
 
 var get_data;
-
-$(document).on("click", ".dropdown-menu li a", function () {
-    get_area = $(this).text().trim();
-    /*trim()去除空格*/
-    /*获取下拉值*/
-    $('#area').val(get_area);
-    /*区域选择框赋值*/
-    console.log(get_area);
-});
 
 var data_fitst = [];
 
@@ -39,13 +31,7 @@ var area_choose = new Vue({
         ]
     }
 });
-var new_data1 = ['新城区', '碑林区', '莲湖区', '雁塔区', '未央区', '灞桥区', '长安区', '阎良区']
-$('#area').typeahead({
-    /*输入提示框*/
-    source: new_data1,
-    items: 7        /*下拉菜单中显示的最大的条目数。*/
-
-});
+var new_data1 = ['新城区', '碑林区', '莲湖区', '雁塔区', '未央区', '灞桥区', '长安区', '阎良区'];
 
 var options = {
     chart: {
@@ -68,7 +54,7 @@ var options = {
         enabled: false
     },
     series: [{
-        name: '速率',
+        name: 'ping时延',
         data: []
     }
     ]
@@ -98,7 +84,8 @@ $('input[name="daterange"]').daterangepicker(
         endDate: (new Date()).toLocaleDateString(), /*当前日期*/
     },
     function (start, end, label) {          /*日期选择触发事件*/
-        /*console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));*/
+        console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        console.log("地区选择:" + typeof(get_area) == "undefined");
         starttime = start.format('YYYY-MM-DD HH:mm:ss');
         endtime = end.format('YYYY-MM-DD HH:mm:ss');
     });
@@ -110,28 +97,28 @@ var new_search = new Vue({
         search: function () {
             console.log("你选择了时间区间" + starttime + "to" + endtime);
             var postdata = {};
-            postdata.area = $('#area').val();
+            // postdata.area = $('#area').val();
             postdata.starttime = starttime;
             postdata.endtime = endtime;
             $.ajax({
                 /*后台取得数据,赋值给观察者*/
                 type: "POST",
-                url: "../resultyoukutest/countyyoukulist",
+                url: "../resultgametest/brasgamelist",
                 cache: false,  //禁用缓存
                 data: postdata,  //传入组装的参数
                 dataType: "json",
                 success: function (result) {
                     console.log(result);
-                    console.log("成功返回!" + typeof (result.resultCountyYoukutestList));
-                    console.log(result.resultCountyYoukutestList);
-                    console.log(result.resultCountyYoukutestList.length);
-                    if (result.resultCountyYoukutestList.length != 0 && result.resultCountyYoukutestList[0] != null) {
-                        if (result.resultCountyYoukutestList.length == 1) {
+                    console.log("成功返回!" + typeof (result.resultBRASGametestList));
+                    console.log(result.resultBRASGametestList);
+                    console.log(result.resultBRASGametestList.length);
+                    if (result.resultBRASGametestList.length != 0 && result.resultBRASGametestList[0] != null) {
+                        if (result.resultBRASGametestList.length == 1) {
                             flag = 1;
                         } else {
                             flag = 0;
                         }
-                        new_data.users = result.resultCountyYoukutestList;
+                        new_data.users = result.resultBRASGametestList;
                     } else {
                         toastr.warning('该时间区间没有对应数据！');
                     }
@@ -158,7 +145,6 @@ Date.prototype.Format = function (fmt) { //author: meizz
     return fmt;
 };
 
-
 var Reset = new Vue({
     el: '#reset',
     methods: {
@@ -166,7 +152,7 @@ var Reset = new Vue({
             /****************************/
             /*重置,回到页面加载时的数据*/
             var postdata = {};
-            postdata.area = '';
+            // postdata.area = '';
             postdata.starttime = new Date(new Date() - 1000 * 60 * 60 * 24 * 4).Format("yyyy-MM-dd") + " 00:00:00";
             /*前4天日期*/
             postdata.endtime = (new Date()).Format("yyyy-MM-dd") + " 23:59:59";
@@ -175,18 +161,18 @@ var Reset = new Vue({
             $.ajax({
                 /*后台取得数据,赋值给观察者*/
                 type: "POST",
-                url: "../resultyoukutest/countyyoukulist",
+                url: "../resultgametest/brasgamelist",
                 cache: false,  //禁用缓存
                 data: postdata,  //传入组装的参数
                 dataType: "json",
                 success: function (result) {
                     console.log(result);
-                    if (result.resultCountyYoukutestList.length == 2) {
+                    if (result.resultBRASGametestList.length == 2) {
                         staus = 0;
                         flag = 0;
-                        button_change.speed();
+                        button_change.delay();
                         /*option先回到状态0,注意,不然会出错*/
-                        new_data.users = result.resultCountyYoukutestList;
+                        new_data.users = result.resultBRASGametestList;
                     } else {
                         toastr.warning('最近4天没有对应数据！');
                     }
@@ -200,60 +186,61 @@ var button_change = new Vue({
     /*实例化Vue*/
     el: '#charts_button',
     data: {
-        option_speed: {
+        option_rtt_avg: {
             /*设置时延option*/
             title: {
                 text: ''
             },
-            series_speed: [{
-                name: '速率',
+            series_rtt_avg: [{
+                name: 'ping时延',
                 data: []
             },
-            ],
-            yAxis: {
-                title: {
-                    text: '结果(Mbps)'
-                }
-            }
-        },
-        option_pausecount: {
-            /*设置时延option*/
-            title: {
-                text: ''
-            },
-            series_pausecount: [{
-                name: '停顿次数',
-                data: []
-            },
-            ],
-            yAxis: {
-                title: {
-                    text: '结果(次)'
-                }
-            }
-        },
-        option_pausetime: {
-            /*设置停顿时长option*/
-            title: {
-                text: ''
-            },
-            series_pausetime: [{
-                name: '停顿时长',
-                data: []
-            }
             ],
             yAxis: {
                 title: {
                     text: '结果(ms)'
+                }
+            }
+        },
+        option_tcpDelay: {
+            /*设置时延option*/
+            title: {
+                text: ''
+            },
+            series_tcpDelay: [{
+                name: '连接时延',
+                data: []
+            },
+            ],
+            yAxis: {
+                title: {
+                    text: '结果(ms)'
+                }
+            }
+        },
+        option_loss: {
+            /*设置丢包option*/
+            title: {
+                text: ''
+            },
+            series_loss: [{
+                name: '丢包',
+                data: []
+            }
+            ],
+            yAxis: {
+                title: {
+                    text: '结果(%)'
                 },
+                max: 100
             },
             tooltip: {
                 /*数据提示框*/
-                valueSuffix: 'ms'    /* y值后缀字符串*/
+                valueSuffix: '%'    /* y值后缀字符串*/
             }
         },
         option_qoe: {
-            /*设置Qoe option*/
+            /*设置qoe option*/
             title: {
                 text: ''
             },
@@ -268,37 +255,21 @@ var button_change = new Vue({
                 },
                 max: 100
             }
-        },
-        option_buffertime: {
-            /*设置缓冲时长option*/
-            title: {
-                text: ''
-            },
-            series_buffertime: [{
-                name: '缓冲时长',
-                data: []
-            }
-            ],
-            yAxis: {
-                title: {
-                    text: '结果(ms)'
-                },
-            }
         }
     },
     // 在 `methods` 对象中定义方法
     methods: {
         /*事件监听*/
-        speed: function () {
+        rtt_avg: function () {
             status = 0;
-            console.log("速率");
-            options.title = this.option_speed.title;
+            console.log("ping时延");
+            options.title = this.option_rtt_avg.title;
             /*设置标题*/
 
-            options.series = this.option_speed.series_speed;
+            options.series = this.option_rtt_avg.series_rtt_avg;
             /*设置数据*/
 
-            options.yAxis = this.option_speed.yAxis;
+            options.yAxis = this.option_rtt_avg.yAxis;
             /*设置y轴*/
             options.tooltip = {};
             /*设置数据提示框*/
@@ -306,29 +277,29 @@ var button_change = new Vue({
             /*重新绘图*/
         },
 
-        pausecount: function () {
+        tcpDelay: function () {
             status = 1;
-            console.log("停顿次数");
-            options.title = this.option_pausecount.title;
+            console.log("连接时延");
+            options.title = this.option_tcpDelay.title;
             /*设置标题*/
 
-            options.series = this.option_pausecount.series_pausecount;
+            options.series = this.option_tcpDelay.series_tcpDelay;
             /*设置数据*/
 
-            options.yAxis = this.option_pausecount.yAxis;
+            options.yAxis = this.option_tcpDelay.yAxis;
             /*设置y轴*/
             options.tooltip = {};
             /*设置数据提示框*/
             var chart = new Highcharts.Chart('container', options)
             /*重新绘图*/
         },
-        pausetime: function () {
+        loss: function () {
             status = 2;
-            console.log("停顿时长");
-            options.title = this.option_pausetime.title;
-            options.series = this.option_pausetime.series_pausetime;
-            options.yAxis = this.option_pausetime.yAxis;
-            options.tooltip = this.option_pausetime.tooltip;
+            console.log("丢包");
+            options.title = this.option_loss.title;
+            options.series = this.option_loss.series_loss;
+            options.yAxis = this.option_loss.yAxis;
+            options.tooltip = this.option_loss.tooltip;
             var chart = new Highcharts.Chart('container', options)
         },
         qoe: function () {
@@ -339,32 +310,22 @@ var button_change = new Vue({
             options.yAxis = this.option_qoe.yAxis;
             options.tooltip = {};
             var chart = new Highcharts.Chart('container', options)
-        },
-        buffertime: function () {
-            status = 4;
-            console.log("buffertime");
-            options.title = this.option_buffertime.title;
-            options.series = this.option_buffertime.series_buffertime;
-            options.yAxis = this.option_buffertime.yAxis;
-            options.tooltip = {};
-            var chart = new Highcharts.Chart('container', options)
         }
     }
 });
 
 
 Vue.component('data-table', {
-    template: '<table class="table table-bordered table-hover table-striped" id="area_table"></table>',
+    template: '<table class="table table-bordered table-hover table-striped" id="bras_table"></table>',
     props: ['users'],
     data() {
         return {
             headers: [
-                {title: '区县'},
-                {title: '速率(Mbps)',},
-                {title: '停顿次数(次)'},
-                {title: '停顿时长(ms)'},
-                {title: 'qoe(分)'},
-                {title: '缓冲时长(ms)'},
+                {title: 'BRAS'},
+                {title: 'ping时延(ms)',},
+                {title: '连接时延(ms)'},
+                {title: '丢包(%)'},
+                {title: 'qoe(分)'}
             ],
             rows: [],
             dtHandle: null
@@ -379,37 +340,43 @@ Vue.component('data-table', {
                 times = 0;
             }
 
-            options.xAxis.categories = [];             /*先清空当前状态option的data*/
-            options.series[0].data = [];
+            options.xAxis.categories = [];
+            if (status == 0) {                       /*先清空当前状态option的data*/
+                options.series[0].data = [];
+            } else if (status == 1) {
+                options.series[0].data = [];
+            } else if (status == 2) {
+                options.series[0].data = [];
+            } else {
+                options.series[0].data = [];
+            }
 
-            button_change.option_speed.series_speed[0].data = [];
+            button_change.option_rtt_avg.series_rtt_avg[0].data = [];
             /*清空所有监听事件的option数据*/
             /*动态设置button_change.option*/
-            button_change.option_pausecount.series_pausecount[0].data = [];
-            button_change.option_pausetime.series_pausetime[0].data = [];
+            button_change.option_tcpDelay.series_tcpDelay[0].data = [];
+            button_change.option_loss.series_loss[0].data = [];
             button_change.option_qoe.series_qoe[0].data = [];
-            button_change.option_buffertime.series_buffertime[0].data = [];
 
             for (var i = 0; i <= times; i++) {                          /*观察user是否变化,重绘HighCharts图*/
-                options.xAxis.categories[i] = val[i].county;
+                options.xAxis.categories[i] = val[i].brasName;
                 if (status == 0) {                                       /*设置当前状态option*/
-                    options.series[0].data[i] = val[i].speed;
+                    options.series[0].data[i] = val[i].rtt_avg;
                     /*动态设置option*/
                 } else if (status == 1) {
-                    options.series[0].data[i] = val[i].pausecount;
+                    options.series[0].data[i] = val[i].tcpDelay;
                 } else if (status == 2) {
-                    options.series[0].data[i] = val[i].pausetime;
-                } else if (status == 3) {
-                    options.series[0].data[i] = val[i].qoe;
+                    options.series[0].data[i] = val[i].loss;
                 } else {
-                    options.series[0].data[i] = val[i].buffertime;
+                    options.series[0].data[i] = val[i].qoe;
                 }
 
-                button_change.option_speed.series_speed[0].data[i] = val[i].speed;
-                button_change.option_pausecount.series_pausecount[0].data[i] = val[i].pausecount;
-                button_change.option_pausetime.series_pausetime[0].data[i] = val[i].pausetime;
+                button_change.option_rtt_avg.series_rtt_avg[0].data[i] = val[i].rtt_avg;
+                /*设置监听事件所有option*/
+                /*动态设置button_change.option*/
+                button_change.option_tcpDelay.series_tcpDelay[0].data[i] = val[i].tcpDelay;
+                button_change.option_loss.series_loss[0].data[i] = val[i].loss;
                 button_change.option_qoe.series_qoe[0].data[i] = val[i].qoe;
-                button_change.option_buffertime.series_buffertime[0].data[i] = val[i].buffertime;
             }
             var chart = new Highcharts.Chart('container', options);
 
@@ -417,17 +384,19 @@ Vue.component('data-table', {
             val.forEach(function (item) {              /*观察user是否变化,更新表格数据*/
                 let row = [];
 
-                row.push(item.county);
-                row.push(item.speed);
-                row.push(item.pausecount);
-                row.push(item.pausetime);
+                row.push(item.brasName);
+                row.push(item.rtt_avg);
+                row.push(item.tcpDelay);
+                row.push(item.loss);
                 row.push(item.qoe);
-                row.push(item.buffertime);
 
                 console.log(item);
 
                 vm.rows.push(row);
             });
+
+            // Here's the magic to keeping the DataTable in sync.
+            // It must be cleared, new rows added, then redrawn!
             vm.dtHandle.clear();
             vm.dtHandle.rows.add(vm.rows);
             vm.dtHandle.draw();
@@ -435,6 +404,7 @@ Vue.component('data-table', {
     },
     mounted() {
         let vm = this;
+        // Instantiate the datatable and store the reference to the instance in our dtHandle element.
         vm.dtHandle = $(this.$el).DataTable({
             // Specify whatever options you want, at a minimum these:
             columns: vm.headers,
@@ -451,6 +421,12 @@ Vue.component('data-table', {
                 'copy', 'excel', 'pdf'
             ]
         });
+
+        /*new $.fn.dataTable.Buttons( vm.dtHandle, {
+         buttons: [
+         'copy', 'excel', 'pdf'
+         ]
+         } );*/
     }
 });
 
@@ -468,19 +444,14 @@ var new_data = new Vue({
     },
     mounted() {
         Reset.reset();
+        /*调用reset,即为页面加载状态*/
     }
 });
 
 
 /*导出表格到excel*/
 function exportExcel() {
-    alasql('SELECT * INTO XLSX("区县视频感知对比.xlsx",{headers:true}) \
-                    FROM HTML("#area_table",{headers:true})');
+    alasql('SELECT * INTO XLSX("BRAS游戏感知对比.xlsx",{headers:true}) \
+                    FROM HTML("#bras_table",{headers:true})');
 
 }
-
-
-
-
-
-

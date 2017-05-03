@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.baolian.entity.map.BrasPingtestResult;
 import com.baolian.entity.map.CountyPingtestResult;
 import com.baolian.entity.map.WebPingCountResult;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -29,57 +30,73 @@ import com.baolian.utils.R;
 @Controller
 @RequestMapping("resultpingtest")
 public class ResultPingtestController {
-	@Autowired
-	private ResultPingtestService resultPingtestService;
-	
-	@RequestMapping("/resultpingtest.html")
-	public String list(){
-		return "resultpingtest/resultpingtest.html";
-	}
+    @Autowired
+    private ResultPingtestService resultPingtestService;
 
-	/**
-	 * 列表
-	 */
-	@ResponseBody
-	@RequestMapping("/countypinglist")
-	@RequiresPermissions("resultpingtest:countypinglist")
-	public R list(String starttime, String endtime, String area){
-		Map<String, Object> map = new HashMap<>();
-		map.put("starttime", starttime);
-		map.put("endtime", endtime);
-		map.put("county", area);
+    @RequestMapping("/resultpingtest.html")
+    public String list() {
+        return "resultpingtest/resultpingtest.html";
+    }
 
-		System.out.println("starttime:"+starttime);
-		System.out.println("endtime:"+endtime);
-		System.out.println("county:"+area);
+    /**
+     * 区域Ping感知列表
+     */
+    @ResponseBody
+    @RequestMapping("/countypinglist")
+    @RequiresPermissions("resultpingtest:countypinglist")
+    public R list(String starttime, String endtime, String area) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("starttime", starttime);
+        map.put("endtime", endtime);
+        map.put("county", area);
 
-
-		//查询列表数据
-		List<CountyPingtestResult> resultCountyPingtestList = resultPingtestService.queryCountyPingList(map);
+        System.out.println("starttime:" + starttime);
+        System.out.println("endtime:" + endtime);
+        System.out.println("county:" + area);
 
 
-		return R.ok().put("resultCountyPingtestList", resultCountyPingtestList);
-	}
-	
-	/**
-	 * 列表
-	 */
-	@ResponseBody
-	@RequestMapping("/list")
-	@RequiresPermissions("resultpingtest:list")
-	public R list(Integer page, Integer limit){
-		Map<String, Object> map = new HashMap<>();
-		map.put("offset", (page - 1) * limit);
-		map.put("limit", limit);
-		
-		//查询列表数据
-		List<ResultPingtestEntity> resultPingtestList = resultPingtestService.queryList(map);
-		int total = resultPingtestService.queryTotal(map);
-		
-		PageUtils pageUtil = new PageUtils(resultPingtestList, total, limit, page);
-		
-		return R.ok().put("page", pageUtil);
-	}
+        //查询列表数据
+        List<CountyPingtestResult> resultCountyPingtestList = resultPingtestService.queryCountyPingList(map);
+
+
+        return R.ok().put("resultCountyPingtestList", resultCountyPingtestList);
+    }
+
+    /**
+     * BRASPing感知列表
+     */
+    @ResponseBody
+    @RequestMapping("/braspinglist")
+    @RequiresPermissions("resultpingtest:braspinglist")
+    public R brasList(String starttime, String endtime) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("starttime", starttime);
+        map.put("endtime", endtime);
+
+        //查询列表数据
+        List<BrasPingtestResult> resultBRASPingtestList = resultPingtestService.queryBRASPingList(map);
+        return R.ok().put("resultBRASPingtestList", resultBRASPingtestList);
+    }
+
+    /**
+     * 列表
+     */
+    @ResponseBody
+    @RequestMapping("/list")
+    @RequiresPermissions("resultpingtest:list")
+    public R list(Integer page, Integer limit) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("offset", (page - 1) * limit);
+        map.put("limit", limit);
+
+        //查询列表数据
+        List<ResultPingtestEntity> resultPingtestList = resultPingtestService.queryList(map);
+        int total = resultPingtestService.queryTotal(map);
+
+        PageUtils pageUtil = new PageUtils(resultPingtestList, total, limit, page);
+
+        return R.ok().put("page", pageUtil);
+    }
 
 	/**
 	 *
@@ -104,53 +121,55 @@ public class ResultPingtestController {
 
 		return R.ok().put("resultPingwebtestList", resultPingwebtestList);
 	}
-	
-	/**
-	 * 信息
-	 */
-	@ResponseBody
-	@RequestMapping("/info/{id}")
-	@RequiresPermissions("resultpingtest:info")
-	public R info(@PathVariable("id") Integer id){
-		ResultPingtestEntity resultPingtest = resultPingtestService.queryObject(id);
-		
-		return R.ok().put("resultPingtest", resultPingtest);
-	}
-	
-	/**
-	 * 保存
-	 */
-	@ResponseBody
-	@RequestMapping("/save")
-	@RequiresPermissions("resultpingtest:save")
-	public R save(@RequestBody ResultPingtestEntity resultPingtest){
-		resultPingtestService.save(resultPingtest);
-		
-		return R.ok();
-	}
-	
-	/**
-	 * 修改
-	 */
-	@ResponseBody
-	@RequestMapping("/update")
-	@RequiresPermissions("resultpingtest:update")
-	public R update(@RequestBody ResultPingtestEntity resultPingtest){
-		resultPingtestService.update(resultPingtest);
-		
-		return R.ok();
-	}
-	
-	/**
-	 * 删除
-	 */
-	@ResponseBody
-	@RequestMapping("/delete")
-	@RequiresPermissions("resultpingtest:delete")
-	public R delete(@RequestBody Integer[] ids){
-		resultPingtestService.deleteBatch(ids);
-		
-		return R.ok();
-	}
+
+
+    /**
+     * 信息
+     */
+    @ResponseBody
+    @RequestMapping("/info/{id}")
+    @RequiresPermissions("resultpingtest:info")
+    public R info(@PathVariable("id") Integer id) {
+        ResultPingtestEntity resultPingtest = resultPingtestService.queryObject(id);
+
+        return R.ok().put("resultPingtest", resultPingtest);
+    }
+
+    /**
+     * 保存
+     */
+    @ResponseBody
+    @RequestMapping("/save")
+    @RequiresPermissions("resultpingtest:save")
+    public R save(@RequestBody ResultPingtestEntity resultPingtest) {
+        resultPingtestService.save(resultPingtest);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @ResponseBody
+    @RequestMapping("/update")
+    @RequiresPermissions("resultpingtest:update")
+    public R update(@RequestBody ResultPingtestEntity resultPingtest) {
+        resultPingtestService.update(resultPingtest);
+
+        return R.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @ResponseBody
+    @RequestMapping("/delete")
+    @RequiresPermissions("resultpingtest:delete")
+    public R delete(@RequestBody Integer[] ids) {
+        resultPingtestService.deleteBatch(ids);
+
+        return R.ok();
+    }
+
 
 }

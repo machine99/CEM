@@ -3,6 +3,7 @@
 
 <mapper namespace="com.baolian.dao.ResultYoukutestDao">
 
+
     <!--门户感知返回的联表类型-->
     <resultMap id="webVideoCountResult" type="com.baolian.entity.map.WebVideoCountResult">
         <id property="id" column="id"/>
@@ -12,6 +13,26 @@
         <result property="pausetime" column="pausetime"/>
         <result property="buffertime" column="buffertime"/>
         <result property="destname" column="destname"/>
+    </resultMap>
+    <resultMap id="countyYoukutestResult" type="com.baolian.entity.map.CountyYoukutestResult">
+        <id property="id" column="id"/>
+        <result property="speed" column="speed"/>
+        <result property="pausecount" column="pausecount"/>
+        <result property="pausetime" column="pausetime"/>
+        <result property="qoe" column="qoe"/>
+        <result property="buffertime" column="buffertime"/>
+        <result property="county" column="county"/>
+    </resultMap>
+
+    <resultMap id="brasYoukutestResult" type="com.baolian.entity.map.BrasYoukutestResult">
+        <id property="id" column="id"/>
+        <result property="pauseCount" column="pausecount"/>
+        <result property="pauseTime" column="pausetime"/>
+        <result property="bufferTime" column="buffertime"/>
+        <result property="speed" column="speed"/>
+        <result property="qoe" column="qoe"/>
+        <result property="brasName" column="brasname"/>
+
     </resultMap>
 
     <select id="queryObject" resultType="com.baolian.entity.ResultYoukutestEntity">
@@ -27,6 +48,7 @@
         </if>
     </select>
 
+
     <select id="queryWebList" resultMap="webVideoCountResult">
         SELECT
         MAX(result_youkutest.id) AS id,
@@ -39,6 +61,44 @@
         FROM result_youkutest
         WHERE result_youkutest.testtime BETWEEN #{starttime} AND #{endtime}
         GROUP BY result_youkutest.destname;
+    </select>
+    <select id="queryCountyYoukuList" resultMap="countyYoukutestResult">
+        SELECT
+        MAX(result_youkutest.id) AS id,
+        AVG(result_youkutest.speed) AS speed,
+        AVG(result_youkutest.pausecount) AS pausecount,
+        AVG(result_youkutest.pausetime) AS pausetime,
+        AVG(result_youkutest.qoe) AS qoe,
+        AVG(result_youkutest.buffertime) AS buffertime,
+        testagent.county AS county
+        FROM result_youkutest
+        INNER JOIN testagent
+        ON result_youkutest.testagentid = testagent.id
+        WHERE result_youkutest.testtime BETWEEN #{starttime} AND #{endtime}
+        <if test="county != null and county != ''">
+            AND testagent.county = #{county}
+        </if>
+        <if test="county == null or county == ''">
+            AND testagent.county IN ('新城区', '碑林区')
+            GROUP BY testagent.county;
+        </if>
+    </select>
+
+    <select id="queryBRASYoukuList" resultMap="brasYoukutestResult">
+        SELECT
+            MAX(result_youkutest.id)         AS id,
+            AVG(result_youkutest.pausecount) AS pausecount,
+            AVG(result_youkutest.pausetime)  AS pausetime,
+            AVG(result_youkutest.buffertime) AS buffertime,
+            AVG(result_youkutest.speed)      AS speed,
+            AVG(result_youkutest.qoe)        AS qoe,
+            testagent.brasname               AS brasname
+        FROM result_youkutest
+            INNER JOIN testagent
+                ON result_youkutest.testagentid = testagent.id
+        WHERE result_youkutest.testtime BETWEEN #{starttime} AND #{endtime}
+        GROUP BY testagent.brasname;
+
     </select>
 
     <select id="queryTotal" resultType="int">

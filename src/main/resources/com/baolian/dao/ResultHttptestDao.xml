@@ -3,7 +3,7 @@
 
 <mapper namespace="com.baolian.dao.ResultHttptestDao">
 
-    <!--区域Ping感知返回的联表类型-->
+    <!--区域网页感知返回的联表类型-->
     <resultMap id="countyHttptestResult" type="com.baolian.entity.map.CountyHttptestResult">
         <id property="id" column="id"/>
         <result property="dnsDelay" column="dnsdelay"/>
@@ -13,6 +13,7 @@
         <result property="qoe" column="qoe"/>
         <result property="county" column="county"/>
     </resultMap>
+
 
     <!--门户感知返回的联表类型-->
     <resultMap id="webHttpCountResult" type="com.baolian.entity.map.WebHttpCountResult">
@@ -24,6 +25,16 @@
         <result property="responsedelay" column="responsedelay"/>
         <result property="downloaddelay" column="downloaddelay"/>
         <result property="destname" column="destname"/>
+    </resultMap>
+    <!--BRAS网页感知返回的联表类型-->
+    <resultMap id="brasHttptestResult" type="com.baolian.entity.map.BrasHttptestResult">
+        <id property="id" column="id"/>
+        <result property="dnsDelay" column="dnsdelay"/>
+        <result property="connectDelay" column="connectdelay"/>
+        <result property="responseDelay" column="responsedelay"/>
+        <result property="speed" column="speed"/>
+        <result property="qoe" column="qoe"/>
+        <result property="brasName" column="brasname"/>
     </resultMap>
 
     <select id="queryObject" resultType="com.baolian.entity.ResultHttptestEntity">
@@ -74,6 +85,23 @@
             AND testagent.county IN ('新城区', '碑林区')
             GROUP BY testagent.county;
         </if>
+
+    </select>
+
+    <select id="queryBRASHttpList" resultMap="brasHttptestResult">
+        SELECT
+        MAX(result_httptest.id) AS id,
+        AVG(result_httptest.connectdelay) AS connectdelay,
+        AVG(result_httptest.dnsdelay) AS dnsdelay,
+        AVG(result_httptest.responsedelay) AS responsedelay,
+        AVG(result_httptest.speed) AS speed,
+        AVG(result_httptest.qoe) AS qoe,
+        testagent.brasname AS brasname
+        FROM result_httptest
+        INNER JOIN testagent
+        ON result_httptest.testagentid = testagent.id
+        WHERE result_httptest.testtime BETWEEN #{starttime} AND #{endtime}
+        GROUP BY testagent.brasname;
 
     </select>
 

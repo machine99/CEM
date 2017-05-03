@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.baolian.dao.ResultSpeedtestDao">
+
+
+    <resultMap id="countySpeedtestResult" type="com.baolian.entity.map.CountySpeedtestResult">
+        <id property="id" column="id"/>
+        <result property="speed" column="speed"/>
+        <result property="qoe" column="qoe"/>
+        <result property="county" column="county"/>
+    </resultMap>
+
+    <resultMap id="brasSpeedtestResult" type="com.baolian.entity.map.BrasSpeedtestResult">
+        <id property="id" column="id"/>
+        <result property="speed" column="speed"/>
+        <result property="qoe" column="qoe"/>
+        <result property="brasName" column="brasname"/>
+    </resultMap>
+
+    <select id="queryCountySpeedList" resultMap="countySpeedtestResult">
+        SELECT
+        MAX(result_speedtest.id) AS id,
+        AVG(result_speedtest.speed) AS speed,
+        AVG(result_speedtest.qoe) AS qoe,
+        testagent.county AS county
+        FROM result_speedtest
+        INNER JOIN testagent
+        ON result_speedtest.testagentid = testagent.id
+        WHERE result_speedtest.testtime BETWEEN #{starttime} AND #{endtime}
+        <if test="county != null and county != ''">
+            AND testagent.county = #{county}
+        </if>
+        <if test="county == null or county == ''">
+            AND testagent.county IN ('新城区', '碑林区')
+            GROUP BY testagent.county;
+        </if>
+
+    </select>
+
+    <select id="queryBRASSpeedList" resultMap="brasSpeedtestResult">
+        SELECT
+        MAX(result_speedtest.id) AS id,
+        AVG(result_speedtest.speed) AS speed,
+        AVG(result_speedtest.qoe) AS qoe,
+        testagent.brasname AS brasname
+        FROM result_speedtest
+        INNER JOIN testagent
+        ON result_speedtest.testagentid = testagent.id
+        WHERE result_speedtest.testtime BETWEEN #{starttime} AND #{endtime}
+        GROUP BY testagent.brasname;
+
+    </select>
+
+    <select id="queryObject" resultType="com.baolian.entity.ResultSpeedtestEntity">
+        SELECT *
+        FROM result_speedtest
+        WHERE id = #{value}
+    </select>
+
+    <select id="queryList" resultType="com.baolian.entity.ResultSpeedtestEntity">
+        select * from result_speedtest
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        SELECT count(*)
+        FROM result_speedtest
+    </select>
+
+    <insert id="save" parameterType="com.baolian.entity.ResultSpeedtestEntity" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO result_speedtest
+        (
+            `guid`,
+            `state`,
+            `errorcode`,
+            `destid`,
+            `destname`,
+            `testtime`,
+            `elapsetime`,
+            `alldelay`,
+            `screendelay`,
+            `testagent`,
+            `qoe`,
+            `qoemodel`,
+            `bandwidth`,
+            `speed`,
+            `dnsdelay`,
+            `connectdelay`,
+            `responsedelay`,
+            `downloaddelay`,
+            `httpsize`,
+            `httpstatus`,
+            `tcpcount`,
+            `tcphead`,
+            `tcpconn`,
+            `tcpretrans`,
+            `l2delay`,
+            `l2loss`,
+            `l2trace`,
+            `l2tracedelay`,
+            `lanhoops`,
+            `landelay`,
+            `sharepc`,
+            `wanip`,
+            `lanip`,
+            `sysbacknetwork`,
+            `syscpuusage`,
+            `syscpu`,
+            `sysmemusage`,
+            `sysmem`,
+            `sysadapterrate`,
+            `sysadapter`,
+            `sysapps`,
+            `sysos`,
+            `testagentid`
+        )
+        VALUES
+            (
+                #{guid},
+                #{state},
+                #{errorcode},
+                #{destid},
+                #{destname},
+                #{testtime},
+                #{elapsetime},
+                #{alldelay},
+                #{screendelay},
+                #{testagent},
+                #{qoe},
+                #{qoemodel},
+                #{bandwidth},
+                #{speed},
+                #{dnsdelay},
+                #{connectdelay},
+                #{responsedelay},
+                #{downloaddelay},
+                #{httpsize},
+                #{httpstatus},
+                #{tcpcount},
+                #{tcphead},
+                #{tcpconn},
+                #{tcpretrans},
+                #{l2delay},
+                #{l2loss},
+                #{l2trace},
+                #{l2tracedelay},
+                #{lanhoops},
+                #{landelay},
+                #{sharepc},
+                #{wanip},
+                #{lanip},
+                #{sysbacknetwork},
+                #{syscpuusage},
+                #{syscpu},
+                #{sysmemusage},
+                #{sysmem},
+                #{sysadapterrate},
+                #{sysadapter},
+                #{sysapps},
+                #{sysos},
+                #{testagentid}
+            )
+    </insert>
+
+    <update id="update" parameterType="com.baolian.entity.ResultSpeedtestEntity">
+        update result_speedtest
+        <set>
+            <if test="guid != null">`guid` = #{guid},</if>
+            <if test="state != null">`state` = #{state},</if>
+            <if test="errorcode != null">`errorcode` = #{errorcode},</if>
+            <if test="destid != null">`destid` = #{destid},</if>
+            <if test="destname != null">`destname` = #{destname},</if>
+            <if test="testtime != null">`testtime` = #{testtime},</if>
+            <if test="elapsetime != null">`elapsetime` = #{elapsetime},</if>
+            <if test="alldelay != null">`alldelay` = #{alldelay},</if>
+            <if test="screendelay != null">`screendelay` = #{screendelay},</if>
+            <if test="testagent != null">`testagent` = #{testagent},</if>
+            <if test="qoe != null">`qoe` = #{qoe},</if>
+            <if test="qoemodel != null">`qoemodel` = #{qoemodel},</if>
+            <if test="bandwidth != null">`bandwidth` = #{bandwidth},</if>
+            <if test="speed != null">`speed` = #{speed},</if>
+            <if test="dnsdelay != null">`dnsdelay` = #{dnsdelay},</if>
+            <if test="connectdelay != null">`connectdelay` = #{connectdelay},</if>
+            <if test="responsedelay != null">`responsedelay` = #{responsedelay},</if>
+            <if test="downloaddelay != null">`downloaddelay` = #{downloaddelay},</if>
+            <if test="httpsize != null">`httpsize` = #{httpsize},</if>
+            <if test="httpstatus != null">`httpstatus` = #{httpstatus},</if>
+            <if test="tcpcount != null">`tcpcount` = #{tcpcount},</if>
+            <if test="tcphead != null">`tcphead` = #{tcphead},</if>
+            <if test="tcpconn != null">`tcpconn` = #{tcpconn},</if>
+            <if test="tcpretrans != null">`tcpretrans` = #{tcpretrans},</if>
+            <if test="l2delay != null">`l2delay` = #{l2delay},</if>
+            <if test="l2loss != null">`l2loss` = #{l2loss},</if>
+            <if test="l2trace != null">`l2trace` = #{l2trace},</if>
+            <if test="l2tracedelay != null">`l2tracedelay` = #{l2tracedelay},</if>
+            <if test="lanhoops != null">`lanhoops` = #{lanhoops},</if>
+            <if test="landelay != null">`landelay` = #{landelay},</if>
+            <if test="sharepc != null">`sharepc` = #{sharepc},</if>
+            <if test="wanip != null">`wanip` = #{wanip},</if>
+            <if test="lanip != null">`lanip` = #{lanip},</if>
+            <if test="sysbacknetwork != null">`sysbacknetwork` = #{sysbacknetwork},</if>
+            <if test="syscpuusage != null">`syscpuusage` = #{syscpuusage},</if>
+            <if test="syscpu != null">`syscpu` = #{syscpu},</if>
+            <if test="sysmemusage != null">`sysmemusage` = #{sysmemusage},</if>
+            <if test="sysmem != null">`sysmem` = #{sysmem},</if>
+            <if test="sysadapterrate != null">`sysadapterrate` = #{sysadapterrate},</if>
+            <if test="sysadapter != null">`sysadapter` = #{sysadapter},</if>
+            <if test="sysapps != null">`sysapps` = #{sysapps},</if>
+            <if test="sysos != null">`sysos` = #{sysos},</if>
+            <if test="testagentid != null">`testagentid` = #{testagentid}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM result_speedtest
+        WHERE id = #{value}
+    </delete>
+
+    <delete id="deleteBatch">
+        delete from result_speedtest where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
