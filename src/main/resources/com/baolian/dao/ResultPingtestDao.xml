@@ -18,6 +18,17 @@
         <!--</association>-->
     </resultMap>
 
+    <!--门户感知返回的联表类型-->
+    <resultMap id="webPingCountResult" type="com.baolian.entity.map.WebPingCountResult">
+        <id property="id" column="id"/>
+        <result property="qoe" column="qoe"/>
+        <result property="rtt_avg" column="rtt_avg"/>
+        <result property="rtt_min" column="rtt_min"/>
+        <result property="rtt_max" column="rtt_max"/>
+        <result property="loss" column="loss"/>
+        <result property="destname" column="destname"/>
+    </resultMap>
+
     <select id="queryObject" resultType="com.baolian.entity.ResultPingtestEntity">
         SELECT *
         FROM result_pingtest
@@ -29,6 +40,20 @@
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>
+    </select>
+
+    <select id="queryWebList" resultMap="webPingCountResult">
+        SELECT
+        MAX(result_pingtest.id) AS id,
+        AVG(result_pingtest.qoe) AS qoe,
+        AVG(result_pingtest.rtt_avg) AS rtt_avg,
+        MIN(result_pingtest.rtt_min) AS rtt_min,
+        MAX(result_pingtest.rtt_max) AS rtt_max,
+        AVG(result_pingtest.loss) AS loss,
+            result_pingtest.destname AS destname
+        FROM result_pingtest
+        WHERE result_pingtest.testtime BETWEEN #{starttime} AND #{endtime}
+        GROUP BY result_pingtest.destname;
     </select>
 
     <!--通过时间范围以及区域查询区域Ping感知数据-->

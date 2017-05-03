@@ -262,41 +262,8 @@ var targetgroup_table = new Vue({
         group_flag : 0
     },
     methods:{
-        gettargetlist:function () {
-            $.ajax({
-                type: "POST",   /*GET会乱码*/
-                url: "../testtarget/alllist",
-                cache: false,  //禁用缓存
-                dataType: "json",
-                /*contentType:"application/json",  /!*必须要,不可少*!/*/
-                success: function (result) {
-                    this.targetlist = result.testtargetallList;
-                    this.target_flag = 1;
-
-
-                }
-            });
-        },
-        getgrouplist:function () {
-            $.ajax({
-                type: "POST",   /*GET会乱码*/
-                url: "../testgroup/alllist",
-                cache: false,  //禁用缓存
-                dataType: "json",
-                /*contentType:"application/json",  /!*必须要,不可少*!/*/
-                success: function (result) {
-                    this.grouplist = result.testgroupallList;
-                    this.group_flag = 1;
-
-
-                }
-            });
-        }
+        
     },
-    mounted() {
-        this.gettargetlist();
-        this.getgrouplist();
-    }
 });
 // 注册
 var probetable = new Vue({

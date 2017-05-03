@@ -2,6 +2,7 @@ package com.baolian.service.impl;
 
 import com.baolian.dao.datasouce.annotation.DataSource;
 import com.baolian.entity.map.CountyPingtestResult;
+import com.baolian.entity.map.WebPingCountResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,12 @@ public class ResultPingtestServiceImpl implements ResultPingtestService {
     public List<ResultPingtestEntity> queryList(Map<String, Object> map) {
         return resultPingtestDao.queryList(map);
     }
+
+
+    public List<WebPingCountResult> queryWebList(Map<String, Object> map) {
+        return resultPingtestDao.queryWebList(map);
+    }
+
 
     @Override
     public List<CountyPingtestResult> queryCountyPingList(Map<String, Object> map) {

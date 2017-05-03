@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.baolian.entity.map.WebSpeedCountResult;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,6 +53,30 @@ public class ResultSpeedtestController {
 		PageUtils pageUtil = new PageUtils(resultSpeedtestList, total, limit, page);
 		
 		return R.ok().put("page", pageUtil);
+	}
+
+	/**
+	 *
+	 * @param starttime
+	 * @param endtime
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/weblist")
+	@RequiresPermissions("resultspeedtest:weblist")
+	public R list(String starttime, String endtime){
+		Map<String, Object> map = new HashMap<>();
+		map.put("starttime", starttime);
+		map.put("endtime", endtime);
+
+		System.out.println("starttime:"+starttime);
+		System.out.println("endtime:"+endtime);
+
+		//查询列表数据
+		List<WebSpeedCountResult> resultSpeedwebtestList = resultSpeedtestService.queryWebList(map);
+
+
+		return R.ok().put("resultSpeedwebtestList", resultSpeedwebtestList);
 	}
 	
 	

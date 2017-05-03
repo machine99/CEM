@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.baolian.entity.map.CountyPingtestResult;
+import com.baolian.entity.map.WebPingCountResult;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -79,7 +80,30 @@ public class ResultPingtestController {
 		
 		return R.ok().put("page", pageUtil);
 	}
-	
+
+	/**
+	 *
+	 * @param starttime
+	 * @param endtime
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/weblist")
+	@RequiresPermissions("resultpingtest:weblist")
+	public R list(String starttime, String endtime){
+		Map<String, Object> map = new HashMap<>();
+		map.put("starttime", starttime);
+		map.put("endtime", endtime);
+
+		System.out.println("starttime:"+starttime);
+		System.out.println("endtime:"+endtime);
+
+		//查询列表数据
+		List<WebPingCountResult> resultPingwebtestList = resultPingtestService.queryWebList(map);
+
+
+		return R.ok().put("resultPingwebtestList", resultPingwebtestList);
+	}
 	
 	/**
 	 * 信息

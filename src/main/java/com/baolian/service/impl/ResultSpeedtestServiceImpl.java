@@ -1,6 +1,7 @@
 package com.baolian.service.impl;
 
 import com.baolian.dao.datasouce.annotation.DataSource;
+import com.baolian.entity.map.WebSpeedCountResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,11 @@ public class ResultSpeedtestServiceImpl implements ResultSpeedtestService {
     @Override
     public List<ResultSpeedtestEntity> queryList(Map<String, Object> map) {
         return resultSpeedtestDao.queryList(map);
+    }
+
+    @Override
+    public List<WebSpeedCountResult> queryWebList(Map<String, Object> map) {
+        return resultSpeedtestDao.queryWebList(map);
     }
 
     @Override

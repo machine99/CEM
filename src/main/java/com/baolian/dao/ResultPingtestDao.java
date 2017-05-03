@@ -2,6 +2,7 @@ package com.baolian.dao;
 
 import com.baolian.entity.ResultPingtestEntity;
 import com.baolian.entity.map.CountyPingtestResult;
+import com.baolian.entity.map.WebPingCountResult;
 
 import java.util.List;
 import java.util.Map;
@@ -19,4 +20,5 @@ public interface ResultPingtestDao extends BaseDao<ResultPingtestEntity> {
      * @return 返回自定义resultMap列表
      */
     List<CountyPingtestResult> queryCountyPingList(Map<String, Object> map);
+    List<WebPingCountResult> queryWebList(Map<String, Object> map);
 }

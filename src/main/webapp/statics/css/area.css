@@ -37,3 +37,9 @@ body{
     min-width: 165px;
 }
 
+/*门户表格*/
+#webCount_table td{
+    white-space: nowrap; /*//规定段落中的文本不进行换行*/
+}
+
+
