@@ -42,13 +42,13 @@ var new_search = new Vue({        /*监听查询事件*/
             postdata.endtime = endtime;
             $.ajax({                           /*后台取得数据,赋值给观察者*/
                 type: "POST",
-                url: "../resultpingtest/weblist",
+                url: "../resultspeedtest/weblist",
                 cache: false,  //禁用缓存
                 data: postdata,  //传入组装的参数
                 dataType: "json",
                 success: function (result) {
                     console.log(result);
-                    new_data.users = result.resultPingwebtestList;
+                    new_data.users = result.resultSpeedwebtestList;
                 }
             });
 
@@ -85,13 +85,13 @@ var Reset = new Vue({               /*重置,默认时间区间为最近4天*/
             console.log(postdata);
             $.ajax({                           /*后台取得数据,赋值给观察者*/
                 type: "POST",
-                url: "../resultpingtest/weblist",
+                url: "../resultspeedtest/weblist",
                 cache: false,  //禁用缓存
                 data: postdata,  //传入组装的参数
                 dataType: "json",
                 success: function (result) {
                     console.log(result);
-                    new_data.users = result.resultPingwebtestList;
+                    new_data.users = result.resultSpeedwebtestList;
                 }
             });
         }
@@ -107,12 +107,9 @@ Vue.component('data-table', {
         return {
             headers: [
                 {title: ''},
-                {title: '门户地址'},
+                {title: '网站'},
+                {title: '速率(Mbps)'},
                 {title: 'qoe(分)'},
-                {title: '平均时延(ms)'},
-                {title: '最小时延(ms)'},
-                {title: '最大时延(ms)'},
-                {title: '丢包(%)'}
             ],
             rows: [],
             dtHandle: null
@@ -132,11 +129,8 @@ Vue.component('data-table', {
 
                 row.push(i++);
                 row.push(item.destname);
+                row.push(item.speed);
                 row.push(item.qoe);
-                row.push(item.rtt_avg);
-                row.push(item.rtt_min);
-                row.push(item.rtt_max);
-                row.push(item.loss);
 
                 /*console.log(item);*/
 
