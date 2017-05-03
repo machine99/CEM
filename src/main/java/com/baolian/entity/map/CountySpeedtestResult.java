@@ -18,6 +18,10 @@ public class CountySpeedtestResult implements Serializable {
     private String county;
 
 
+    public CountySpeedtestResult(){
+
+    }
+
     public CountySpeedtestResult(String county, Integer id, Double speed, Double qoe) {
         this.county = county;
         this.id = id;

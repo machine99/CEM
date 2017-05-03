@@ -2,7 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.baolian.dao.ResultSpeedtestDao">
-
+    <!--门户感知-->
+    <resultMap id="webSpeedCountResult" type="com.baolian.entity.map.WebSpeedCountResult">
+        <id property="id" column="id"/>
+        <result property="speed" column="speed"/>
+        <result property="qoe" column="qoe"/>
+        <result property="destname" column="destname"/>
+    </resultMap>
 
     <resultMap id="countySpeedtestResult" type="com.baolian.entity.map.CountySpeedtestResult">
         <id property="id" column="id"/>
@@ -63,6 +69,19 @@
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>
+    </select>
+
+    <select id="queryWebList" resultMap="webSpeedCountResult">
+        SELECT
+        MAX(result_speedtest.id) AS id,
+        AVG(result_speedtest.speed) AS speed,
+        AVG(result_speedtest.qoe) AS qoe,
+            result_pingtest.destname AS destname
+        FROM result_speedtest
+        INNER JOIN result_pingtest
+        ON result_speedtest.testagentid = result_pingtest.testagentid
+        WHERE result_speedtest.testtime BETWEEN #{starttime} AND #{endtime}
+        GROUP BY result_pingtest.destname;
     </select>
 
     <select id="queryTotal" resultType="int">

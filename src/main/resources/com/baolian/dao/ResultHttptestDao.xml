@@ -14,6 +14,18 @@
         <result property="county" column="county"/>
     </resultMap>
 
+
+    <!--门户感知返回的联表类型-->
+    <resultMap id="webHttpCountResult" type="com.baolian.entity.map.WebHttpCountResult">
+        <id property="id" column="id"/>
+        <result property="qoe" column="qoe"/>
+        <result property="speed" column="speed"/>
+        <result property="dnsdelay" column="dnsdelay"/>
+        <result property="connectdelay" column="connectdelay"/>
+        <result property="responsedelay" column="responsedelay"/>
+        <result property="downloaddelay" column="downloaddelay"/>
+        <result property="destname" column="destname"/>
+    </resultMap>
     <!--BRAS网页感知返回的联表类型-->
     <resultMap id="brasHttptestResult" type="com.baolian.entity.map.BrasHttptestResult">
         <id property="id" column="id"/>
@@ -36,6 +48,21 @@
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>
+    </select>
+
+    <select id="queryWebList" resultMap="webHttpCountResult">
+        SELECT
+        MAX(result_httptest.id) AS id,
+        AVG(result_httptest.qoe) AS qoe,
+        AVG(result_httptest.speed) AS speed,
+        AVG(result_httptest.dnsdelay) AS dnsdelay,
+        AVG(result_httptest.connectdelay) AS connectdelay,
+        AVG(result_httptest.responsedelay) AS responsedelay,
+        AVG(result_httptest.downloaddelay) AS downloaddelay,
+            result_httptest.destname AS destname
+        FROM result_httptest
+        WHERE result_httptest.testtime BETWEEN #{starttime} AND #{endtime}
+        GROUP BY result_httptest.destname;
     </select>
 
     <select id="queryCountyHttpList" resultMap="countyHttptestResult">

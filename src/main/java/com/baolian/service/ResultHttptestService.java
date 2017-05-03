@@ -3,6 +3,7 @@ package com.baolian.service;
 import com.baolian.entity.ResultHttptestEntity;
 import com.baolian.entity.map.BrasHttptestResult;
 import com.baolian.entity.map.CountyHttptestResult;
+import com.baolian.entity.map.WebHttpCountResult;
 
 import java.util.List;
 import java.util.Map;
@@ -14,11 +15,15 @@ import java.util.Map;
  */
 public interface ResultHttptestService {
 
+
     ResultHttptestEntity queryObject(Integer id);
 
     List<ResultHttptestEntity> queryList(Map<String, Object> map);
 
     List<CountyHttptestResult> queryCountyHttpList(Map<String, Object> map);
+
+	/*门户感知*/
+	List<WebHttpCountResult> queryWebList(Map<String, Object> map);
 
     List<BrasHttptestResult> queryBRASHttpList(Map<String, Object> map);
 
@@ -31,4 +36,5 @@ public interface ResultHttptestService {
     void delete(Integer id);
 
     void deleteBatch(Integer[] ids);
+
 }

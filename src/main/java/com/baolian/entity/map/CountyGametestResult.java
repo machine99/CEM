@@ -22,6 +22,9 @@ public class CountyGametestResult implements Serializable {
     //区县
     private String county;
 
+    public CountyGametestResult(){
+
+    }
 
     public CountyGametestResult(String county, Integer id, Double rtt_avg, Double tcpConnect, Double loss, Double qoe) {
         this.county = county;

@@ -1,11 +1,19 @@
 package com.baolian.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+import com.baolian.entity.map.WebVideoCountResult;
+
+import com.baolian.entity.map.CountyYoukutestResult;
 import com.baolian.entity.map.BrasPingtestResult;
 import com.baolian.entity.map.BrasYoukutestResult;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,6 +64,62 @@ public class ResultYoukutestController {
 		return R.ok().put("page", pageUtil);
 	}
 
+
+	/**
+	 *
+	 * @param starttime
+	 * @param endtime
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/weblist")
+	@RequiresPermissions("resultyoukutest:weblist")
+	public R list(String starttime, String endtime){
+		Map<String, Object> map = new HashMap<>();
+		map.put("starttime", starttime);
+		map.put("endtime", endtime);
+
+		System.out.println("starttime:"+starttime);
+		System.out.println("endtime:"+endtime);
+
+		//查询列表数据
+		List<WebVideoCountResult> resultVideowebtestList = resultYoukutestService.queryWebList(map);
+
+
+		return R.ok().put("resultVideowebtestList", resultVideowebtestList);
+	}
+	
+
+	@ResponseBody
+	@RequestMapping("/countyyoukulist")
+	@RequiresPermissions("resultyoukutest:countyyoukulist")
+	public R list(String starttime, String endtime, String area) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("starttime", starttime);
+		map.put("endtime", endtime);
+		map.put("county", area);
+
+		System.out.println("starttime:" + starttime);
+		System.out.println("endtime:" + endtime);
+		System.out.println("county:" + area);
+
+
+		//查询列表数据
+		List<CountyYoukutestResult> resultCountyYoukutestList = resultYoukutestService.queryCountyYoukuList(map);
+
+		for (CountyYoukutestResult result : resultCountyYoukutestList) {
+			System.out.println(result);
+		}
+
+		if (resultCountyYoukutestList.size() == 1 && "".equals(area)) {
+			if (resultCountyYoukutestList.get(0).getCounty().equals("新城区")) {
+				resultCountyYoukutestList.add(new CountyYoukutestResult("碑林区", 0, 0.0, 0.0, 0.0, 0.0, 0.0));
+			} else if (resultCountyYoukutestList.get(0).getCounty().equals("碑林区")) {
+				resultCountyYoukutestList.add(0, new CountyYoukutestResult("新城区", 0, 0.0, 0.0, 0.0, 0.0, 0.0));
+			}
+		}
+		return R.ok().put("resultCountyYoukutestList", resultCountyYoukutestList);
+	}
 	/**
 	 * BRASPing感知列表
 	 */
@@ -71,7 +135,8 @@ public class ResultYoukutestController {
 		List<BrasYoukutestResult> resultBRASYoukutestList = resultYoukutestService.queryBRASYoukuList(map);
 		return R.ok().put("resultBRASYoukutestList", resultBRASYoukutestList);
 	}
-	
+
+
 	
 	/**
 	 * 信息

@@ -3,6 +3,7 @@ package com.baolian.service;
 import com.baolian.entity.ResultPingtestEntity;
 import com.baolian.entity.map.BrasPingtestResult;
 import com.baolian.entity.map.CountyPingtestResult;
+import com.baolian.entity.map.WebPingCountResult;
 
 import java.util.List;
 import java.util.Map;
@@ -14,11 +15,14 @@ import java.util.Map;
  */
 public interface ResultPingtestService {
 
+
     ResultPingtestEntity queryObject(Integer id);
 
     List<ResultPingtestEntity> queryList(Map<String, Object> map);
 
     List<CountyPingtestResult> queryCountyPingList(Map<String, Object> map);
+
+    List<WebPingCountResult> queryWebList(Map<String, Object> map);
 
     List<BrasPingtestResult> queryBRASPingList(Map<String, Object> map);
 
@@ -31,4 +35,5 @@ public interface ResultPingtestService {
     void delete(Integer id);
 
     void deleteBatch(Integer[] ids);
+
 }

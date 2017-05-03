@@ -447,7 +447,7 @@ var new_data = new Vue({
 
 /*导出表格到excel*/
 function exportExcel() {
-    alasql('SELECT * INTO XLSX("区县Http对比.xlsx",{headers:true}) \
+    alasql('SELECT * INTO XLSX("区县Http感知对比.xlsx",{headers:true}) \
                     FROM HTML("#area_table",{headers:true})');
 
 }

@@ -1,14 +1,12 @@
 package com.baolian.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.baolian.entity.map.BrasHttptestResult;
 import com.baolian.entity.map.CountyHttptestResult;
+import com.baolian.entity.map.WebHttpCountResult;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -102,6 +100,30 @@ public class ResultHttptestController {
 
         return R.ok().put("page", pageUtil);
     }
+
+	/**
+	 *
+	 * @param starttime
+	 * @param endtime
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/weblist")
+	@RequiresPermissions("resulthttptest:weblist")
+	public R list(String starttime, String endtime){
+		Map<String, Object> map = new HashMap<>();
+		map.put("starttime", starttime);
+		map.put("endtime", endtime);
+
+		System.out.println("starttime:"+starttime);
+		System.out.println("endtime:"+endtime);
+
+		//查询列表数据
+		List<WebHttpCountResult> resultHttpwebtestList = resultHttptestService.queryWebList(map);
+
+
+		return R.ok().put("resultHttpwebtestList", resultHttpwebtestList);
+	}
 
 
     /**
