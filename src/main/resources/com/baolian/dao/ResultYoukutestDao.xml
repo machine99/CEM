@@ -2,7 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.baolian.dao.ResultYoukutestDao">
-
+    
+    <resultMap id="countyYoukutestResult" type="com.baolian.entity.map.CountyYoukutestResult">
+        <id property="id" column="id"/>
+        <result property="speed" column="speed"/>
+        <result property="pausecount" column="pausecount"/>
+        <result property="pausetime" column="pausetime"/>
+        <result property="qoe" column="qoe"/>
+        <result property="buffertime" column="buffertime"/>
+        <result property="county" column="county"/>
+    </resultMap>
+    
     <select id="queryObject" resultType="com.baolian.entity.ResultYoukutestEntity">
         SELECT *
         FROM result_youkutest
@@ -14,6 +24,29 @@
         <if test="offset != null and limit != null">
             limit #{offset}, #{limit}
         </if>
+    </select>
+
+    <select id="queryCountyYoukuList" resultMap="countyYoukutestResult">
+        SELECT
+        MAX(result_youkutest.id) AS id,
+        AVG(result_youkutest.speed) AS speed,
+        AVG(result_youkutest.pausecount) AS pausecount,
+        AVG(result_youkutest.pausetime) AS pausetime,
+        AVG(result_youkutest.qoe) AS qoe,
+        AVG(result_youkutest.buffertime) AS buffertime,
+        testagent.county AS county
+        FROM result_youkutest
+        INNER JOIN testagent
+        ON result_youkutest.testagentid = testagent.id
+        WHERE result_youkutest.testtime BETWEEN #{starttime} AND #{endtime}
+        <if test="county != null and county != ''">
+            AND testagent.county = #{county}
+        </if>
+        <if test="county == null or county == ''">
+            AND testagent.county IN ('新城区', '碑林区')
+            GROUP BY testagent.county;
+        </if>
+
     </select>
 
     <select id="queryTotal" resultType="int">

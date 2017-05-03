@@ -1,6 +1,7 @@
 package com.baolian.service.impl;
 
 import com.baolian.dao.datasouce.annotation.DataSource;
+import com.baolian.entity.map.CountyYoukutestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,10 @@ public class ResultYoukutestServiceImpl implements ResultYoukutestService {
         return resultYoukutestDao.queryList(map);
     }
 
+    @Override
+    public List<CountyYoukutestResult> queryCountyYoukuList(Map<String, Object> map) {
+        return resultYoukutestDao.queryCountyYoukuList(map);
+    }
     @Override
     public int queryTotal(Map<String, Object> map) {
         return resultYoukutestDao.queryTotal(map);
