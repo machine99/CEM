@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.baolian.entity.map.BrasGametestResult;
 import com.baolian.entity.map.CountyGametestResult;
+import com.baolian.entity.map.WebGameCountResult;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -101,6 +102,30 @@ public class ResultGametestController {
         PageUtils pageUtil = new PageUtils(resultGametestList, total, limit, page);
 
         return R.ok().put("page", pageUtil);
+    }
+
+    /**
+     *
+     * @param starttime
+     * @param endtime
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/weblist")
+    @RequiresPermissions("resultgametest:weblist")
+    public R list(String starttime, String endtime){
+        Map<String, Object> map = new HashMap<>();
+        map.put("starttime", starttime);
+        map.put("endtime", endtime);
+
+        System.out.println("starttime:"+starttime);
+        System.out.println("endtime:"+endtime);
+
+        //查询列表数据
+        List<WebGameCountResult> resultGamewebtestList = resultGametestService.queryWebList(map);
+
+
+        return R.ok().put("resultGamewebtestList", resultGamewebtestList);
     }
 
     /**

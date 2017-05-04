@@ -23,11 +23,13 @@ public class TotalBRASQoeResult implements Serializable {
     //视频感知平均qoe
     private Double youkuAvgQoe;
     // 日期
+
     private String date;
 
     public TotalBRASQoeResult(String brasName) {
         this.brasName = brasName;
     }
+
 
     public TotalBRASQoeResult(String brasName, String date) {
         this.brasName = brasName;
@@ -82,12 +84,14 @@ public class TotalBRASQoeResult implements Serializable {
         this.youkuAvgQoe = youkuAvgQoe;
     }
 
+
     public String getDate() {
         return date;
     }
 
     public void setDate(String date) {
         this.date = date;
+
     }
 
     @Override

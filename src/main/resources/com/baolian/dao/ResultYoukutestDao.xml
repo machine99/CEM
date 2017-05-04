@@ -111,7 +111,6 @@
         <if test="groupByDate != null and groupByDate == true">
             ,date_format(result_youkutest.testtime, '%Y-%m-%d')
         </if>
-
     </select>
 
     <select id="queryTotal" resultType="int">

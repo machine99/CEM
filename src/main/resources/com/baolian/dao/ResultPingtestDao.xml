@@ -18,7 +18,6 @@
         <!--</association>-->
     </resultMap>
 
-
     <!--门户感知返回的联表类型-->
     <resultMap id="webPingCountResult" type="com.baolian.entity.map.WebPingCountResult">
         <id property="id" column="id"/>
