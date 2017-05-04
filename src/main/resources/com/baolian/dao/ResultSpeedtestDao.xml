@@ -2,13 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.baolian.dao.ResultSpeedtestDao">
-    <!--门户感知-->
-    <resultMap id="webSpeedCountResult" type="com.baolian.entity.map.WebSpeedCountResult">
-        <id property="id" column="id"/>
-        <result property="speed" column="speed"/>
-        <result property="qoe" column="qoe"/>
-        <result property="destname" column="destname"/>
-    </resultMap>
+
 
     <resultMap id="countySpeedtestResult" type="com.baolian.entity.map.CountySpeedtestResult">
         <id property="id" column="id"/>
@@ -76,10 +70,13 @@
         MAX(result_speedtest.id) AS id,
         AVG(result_speedtest.speed) AS speed,
         AVG(result_speedtest.qoe) AS qoe,
-            result_speedtest.destname AS destname
+        testagent.brasname AS brasname
         FROM result_speedtest
+        INNER JOIN testagent
+        ON result_speedtest.testagentid = result_speedtest.id
         WHERE result_speedtest.testtime BETWEEN #{starttime} AND #{endtime}
-        GROUP BY result_speedtest.destname;
+        GROUP BY testagent.brasname;
+
     </select>
 
     <select id="queryTotal" resultType="int">

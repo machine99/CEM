@@ -31,6 +31,7 @@
         <result property="bufferTime" column="buffertime"/>
         <result property="speed" column="speed"/>
         <result property="qoe" column="qoe"/>
+        <result property="date" column="date"/>
         <result property="brasName" column="brasname"/>
 
     </resultMap>
@@ -92,13 +93,21 @@
             AVG(result_youkutest.buffertime) AS buffertime,
             AVG(result_youkutest.speed)      AS speed,
             AVG(result_youkutest.qoe)        AS qoe,
+            <if test="groupByDate == null or groupByDate==''">
+            date_format(MAX(result_youkutest.testtime), '%Y-%m-%d') AS date,
+            </if>
+            <if test="groupByDate == true">
+                date_format(result_youkutest.testtime, '%Y-%m-%d') AS date,
+            </if>
             testagent.brasname               AS brasname
         FROM result_youkutest
             INNER JOIN testagent
                 ON result_youkutest.testagentid = testagent.id
         WHERE result_youkutest.testtime BETWEEN #{starttime} AND #{endtime}
-        GROUP BY testagent.brasname;
-
+        GROUP BY testagent.brasname
+        <if test="groupByDate == true">
+            ,date_format(result_youkutest.testtime, '%Y-%m-%d')
+        </if>
     </select>
 
     <select id="queryTotal" resultType="int">

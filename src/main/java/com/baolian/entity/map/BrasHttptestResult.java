@@ -92,6 +92,15 @@ public class BrasHttptestResult implements Serializable{
 
     @Override
     public String toString() {
-        return String.format("%d,%f,%f,%f,%f,%f,%s", id, dnsDelay, connectDelay, responseDelay, speed, qoe, brasName);
+        return "BrasHttptestResult{" +
+                "id=" + id +
+                ", dnsDelay=" + dnsDelay +
+                ", connectDelay=" + connectDelay +
+                ", responseDelay=" + responseDelay +
+                ", speed=" + speed +
+                ", qoe=" + qoe +
+                ", brasName='" + brasName + '\'' +
+                ", date='" + date + '\'' +
+                '}';
     }
 }

@@ -4,7 +4,7 @@
 
 var starttime;
 var endtime;
-var testtimeflag;
+var groupByDate;
 
 var bras_choose = new Vue({
     el: '#bras_choose',
@@ -148,8 +148,6 @@ var Reset = new Vue({
             postdata.starttime = new Date(new Date() - 1000 * 60 * 60 * 24 * 4).Format("yyyy-MM-dd") + " 00:00:00";
             /*前4天日期*/
             postdata.endtime = (new Date()).Format("yyyy-MM-dd") + " 23:59:59";
-            /*当前日期*/
-            postdata.testtimeflag = 1;
             console.log(postdata);
             $.ajax({
                 /*后台取得数据,赋值给观察者*/

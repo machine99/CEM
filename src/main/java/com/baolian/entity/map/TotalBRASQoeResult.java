@@ -23,18 +23,18 @@ public class TotalBRASQoeResult implements Serializable {
     //视频感知平均qoe
     private Double youkuAvgQoe;
     //测试时间
-    private String testTime;
+    private String date;
 
     public TotalBRASQoeResult(String brasName) {
         this.brasName = brasName;
     }
 
-    public String getTestTime() {
-        return testTime;
+    public String getDate() {
+        return date;
     }
 
-    public void setTestTime(String testTime) {
-        this.testTime = testTime;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getBrasName() {
@@ -87,7 +87,7 @@ public class TotalBRASQoeResult implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%s,%f,%f,%f,%f,%f,%f", brasName, pingAvgQoe, httpAvgQoe, speedAvgQoe, gameAvgQoe, youkuAvgQoe,testTime);
+        return String.format("%s,%f,%f,%f,%f,%f,%f", brasName, pingAvgQoe, httpAvgQoe, speedAvgQoe, gameAvgQoe, youkuAvgQoe,date);
     }
 
     @Override
