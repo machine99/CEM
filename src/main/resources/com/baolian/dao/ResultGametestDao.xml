@@ -18,7 +18,8 @@
         <result property="tcpConnect" column="tcpconnect"/>
         <result property="loss" column="loss"/>
         <result property="qoe" column="qoe"/>
-        <result property="county" column="county"/>
+        <result property="date" column="date"/>
+        <result property="brasName" column="brasname"/>
     </resultMap>
 
     <select id="queryObject" resultType="com.baolian.entity.ResultGametestEntity">
@@ -63,12 +64,16 @@
         AVG(result_gametest.tcpconnect) AS tcpconnect,
         AVG(result_gametest.loss) AS loss,
         AVG(result_gametest.qoe) AS qoe,
+        date_format(MAX(result_gametest.testtime), '%Y-%m-%d') AS date,
         testagent.brasname AS brasname
         FROM result_gametest
         INNER JOIN testagent
         ON result_gametest.testagentid = testagent.id
         WHERE result_gametest.testtime BETWEEN #{starttime} AND #{endtime}
-        GROUP BY testagent.brasname;
+        GROUP BY testagent.brasname
+        <if test="groupByDate == true">
+            ,date_format(result_gametest.testtime, '%Y-%m-%d')
+        </if>
     </select>
 
     <select id="queryTotal" resultType="int">
