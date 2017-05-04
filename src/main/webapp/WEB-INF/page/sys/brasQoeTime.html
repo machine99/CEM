@@ -1,10 +1,115 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>BRAS感知变化趋势</title>
+    #parse("sys/areaHeader.html")  <!--导入CSS和js文件-->
+    <link href="${rc.contextPath}/statics/css/area.css" rel="stylesheet">  <!--自定义CSS-->
 </head>
 <body>
-<h1>BRAS感知变化趋势</h1>
+<div id="wrapper">
+    <div class="wrapper wrapper-content">
+        <div class="row">
+
+            <form class="bs-example bs-example-form" role="form">
+                <div class="row" id="first_row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"></div>    <!--自适应分辨率-->
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <div class="input-group">
+                            <span class="input-group-addon">BRAS:</span>
+                            <input type="text" class="form-control" id="area" data-provide="typeahead">
+                            <!--输入提示框typeahead-->
+                            <div class="input-group-btn" id="area_dropdown">
+                                <button type="button" class="btn btn-default dropdown-toggle"
+                                        data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right" id="area_choose">  <!--应该为动态的-->
+                                    <!--<li><a href="#">新城区</a></li>
+                                    <li><a href="#">碑林区</a></li>
+                                    <li><a href="#">莲湖区</a></li>
+                                    <li><a href="#">雁塔区</a></li>
+                                    <li><a href="#">未央区</a></li>
+                                    <li><a href="#">灞桥区</a></li>
+                                    <li><a href="#">长安区</a></li>
+                                    <li><a href="#">阎良区</a></li>-->
+                                    <li>                                       <!--Vue渲染列表-->
+                                        <a href="#" v-for="item in items">
+                                            {{ item.message }}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div><!-- /btn-group -->
+                            <div id="message"></div>
+                        </div><!-- /input-group -->
+                    </div><!-- /.col-lg-2 -->
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <form class="bs-example bs-example-form" role="form">
+                            <div class="input-daterange input-group" id="datepicker">
+                                <span class="input-group-addon">时间:</span>
+                                <input type="text" class="form-control" name="daterange"
+                                       value="01/01/2015 - 01/31/2015"/>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="btn-group" id="min_button">
+                            <button type="button" class="btn btn-default" v-on:click="search" id="search">
+                                <span class="fa fa-search"></span>查询
+                            </button>
+                            <button type="button" class="btn btn-default" v-on:click="reset" id="reset">
+                                <span class="glyphicon glyphicon-repeat"></span>重置
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <span class="label label-primary pull-right">Today</span>
+                        <h3>BRAS感知变化趋势</h3>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">     <!--highcharts图-->
+                            <div id="container" style="height: 400px; margin: 0 auto"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div><!-- /.row -->
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <button type="button" class="btn btn-primary btn-sm pull-right" onclick="exportExcel()">导出
+                        </button>  <!--模板按钮,导出表格excel-->
+                        <h3>数据明细</h3>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row pre-scrollable">     <!--表格-->
+                            <div id="tabledemo">
+                                <data-table :users="filteredUsers"></data-table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="${rc.contextPath}/js/sys/brasQoeTime.js?_${date.systemTime}"></script>
+
+
 </body>
 </html>

@@ -82,6 +82,6 @@ public class BrasGametestResult implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%d,%f,%f,%f,%f,%s", id, rtt_avg, tcpConnect, loss, qoe, brasName);
+        return String.format("%d,%f,%f,%f,%f,%s,%s", id, rtt_avg, tcpConnect, loss, qoe, brasName, date);
     }
 }

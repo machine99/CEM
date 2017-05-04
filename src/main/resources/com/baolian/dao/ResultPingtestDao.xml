@@ -37,6 +37,7 @@
         <result property="rttMin" column="rtt_min"/>
         <result property="loss" column="loss"/>
         <result property="qoe" column="qoe"/>
+        <result property="date" column="date"/>
         <result property="brasName" column="brasname"/>
     </resultMap>
 
@@ -94,18 +95,30 @@
     <!--通过时间范围以及区域查询BRAS的Ping感知数据-->
     <select id="queryBRASPingList" resultMap="brasPingtestResult">
         SELECT
-            MAX(result_pingtest.id)      AS id,
-            AVG(result_pingtest.rtt_avg) AS rtt_avg,
-            MAX(result_pingtest.rtt_max) AS rtt_max,
-            MIN(result_pingtest.rtt_min) AS rtt_min,
-            AVG(result_pingtest.loss)    AS loss,
-            AVG(result_pingtest.qoe)     AS qoe,
-            testagent.brasname           AS brasname
+        MAX(result_pingtest.id) AS id,
+        AVG(result_pingtest.rtt_avg) AS rtt_avg,
+        MAX(result_pingtest.rtt_max) AS rtt_max,
+        MIN(result_pingtest.rtt_min) AS rtt_min,
+        AVG(result_pingtest.loss) AS loss,
+        AVG(result_pingtest.qoe) AS qoe,
+        <if test="groupByDate != null and groupByDate == true">
+            date_format(result_pingtest.testtime, '%Y-%m-%d') AS date,
+        </if>
+        <if test="groupByDate == null or groupByDate == false">
+            date_format(MAX(result_pingtest.testtime), '%Y-%m-%d') AS date,
+        </if>
+        testagent.brasname AS brasname
         FROM result_pingtest
-            INNER JOIN testagent
-                ON result_pingtest.testagentid = testagent.id
+        INNER JOIN testagent
+        ON result_pingtest.testagentid = testagent.id
         WHERE result_pingtest.testtime BETWEEN #{starttime} AND #{endtime}
+        <if test="brasName != null">
+            AND testagent.brasname = #{brasName}
+        </if>
         GROUP BY testagent.brasname
+        <if test="groupByDate != null and groupByDate == true">
+            ,date_format(result_pingtest.testtime, '%Y-%m-%d')
+        </if>
 
     </select>
 

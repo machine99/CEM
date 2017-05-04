@@ -64,14 +64,22 @@
         AVG(result_gametest.tcpconnect) AS tcpconnect,
         AVG(result_gametest.loss) AS loss,
         AVG(result_gametest.qoe) AS qoe,
-        date_format(MAX(result_gametest.testtime), '%Y-%m-%d') AS date,
+        <if test="groupByDate != null and groupByDate == true">
+            date_format(result_gametest.testtime, '%Y-%m-%d') AS date,
+        </if>
+        <if test="groupByDate == null or groupByDate == false">
+            date_format(MAX(result_gametest.testtime), '%Y-%m-%d') AS date,
+        </if>
         testagent.brasname AS brasname
         FROM result_gametest
         INNER JOIN testagent
         ON result_gametest.testagentid = testagent.id
         WHERE result_gametest.testtime BETWEEN #{starttime} AND #{endtime}
+        <if test="brasName != null">
+            AND testagent.brasname = #{brasName}
+        </if>
         GROUP BY testagent.brasname
-        <if test="groupByDate == true">
+        <if test="groupByDate != null and groupByDate == true">
             ,date_format(result_gametest.testtime, '%Y-%m-%d')
         </if>
     </select>

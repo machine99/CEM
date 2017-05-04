@@ -21,6 +21,7 @@
         <id property="id" column="id"/>
         <result property="speed" column="speed"/>
         <result property="qoe" column="qoe"/>
+        <result property="date" column="date"/>
         <result property="brasName" column="brasname"/>
     </resultMap>
 
@@ -49,12 +50,24 @@
         MAX(result_speedtest.id) AS id,
         AVG(result_speedtest.speed) AS speed,
         AVG(result_speedtest.qoe) AS qoe,
+        <if test="groupByDate != null and groupByDate == true">
+            date_format(result_speedtest.testtime, '%Y-%m-%d') AS date,
+        </if>
+        <if test="groupByDate == null or groupByDate == false">
+            date_format(MAX(result_speedtest.testtime), '%Y-%m-%d') AS date,
+        </if>
         testagent.brasname AS brasname
         FROM result_speedtest
         INNER JOIN testagent
         ON result_speedtest.testagentid = testagent.id
         WHERE result_speedtest.testtime BETWEEN #{starttime} AND #{endtime}
-        GROUP BY testagent.brasname;
+        <if test="brasName != null">
+            AND testagent.brasname = #{brasName}
+        </if>
+        GROUP BY testagent.brasname
+        <if test="groupByDate != null and groupByDate == true">
+            ,date_format(result_speedtest.testtime, '%Y-%m-%d')
+        </if>
 
     </select>
 

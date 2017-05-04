@@ -6,7 +6,7 @@ import java.io.Serializable;
  * BRAS网页测试返回结果对应类，用于resultMap
  * Created by tomxie on 2017/5/2 10:55.
  */
-public class BrasHttptestResult implements Serializable{
+public class BrasHttptestResult implements Serializable {
     private static final long serialVersionUID = 1L;
 
     //id
@@ -92,6 +92,6 @@ public class BrasHttptestResult implements Serializable{
 
     @Override
     public String toString() {
-        return String.format("%d,%f,%f,%f,%f,%f,%s", id, dnsDelay, connectDelay, responseDelay, speed, qoe, brasName);
+        return String.format("%d,%f,%f,%f,%f,%f,%s,%s", id, dnsDelay, connectDelay, responseDelay, speed, qoe, brasName, date);
     }
 }
