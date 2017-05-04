@@ -198,7 +198,7 @@ var Reset = new Vue({
                     console.log("成功返回!" + typeof (result.resultBRASPingtestList));
                     console.log(result.resultBRASPingtestList);
                     console.log(result.resultBRASPingtestList.length);
-                    if (result.resultBRASPingtestList.length == 2) {
+                    if (result.resultBRASPingtestList.length > 0) {
                         staus = 0;
                         flag = 0;
                         button_change.delay();

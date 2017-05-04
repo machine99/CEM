@@ -176,7 +176,7 @@ var Reset = new Vue({
                 dataType: "json",
                 success: function (result) {
                     console.log(result);
-                    if (result.resultBRASAvgQoeList.length == 2) {
+                    if (result.resultBRASAvgQoeList.length > 0) {
                         // staus = 0;
                         flag = 0;
                         /*option先回到状态0,注意,不然会出错*/

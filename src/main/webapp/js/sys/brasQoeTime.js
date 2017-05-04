@@ -2,7 +2,6 @@
  * BRAS感知变化趋势对应的js
  * Created by tomxie on 2017/5/4.
  */
-var get_area;
 var flag = 0;
 var starttime;
 var endtime;
@@ -13,94 +12,91 @@ var staus = 0;
 
 var get_data;
 
-$(document).on("click", ".dropdown-menu li a", function () {
-    get_area = $(this).text().trim();
-    /*trim()去除空格*/
-    /*获取下拉值*/
-    $('#area').val(get_area);
-    /*区域选择框赋值*/
-    console.log(get_area);
-});
-
 var data_fitst = [];
-var brasnames = {
-    items: []
-};
 
-$.ajax({
-    /*后台获取brasname*/
-    type: "POST",
-    url: "../testagent/brasnamelist",
-    cache: false,  //禁用缓存
-    // data: postdata,  //传入组装的参数
-    dataType: "json",
-    success: function (result) {
-        if (result.code == 0){
-            data.items
-        }
-    }
-});
-
-var area_choose = new Vue({
-    el: '#area_choose',
+var bras_choose = new Vue({
+    el: '#bras_choose',
     data: {
-        items: [
-            {message: '新城区'},
-            {message: '碑林区'},
-            {message: '莲湖区'},
-            {message: '雁塔区'},
-            {message: '未央区'},
-            {message: '灞桥区'},
-            {message: '长安区'},
-            {message: '阎良区'}
-        ]
+        items: []
     },
-    mounted() {
-
+    ready() {
+        $.ajax({
+            /*后台获取brasname*/
+            type: "POST",
+            url: "../testagent/brasnamelist",
+            cache: false,  //禁用缓存
+            // data: postdata,  //传入组装的参数
+            dataType: "json",
+            success: function (result) {
+                this.data.items = [];
+                if (result.code == 0) {
+                    result.brasNames.forEach(function (item) {
+                        data.items.push({message: item})
+                    });
+                } else {
+                    toastr.warning('获取BRAS列表失败');
+                }
+            }
+        });
     }
 });
-var new_data1 = ['新城区', '碑林区', '莲湖区', '雁塔区', '未央区', '灞桥区', '长安区', '阎良区']
-$('#area').typeahead({
-    /*输入提示框*/
-    source: new_data1,
-    items: 7        /*下拉菜单中显示的最大的条目数。*/
-
-});
-
 
 var json = {};
 var options = {
     chart: {
-        type: 'column'
+        type: 'spline'
     },
     title: {
-        text: 'ping时延对比'
+        text: ''
     },
     xAxis: {
-
-        categories: []
-
+        type: 'datetime',
+        dateTimeLabelFormats: {
+            day: '%Y-%m-%d',
+            week: '%Y-%m-%d',
+            month: '%Y-%m-%d',
+            year: '%Y-%m-%d'
+        },
+        title: {
+            text: 'Date'
+        }
     },
     yAxis: {
         title: {
-            text: '结果(ms)'
+            text: '结果(分)'
+        },
+        min: 0,
+        max: 100
+    },
+    tooltip: {
+        headerFormat: '<b>{series.name}</b><br>',
+        pointFormat: '日期{point.x:%Y-%m-%d}: qoe{point.y:.2f}分'
+    },
+    plotOptions: {
+        spline: {
+            marker: {
+                enabled: true
+            }
         }
     },
-    credits: {
-        enabled: false
-    },
     series: [{
-        name: '平均时延',
+        name: '网页感知',
         data: []
     }, {
-        name: '最大时延',
+        name: '视频感知',
         data: []
     }, {
-        name: '最小时延',
+        name: '游戏感知',
         data: []
-    }
-    ]
+    }, {
+        name: '下载感知',
+        data: []
+    }, {
+        name: 'ping感知',
+        data: []
+    }]
 };
+
 $(document).ready(function () {
     var chart = new Highcharts.Chart('container', options)
 });
@@ -144,7 +140,7 @@ var new_search = new Vue({
         search: function () {
             console.log("你选择了时间区间" + starttime + "to" + endtime);
             var postdata = {};
-            postdata.area = $('#area').val();
+            postdata.brasname = $('#bras_choose').val();
             postdata.starttime = starttime;
             postdata.endtime = endtime;
             $.ajax({
@@ -156,16 +152,16 @@ var new_search = new Vue({
                 dataType: "json",
                 success: function (result) {
                     console.log(result);
-                    console.log("成功返回!" + typeof (result.resultCountyPingtestList));
-                    console.log(result.resultCountyPingtestList);
-                    console.log(result.resultCountyPingtestList.length);
-                    if (result.resultCountyPingtestList.length != 0 && result.resultCountyPingtestList[0] != null) {
-                        if (result.resultCountyPingtestList.length == 1) {
+                    console.log("成功返回!" + typeof (result.resultBRASDailyQoeList));
+                    console.log(result.resultBRASDailyQoeList);
+                    console.log(result.resultBRASDailyQoeList.length);
+                    if (result.resultBRASDailyQoeList.length != 0 && result.resultBRASDailyQoeList[0] != null) {
+                        if (result.resultBRASDailyQoeList.length == 1) {
                             flag = 1;
                         } else {
                             flag = 0;
                         }
-                        new_data.users = result.resultCountyPingtestList;
+                        new_data.users = result.resultBRASDailyQoeList;
                     } else {
                         toastr.warning('该时间区间没有对应数据！');
                     }
@@ -201,7 +197,7 @@ var Reset = new Vue({
             /*重置,回到页面加载时的数据*/
             /**********************************/
             var postdata = {};
-            postdata.area = '';
+            postdata.brasname = null;
             postdata.starttime = new Date(new Date() - 1000 * 60 * 60 * 24 * 4).Format("yyyy-MM-dd") + " 00:00:00";
             /*前4天日期*/
             postdata.endtime = (new Date()).Format("yyyy-MM-dd") + " 23:59:59";
@@ -216,15 +212,14 @@ var Reset = new Vue({
                 dataType: "json",
                 success: function (result) {
                     console.log(result);
-                    console.log("成功返回!" + typeof (result.resultCountyPingtestList));
-                    console.log(result.resultCountyPingtestList);
-                    console.log(result.resultCountyPingtestList.length);
-                    if (result.resultCountyPingtestList.length == 2) {
+                    console.log("成功返回!" + typeof (result.resultBRASDailyQoeList));
+                    console.log(result.resultBRASDailyQoeList);
+                    console.log(result.resultBRASDailyQoeList.length);
+                    if (result.resultBRASDailyQoeList.length > 0) {
                         staus = 0;
                         flag = 0;
-                        button_change.delay();
                         /*option先回到状态0,注意,不然会出错*/
-                        new_data.users = result.resultCountyPingtestList;
+                        new_data.users = result.resultBRASDailyQoeList;
                     } else {
                         toastr.warning('最近4天没有对应数据！');
                     }
@@ -234,127 +229,19 @@ var Reset = new Vue({
     }
 });
 
-var button_change = new Vue({
-    /*实例化Vue*/
-    el: '#charts_button',
-    data: {
-        option_delay: {
-            /*设置时延option*/
-            title: {
-                text: 'ping时延对比'
-            },
-            series_delay: [{
-                name: '平均时延',
-                data: []
-            }, {
-                name: '最大时延',
-                data: []
-            }, {
-                name: '最小时延',
-                data: []
-            }
-            ],
-            yAxis: {
-                title: {
-                    text: '结果(ms)'
-                }
-            }
-        },
-        option_qoe: {
-            /*设置qoe option*/
-            title: {
-                text: 'qoe对比'
-            },
-            series_qoe: [{
-                name: 'qoe',
-                data: []
-            }
-            ],
-            yAxis: {
-                title: {
-                    text: '结果(分)'
-                },
-                max: 100
-            }
-        },
-        option_loss: {
-            /*设置丢包option*/
-            title: {
-                text: '丢包率'
-            },
-            series_loss: [{
-                name: '丢包',
-                data: []
-            }
-            ],
-            yAxis: {
-                title: {
-                    text: '结果(%)'
-                },
-                max: 100
-            },
-            tooltip: {
-                /*数据提示框*/
-                valueSuffix: '%'    /* y值后缀字符串*/
-            }
-        }
-
-
-    },
-    // 在 `methods` 对象中定义方法
-    methods: {
-        /*事件监听*/
-        delay: function () {
-            staus = 0;
-            console.log("时延");
-            options.title = this.option_delay.title;
-            /*设置标题*/
-
-            options.series = this.option_delay.series_delay;
-            /*设置数据*/
-
-            options.yAxis = this.option_delay.yAxis;
-            /*设置y轴*/
-            options.tooltip = {};
-            /*设置数据提示框*/
-            var chart = new Highcharts.Chart('container', options)
-            /*重新绘图*/
-        },
-        loss: function () {
-            staus = 1;
-            console.log("丢包");
-            options.title = this.option_loss.title;
-
-            options.series = this.option_loss.series_loss;
-            options.yAxis = this.option_loss.yAxis;
-            options.tooltip = this.option_loss.tooltip;
-            var chart = new Highcharts.Chart('container', options)
-        },
-        qoe: function () {
-            staus = 2;
-            console.log("qoe");
-            options.title = this.option_qoe.title;
-            options.series = this.option_qoe.series_qoe;
-            options.yAxis = this.option_qoe.yAxis;
-            options.tooltip = {};
-            var chart = new Highcharts.Chart('container', options)
-        }
-    }
-});
-
-
 Vue.component('data-table', {
     template: '<table class="table table-bordered table-hover table-striped" id="area_table"></table>',
     props: ['users'],
     data() {
         return {
             headers: [
-                {title: '区县'},
-                {title: '平均时延(ms)', class: 'some-special-class'},
-                {title: '最大时延(ms)'},
-                {title: '最小时延(ms)'},
-                {title: '丢包(%)'},
-                {title: 'qoe(分)'}
+                {title: 'BRAS'},
+                {title: '网页感知(分)'},
+                {title: '视频感知(分)'},
+                {title: '游戏感知(分)'},
+                {title: '下载感知(分)'},
+                {title: 'ping感知(分)'},
+                {title: '日期'}
             ],
             rows: [],
             dtHandle: null
@@ -370,46 +257,20 @@ Vue.component('data-table', {
             }
 
             options.xAxis.categories = [];
-            if (staus == 0) {                       /*先清空当前状态option的data*/
-                options.series[0].data = [];
-                /*动态设置option*/
-                options.series[1].data = [];
-                options.series[2].data = [];
-            } else if (staus == 1) {
-                options.series[0].data = [];
-            } else {
-                options.series[0].data = [];
+            for (let i = 0; i < options.series.length; i++) {
+                options.series[i].data = [];
+            }
+            // options.xAxis.categories[0] = val[0].county;
+            /*观察user是否变化,重绘HighCharts图*/
+            for (let i = 0; i < val.length; i++) {
+                let date_token = val[i].date.split("-");
+                options.series[0].data[i] = [Date.UTC(date_token[0], date_token[1], date_token[2]), val[i].httpAvgQoe];
+                options.series[1].data[i] = [Date.UTC(date_token[0], date_token[1], date_token[2]), val[i].youkuAvgQoe];
+                options.series[2].data[i] = [Date.UTC(date_token[0], date_token[1], date_token[2]), val[i].gameAvgQoe];
+                options.series[3].data[i] = [Date.UTC(date_token[0], date_token[1], date_token[2]), val[i].speedAvgQoe];
+                options.series[4].data[i] = [Date.UTC(date_token[0], date_token[1], date_token[2]), val[i].pingAvgQoe];
             }
 
-            button_change.option_delay.series_delay[0].data = [];
-            /*清空所有监听事件的option数据*/
-            /*动态设置button_change.option*/
-            button_change.option_delay.series_delay[1].data = [];
-            button_change.option_delay.series_delay[2].data = [];
-            button_change.option_loss.series_loss[0].data = [];
-            button_change.option_qoe.series_qoe[0].data = [];
-
-            for (var i = 0; i <= times; i++) {                          /*观察user是否变化,重绘HighCharts图*/
-                options.xAxis.categories[i] = val[i].county;
-                if (staus == 0) {                                       /*设置当前状态option*/
-                    options.series[0].data[i] = val[i].rttAvg;
-                    /*动态设置option*/
-                    options.series[1].data[i] = val[i].rttMax;
-                    options.series[2].data[i] = val[i].rttMin;
-                } else if (staus == 1) {
-                    options.series[0].data[i] = val[i].loss;
-                } else {
-                    options.series[0].data[i] = val[i].qoe;
-                }
-
-                button_change.option_delay.series_delay[0].data[i] = val[i].rttAvg;
-                /*设置监听事件所有option*/
-                /*动态设置button_change.option*/
-                button_change.option_delay.series_delay[1].data[i] = val[i].rttMax;
-                button_change.option_delay.series_delay[2].data[i] = val[i].rttMin;
-                button_change.option_loss.series_loss[0].data[i] = val[i].loss;
-                button_change.option_qoe.series_qoe[0].data[i] = val[i].qoe;
-            }
             var chart = new Highcharts.Chart('container', options);
 
 
@@ -420,12 +281,13 @@ Vue.component('data-table', {
                 // skip this loop...
                 let row = [];
 
-                row.push(item.county);
-                row.push(item.rttAvg);
-                row.push(item.rttMax);
-                row.push(item.rttMin);
-                row.push(item.loss);
-                row.push(item.qoe);
+                row.push(item.brasName);
+                row.push(item.httpAvgQoe);
+                row.push(item.youkuAvgQoe);
+                row.push(item.gameAvgQoe);
+                row.push(item.speedAvgQoe);
+                row.push(item.pingAvgQoe);
+                row.push(item.date);
 
                 /*console.log(item);*/
 

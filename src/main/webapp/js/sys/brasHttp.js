@@ -170,7 +170,7 @@ var Reset = new Vue({
                 dataType: "json",
                 success: function (result) {
                     console.log(result);
-                    if (result.resultBRASHttptestList.length == 2) {
+                    if (result.resultBRASHttptestList.length > 0) {
                         staus = 0;
                         flag = 0;
                         button_change.delay();

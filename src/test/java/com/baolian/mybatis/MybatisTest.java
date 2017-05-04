@@ -44,15 +44,15 @@ public class MybatisTest {
         map.put("endtime", "2017-04-30 00:00:00");
         map.put("groupByDate", true);
 
-        // List<BrasHttptestResult> results = resultHttptestService.queryBRASHttpList(map);
-        // for (BrasHttptestResult result : results) {
-        //     System.out.println(result);
-        // }
-
-        List<String> list = testagentService.queryBrasNames();
-        for (String s : list) {
-            System.out.println(s);
+        List<BrasHttptestResult> results = resultHttptestService.queryBRASHttpList(map);
+        for (BrasHttptestResult result : results) {
+            System.out.println(result);
         }
+
+        // List<String> list = testagentService.queryBrasNames();
+        // for (String s : list) {
+        //     System.out.println(s);
+        // }
 
         // //查询列表数据
         // List<BrasPingtestResult> brasPingtestResults = resultPingtestService.queryBRASPingList(map);

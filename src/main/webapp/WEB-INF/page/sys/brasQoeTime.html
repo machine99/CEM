@@ -16,31 +16,13 @@
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"></div>    <!--自适应分辨率-->
                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
                         <div class="input-group">
-                            <span class="input-group-addon">BRAS:</span>
-                            <input type="text" class="form-control" id="area" data-provide="typeahead">
-                            <!--输入提示框typeahead-->
-                            <div class="input-group-btn" id="area_dropdown">
-                                <button type="button" class="btn btn-default dropdown-toggle"
-                                        data-toggle="dropdown">
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu pull-right" id="area_choose">  <!--应该为动态的-->
-                                    <!--<li><a href="#">新城区</a></li>
-                                    <li><a href="#">碑林区</a></li>
-                                    <li><a href="#">莲湖区</a></li>
-                                    <li><a href="#">雁塔区</a></li>
-                                    <li><a href="#">未央区</a></li>
-                                    <li><a href="#">灞桥区</a></li>
-                                    <li><a href="#">长安区</a></li>
-                                    <li><a href="#">阎良区</a></li>-->
-                                    <li>                                       <!--Vue渲染列表-->
-                                        <a href="#" v-for="item in items">
-                                            {{ item.message }}
-                                        </a>
-                                    </li>
-                                </ul>
+                            <div class="input-group-btn" id="bras_dropdown">
+                                <span class="searchname" title="BRAS">BRAS：</span>
+                                <select class="form-control" id="bras_choose" style="width: 110px">
+                                    <option value="">---请选择---</option>
+                                    <option v-for="item in items">{{ item.message }}</option>
+                                </select>
                             </div><!-- /btn-group -->
-                            <div id="message"></div>
                         </div><!-- /input-group -->
                     </div><!-- /.col-lg-2 -->
                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">

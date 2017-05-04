@@ -167,10 +167,10 @@ var Reset = new Vue({
                 dataType: "json",
                 success: function (result) {
                     console.log(result);
-                    if (result.resultBRASGametestList.length == 2) {
+                    if (result.resultBRASGametestList.length > 0) {
                         staus = 0;
                         flag = 0;
-                        button_change.delay();
+                        button_change.rtt_avg();
                         /*option先回到状态0,注意,不然会出错*/
                         new_data.users = result.resultBRASGametestList;
                     } else {
