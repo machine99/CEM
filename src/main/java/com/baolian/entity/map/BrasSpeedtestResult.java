@@ -17,6 +17,8 @@ public class BrasSpeedtestResult implements Serializable {
     private Double qoe;
     //BRAS
     private String brasName;
+    //日期
+    private String date;
 
     public Integer getId() {
         return id;
@@ -48,6 +50,14 @@ public class BrasSpeedtestResult implements Serializable {
 
     public void setBrasName(String brasName) {
         this.brasName = brasName;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     @Override
