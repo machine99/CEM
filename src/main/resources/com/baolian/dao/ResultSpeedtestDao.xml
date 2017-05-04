@@ -76,12 +76,10 @@
         MAX(result_speedtest.id) AS id,
         AVG(result_speedtest.speed) AS speed,
         AVG(result_speedtest.qoe) AS qoe,
-            result_pingtest.destname AS destname
+            result_speedtest.destname AS destname
         FROM result_speedtest
-        INNER JOIN result_pingtest
-        ON result_speedtest.testagentid = result_pingtest.testagentid
         WHERE result_speedtest.testtime BETWEEN #{starttime} AND #{endtime}
-        GROUP BY result_pingtest.destname;
+        GROUP BY result_speedtest.destname;
     </select>
 
     <select id="queryTotal" resultType="int">
