@@ -3,6 +3,7 @@ package com.baolian.service;
 import com.baolian.entity.ResultGametestEntity;
 import com.baolian.entity.map.BrasGametestResult;
 import com.baolian.entity.map.CountyGametestResult;
+import com.baolian.entity.map.WebGameCountResult;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,8 @@ public interface ResultGametestService {
     ResultGametestEntity queryObject(Integer id);
 
     List<ResultGametestEntity> queryList(Map<String, Object> map);
+
+    List<WebGameCountResult> queryWebList(Map<String, Object> map);
 
     List<CountyGametestResult> queryCountyGameList(Map<String, Object> map);
 

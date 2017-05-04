@@ -72,6 +72,17 @@ public class TestagentController {
         return R.ok().put("page", pageUtil);
     }
 
+    /**
+     * 获得全部的BRAS名称
+     */
+    @ResponseBody
+    @RequestMapping("/brasnamelist")
+    @RequiresPermissions("testagent:brasnamelist")
+    public R brasNameList() {
+        List<String> brasNames = testagentService.queryBrasNames();
+        return R.ok().put("brasNames", brasNames);
+    }
+
     @ResponseBody
     @RequestMapping("/brasavgqoelist")
     @RequiresPermissions("testagent:brasavgqoelist")
@@ -129,6 +140,71 @@ public class TestagentController {
         return R.ok().put("resultBRASAvgQoeList", resultBRASAvgQoeList);
     }
 
+    /**
+     * 获取bras每日平均qoe
+     */
+    @ResponseBody
+    @RequestMapping("/brasdailyqoelist")
+    @RequiresPermissions("testagent:brasdailyqoelist")
+    public R brasDailyQoeList(String starttime, String endtime, String brasname) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("starttime", starttime);
+        map.put("endtime", endtime);
+        map.put("brasName", brasname);
+
+        // 查询列表数据
+        List<BrasPingtestResult> brasPingtestResults = resultPingtestService.queryBRASPingList(map);
+        List<BrasHttptestResult> brasHttptestResults = resultHttptestService.queryBRASHttpList(map);
+        List<BrasSpeedtestResult> brasSpeedtestResults = resultSpeedtestService.queryBRASSpeedList(map);
+        List<BrasGametestResult> brasGametestResults = resultGametestService.queryBRASGameList(map);
+        List<BrasYoukutestResult> brasYoukutestResults = resultYoukutestService.queryBRASYoukuList(map);
+
+        Map<String, TotalBRASQoeResult> resultMap = new HashMap<>();
+        // 合并
+        for (BrasPingtestResult result : brasPingtestResults) {
+            String date = result.getDate();
+            String brasName = result.getBrasName();
+            if (!resultMap.containsKey(date)) {
+                resultMap.put(date, new TotalBRASQoeResult(brasName, date));
+            }
+            resultMap.get(date).setPingAvgQoe(result.getQoe());
+        }
+        for (BrasHttptestResult result : brasHttptestResults) {
+            String date = result.getDate();
+            String brasName = result.getBrasName();
+            if (!resultMap.containsKey(date)) {
+                resultMap.put(date, new TotalBRASQoeResult(brasName, date));
+            }
+            resultMap.get(date).setHttpAvgQoe(result.getQoe());
+        }
+        for (BrasSpeedtestResult result : brasSpeedtestResults) {
+            String date = result.getDate();
+            String brasName = result.getBrasName();
+            if (!resultMap.containsKey(date)) {
+                resultMap.put(date, new TotalBRASQoeResult(brasName, date));
+            }
+            resultMap.get(date).setSpeedAvgQoe(result.getQoe());
+        }
+        for (BrasGametestResult result : brasGametestResults) {
+            String date = result.getDate();
+            String brasName = result.getBrasName();
+            if (!resultMap.containsKey(date)) {
+                resultMap.put(date, new TotalBRASQoeResult(brasName, date));
+            }
+            resultMap.get(date).setGameAvgQoe(result.getQoe());
+        }
+        for (BrasYoukutestResult result : brasYoukutestResults) {
+            String date = result.getDate();
+            String brasName = result.getBrasName();
+            if (!resultMap.containsKey(date)) {
+                resultMap.put(date, new TotalBRASQoeResult(brasName, date));
+            }
+            resultMap.get(date).setYoukuAvgQoe(result.getQoe());
+        }
+
+        List<TotalBRASQoeResult> resultBRASDailyQoeList = new ArrayList<>(resultMap.values());
+        return R.ok().put("resultBRASDailyQoeList", resultBRASDailyQoeList);
+    }
 
     /**
      * 信息

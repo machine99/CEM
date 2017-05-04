@@ -3,6 +3,15 @@
 
 <mapper namespace="com.baolian.dao.ResultGametestDao">
 
+    <resultMap id="webGameCountResult" type="com.baolian.entity.map.WebGameCountResult">
+        <id property="id" column="id"/>
+        <result property="rtt_avg" column="rtt_avg"/>
+        <result property="tcpconnect" column="tcpconnect"/>
+        <result property="loss" column="loss"/>
+        <result property="qoe" column="qoe"/>
+        <result property="destname" column="destname"/>
+    </resultMap>
+
     <resultMap id="countyGametestResult" type="com.baolian.entity.map.CountyGametestResult">
         <id property="id" column="id"/>
         <result property="rtt_avg" column="rtt_avg"/>
@@ -35,6 +44,19 @@
         </if>
     </select>
 
+    <select id="queryWebList" resultMap="webGameCountResult">
+        SELECT
+        MAX(result_gametest.id) AS id,
+        AVG(result_gametest.rtt_avg) AS rtt_avg,
+        AVG(result_gametest.qoe) AS qoe,
+        AVG(result_gametest.tcpconnect) AS tcpconnect,
+        AVG(result_gametest.loss) AS loss,
+            result_gametest.destname AS destname
+        FROM result_gametest
+        WHERE result_gametest.testtime BETWEEN #{starttime} AND #{endtime}
+        GROUP BY result_gametest.destname;
+    </select>
+
     <select id="queryCountyGameList" resultMap="countyGametestResult">
         SELECT
         MAX(result_gametest.id) AS id,
@@ -64,14 +86,22 @@
         AVG(result_gametest.tcpconnect) AS tcpconnect,
         AVG(result_gametest.loss) AS loss,
         AVG(result_gametest.qoe) AS qoe,
-        date_format(MAX(result_gametest.testtime), '%Y-%m-%d') AS date,
+        <if test="groupByDate != null and groupByDate == true">
+            date_format(result_gametest.testtime, '%Y-%m-%d') AS date,
+        </if>
+        <if test="groupByDate == null or groupByDate == false">
+            date_format(MAX(result_gametest.testtime), '%Y-%m-%d') AS date,
+        </if>
         testagent.brasname AS brasname
         FROM result_gametest
         INNER JOIN testagent
         ON result_gametest.testagentid = testagent.id
         WHERE result_gametest.testtime BETWEEN #{starttime} AND #{endtime}
+        <if test="brasName != null">
+            AND testagent.brasname = #{brasName}
+        </if>
         GROUP BY testagent.brasname
-        <if test="groupByDate == true">
+        <if test="groupByDate != null and groupByDate == true">
             ,date_format(result_gametest.testtime, '%Y-%m-%d')
         </if>
     </select>

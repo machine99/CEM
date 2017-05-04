@@ -34,6 +34,7 @@
         <result property="responseDelay" column="responsedelay"/>
         <result property="speed" column="speed"/>
         <result property="qoe" column="qoe"/>
+        <result property="date" column="date"/>
         <result property="brasName" column="brasname"/>
     </resultMap>
 
@@ -59,7 +60,7 @@
         AVG(result_httptest.connectdelay) AS connectdelay,
         AVG(result_httptest.responsedelay) AS responsedelay,
         AVG(result_httptest.downloaddelay) AS downloaddelay,
-            result_httptest.destname AS destname
+        result_httptest.destname AS destname
         FROM result_httptest
         WHERE result_httptest.testtime BETWEEN #{starttime} AND #{endtime}
         GROUP BY result_httptest.destname;
@@ -96,12 +97,24 @@
         AVG(result_httptest.responsedelay) AS responsedelay,
         AVG(result_httptest.speed) AS speed,
         AVG(result_httptest.qoe) AS qoe,
+        <if test="groupByDate != null and groupByDate == true">
+            date_format(result_httptest.testtime, '%Y-%m-%d') AS date,
+        </if>
+        <if test="groupByDate == null or groupByDate == false">
+            date_format(MAX(result_httptest.testtime), '%Y-%m-%d') AS date,
+        </if>
         testagent.brasname AS brasname
         FROM result_httptest
         INNER JOIN testagent
         ON result_httptest.testagentid = testagent.id
         WHERE result_httptest.testtime BETWEEN #{starttime} AND #{endtime}
-        GROUP BY testagent.brasname;
+        <if test="brasName != null">
+            AND testagent.brasname = #{brasName}
+        </if>
+        GROUP BY testagent.brasname
+        <if test="groupByDate != null and groupByDate == true">
+            ,date_format(result_httptest.testtime, '%Y-%m-%d')
+        </if>
 
     </select>
 

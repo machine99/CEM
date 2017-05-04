@@ -62,12 +62,6 @@ public class BrasSpeedtestResult implements Serializable {
 
     @Override
     public String toString() {
-        return "BrasSpeedtestResult{" +
-                "id=" + id +
-                ", speed=" + speed +
-                ", qoe=" + qoe +
-                ", brasName='" + brasName + '\'' +
-                ", date='" + date + '\'' +
-                '}';
+        return String.format("%d,%f,%f,%s,%s", id, speed, qoe, brasName, date);
     }
 }

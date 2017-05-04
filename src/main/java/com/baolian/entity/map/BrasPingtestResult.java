@@ -92,15 +92,6 @@ public class BrasPingtestResult implements Serializable {
 
     @Override
     public String toString() {
-        return "BrasPingtestResult{" +
-                "id=" + id +
-                ", rttAvg=" + rttAvg +
-                ", rttMin=" + rttMin +
-                ", rttMax=" + rttMax +
-                ", loss=" + loss +
-                ", qoe=" + qoe +
-                ", brasName='" + brasName + '\'' +
-                ", date='" + date + '\'' +
-                '}';
+        return String.format("%d,%f,%f,%f,%f,%f,%s,%s", id, rttAvg, rttMin, rttMax, loss, qoe, brasName, date);
     }
 }

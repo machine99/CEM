@@ -92,15 +92,8 @@ public class BrasYoukutestResult implements Serializable {
 
     @Override
     public String toString() {
-        return "BrasYoukutestResult{" +
-                "id=" + id +
-                ", pauseCount=" + pauseCount +
-                ", pauseTime=" + pauseTime +
-                ", bufferTime=" + bufferTime +
-                ", speed=" + speed +
-                ", qoe=" + qoe +
-                ", brasName='" + brasName + '\'' +
-                ", date='" + date + '\'' +
-                '}';
+
+        return String.format("%d,%f,%f,%f,%f,%f,%s,%s", id, pauseCount, pauseTime, bufferTime, speed, qoe, brasName, date);
+
     }
 }

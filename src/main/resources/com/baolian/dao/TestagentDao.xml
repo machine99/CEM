@@ -78,6 +78,14 @@
         </if>
     </select>
 
+    <select id="queryBrasNames" resultType="String">
+        SELECT
+        DISTINCT brasname
+        FROM testagent
+        WHERE brasname IS NOT NULL;
+
+    </select>
+
     <insert id="save" parameterType="com.baolian.entity.TestagentEntity" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO testagent
         (

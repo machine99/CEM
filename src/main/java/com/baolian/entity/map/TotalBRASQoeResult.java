@@ -22,18 +22,17 @@ public class TotalBRASQoeResult implements Serializable {
     private Double gameAvgQoe;
     //视频感知平均qoe
     private Double youkuAvgQoe;
-    //测试时间
+    // 日期
+
     private String date;
 
     public TotalBRASQoeResult(String brasName) {
         this.brasName = brasName;
     }
 
-    public String getDate() {
-        return date;
-    }
 
-    public void setDate(String date) {
+    public TotalBRASQoeResult(String brasName, String date) {
+        this.brasName = brasName;
         this.date = date;
     }
 
@@ -85,19 +84,29 @@ public class TotalBRASQoeResult implements Serializable {
         this.youkuAvgQoe = youkuAvgQoe;
     }
 
-    @Override
-    public String toString() {
-        return String.format("%s,%f,%f,%f,%f,%f,%f", brasName, pingAvgQoe, httpAvgQoe, speedAvgQoe, gameAvgQoe, youkuAvgQoe,date);
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (obj instanceof TotalBRASQoeResult) {
-            return this.brasName.equals(((TotalBRASQoeResult) obj).getBrasName());
-        }
-        return false;
+    public String toString() {
+        return String.format("%s,%f,%f,%f,%f,%f,%s", brasName, pingAvgQoe, httpAvgQoe, speedAvgQoe, gameAvgQoe, youkuAvgQoe, date);
     }
+
+    // @Override
+    // public boolean equals(Object obj) {
+    //     if (obj == this) {
+    //         return true;
+    //     }
+    //     if (obj instanceof TotalBRASQoeResult) {
+    //         return this.brasName.equals(((TotalBRASQoeResult) obj).getBrasName());
+    //     }
+    //     return false;
+    // }
 }

@@ -35,6 +35,11 @@ public class TestagentServiceImpl implements TestagentService {
     }
 
     @Override
+    public List<String> queryBrasNames() {
+        return testagentDao.queryBrasNames();
+    }
+
+    @Override
     public void save(TestagentEntity testagent) {
         testagentDao.save(testagent);
     }

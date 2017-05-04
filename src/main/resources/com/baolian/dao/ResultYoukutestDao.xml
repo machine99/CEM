@@ -87,25 +87,28 @@
 
     <select id="queryBRASYoukuList" resultMap="brasYoukutestResult">
         SELECT
-            MAX(result_youkutest.id)         AS id,
-            AVG(result_youkutest.pausecount) AS pausecount,
-            AVG(result_youkutest.pausetime)  AS pausetime,
-            AVG(result_youkutest.buffertime) AS buffertime,
-            AVG(result_youkutest.speed)      AS speed,
-            AVG(result_youkutest.qoe)        AS qoe,
-            <if test="groupByDate == null or groupByDate==''">
+        MAX(result_youkutest.id) AS id,
+        AVG(result_youkutest.pausecount) AS pausecount,
+        AVG(result_youkutest.pausetime) AS pausetime,
+        AVG(result_youkutest.buffertime) AS buffertime,
+        AVG(result_youkutest.speed) AS speed,
+        AVG(result_youkutest.qoe) AS qoe,
+        <if test="groupByDate != null and groupByDate == true">
+            date_format(result_youkutest.testtime, '%Y-%m-%d') AS date,
+        </if>
+        <if test="groupByDate == null or groupByDate == false">
             date_format(MAX(result_youkutest.testtime), '%Y-%m-%d') AS date,
-            </if>
-            <if test="groupByDate == true">
-                date_format(result_youkutest.testtime, '%Y-%m-%d') AS date,
-            </if>
-            testagent.brasname               AS brasname
+        </if>
+        testagent.brasname AS brasname
         FROM result_youkutest
-            INNER JOIN testagent
-                ON result_youkutest.testagentid = testagent.id
+        INNER JOIN testagent
+        ON result_youkutest.testagentid = testagent.id
         WHERE result_youkutest.testtime BETWEEN #{starttime} AND #{endtime}
+        <if test="brasName != null">
+            AND testagent.brasname = #{brasName}
+        </if>
         GROUP BY testagent.brasname
-        <if test="groupByDate == true">
+        <if test="groupByDate != null and groupByDate == true">
             ,date_format(result_youkutest.testtime, '%Y-%m-%d')
         </if>
     </select>

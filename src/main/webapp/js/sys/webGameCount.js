@@ -4,58 +4,7 @@
 
 var starttime;
 var endtime;
-var groupByDate;
 
-var bras_choose = new Vue({
-    el: '#bras_choose',
-    data: {
-        items: [
-            {message: 'BRAS1'},
-            {message: 'BRAS2'},
-            {message: 'BRAS3'}
-        ]
-    }
-});
-
-var options = {
-    title: {
-        text: ''
-    },
-    xAxis: {
-
-        categories: []
-
-    },
-    yAxis: {
-        title: {
-            text: '结果(分)'
-        }
-    },
-    credits: {
-        enabled: false
-    },
-    series: [{
-        name: '网页感知',
-        data: []
-    }, {
-        name: '视频感知',
-        data: []
-    }, {
-        name: '游戏感知',
-        data: []
-    }, {
-        name: '下载感知',
-        data: []
-    }, {
-        name: 'ping感知',
-        data: []
-    }]
-};
-$(document).ready(function () {
-    var chart = new Highcharts.Chart('container', options)
-});
-
-/*datarange*/
 $('input[name="daterange"]').daterangepicker(
     {
         language: 'zn-ch',
@@ -72,47 +21,34 @@ $('input[name="daterange"]').daterangepicker(
             daysOfWeek: "一_二_三_四_五_六_日".split("_"),
 
         },
-        startDate: new Date(new Date() - 1000 * 60 * 60 * 24 * 4).toLocaleDateString(), /*前4天日期*/
-        endDate: (new Date()).toLocaleDateString(), /*当前日期*/
+        /*页面刚加载时,默认时间区间为最近4天*/
+        startDate: new Date(new Date() - 1000 * 60*60*24*4).toLocaleDateString(),  /*前4天日期*/
+        endDate: (new Date()).toLocaleDateString() ,    /*当前日期*/
     },
     function (start, end, label) {          /*日期选择触发事件*/
         /*console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));*/
         starttime = start.format('YYYY-MM-DD HH:mm:ss');
         endtime = end.format('YYYY-MM-DD HH:mm:ss');
+
     });
 
-var new_search = new Vue({
-    /*监听查询事件*/
-    el: '#search',
-    methods: {
-        search: function () {
-            console.log("你选择了时间区间" + starttime + "to" + endtime);
+var new_search = new Vue({        /*监听查询事件*/
+    el:'#search',
+    methods:{
+        search:function () {
+            console.log("你选择了时间区间"+starttime+"to"+endtime);
             var postdata = {};
-            // postdata.area = $('#area').val();
             postdata.starttime = starttime;
             postdata.endtime = endtime;
-            $.ajax({
-                /*后台取得数据,赋值给观察者*/
+            $.ajax({                           /*后台取得数据,赋值给观察者*/
                 type: "POST",
-                url: "../testagent/brasavgqoelist",
+                url: "../resultgametest/weblist",
                 cache: false,  //禁用缓存
                 data: postdata,  //传入组装的参数
                 dataType: "json",
                 success: function (result) {
                     console.log(result);
-                    console.log("成功返回!" + typeof (result.resultBRASAvgQoeList));
-                    console.log(result.resultBRASAvgQoeList);
-                    console.log(result.resultBRASAvgQoeList.length);
-                    if (result.resultBRASAvgQoeList.length != 0 && result.resultBRASAvgQoeList[0] != null) {
-                        if (result.resultBRASAvgQoeList.length == 1) {
-                            flag = 1;
-                        } else {
-                            flag = 0;
-                        }
-                        new_data.users = result.resultBRASAvgQoeList;
-                    } else {
-                        toastr.warning('该时间区间没有对应数据！');
-                    }
+                    new_data.users = result.resultGamewebtestList;
                 }
             });
 
@@ -120,7 +56,6 @@ var new_search = new Vue({
     }
 });
 
-// 对Date的扩展，将 Date 转化为指定格式的String
 Date.prototype.Format = function (fmt) { //author: meizz
     var o = {
         "M+": this.getMonth() + 1, //月份
@@ -137,45 +72,46 @@ Date.prototype.Format = function (fmt) { //author: meizz
     return fmt;
 };
 
-var Reset = new Vue({
+var Reset = new Vue({               /*重置,默认时间区间为最近4天*/
     el: '#reset',
     methods: {
         reset: function () {
             /****************************/
             /*重置,回到页面加载时的数据*/
+            /**********************************/
             var postdata = {};
-            // postdata.area = '';
-            postdata.starttime = new Date(new Date() - 1000 * 60 * 60 * 24 * 4).Format("yyyy-MM-dd") + " 00:00:00";
-            /*前4天日期*/
-            postdata.endtime = (new Date()).Format("yyyy-MM-dd") + " 23:59:59";
+            postdata.starttime = new Date(new Date() - 1000 * 60*60*24*4).Format("yyyy-MM-dd")+" 00:00:00"; /*前4天日期*/
+            postdata.endtime = (new Date()).Format("yyyy-MM-dd")+" 23:59:59";  /*当前日期*/
             console.log(postdata);
-            $.ajax({
-                /*后台取得数据,赋值给观察者*/
+            $.ajax({                           /*后台取得数据,赋值给观察者*/
                 type: "POST",
-                url: "../testagent/brasavgqoelist",
+                url: "../resultgametest/weblist",
                 cache: false,  //禁用缓存
                 data: postdata,  //传入组装的参数
                 dataType: "json",
                 success: function (result) {
                     console.log(result);
+                    new_data.users = result.resultGamewebtestList;
                 }
             });
         }
     }
 });
 
+/************表格部分*************/
+
 Vue.component('data-table', {
-    template: '<table class="table table-bordered table-hover table-striped" id="bras_table"></table>',
+    template: '<table class="table table-striped table-bordered table-hover scrolltable" id="webCount_table" style="width: 1000px;"></table>',
     props: ['users'],
     data() {
         return {
             headers: [
-                {title: 'BRAS'},
-                {title: '网页感知(分)'},
-                {title: '视频感知(分)'},
-                {title: '游戏感知(分)'},
-                {title: '下载感知(分)'},
-                {title: 'ping感知(分)'}
+                {title: ''},
+                {title: '网址'},
+                {title: 'ping时延'},
+                {title: 'qoe(分)'},
+                {title: '连接时延(ms)'},
+                {title: '丢包(%)'}
             ],
             rows: [],
             dtHandle: null
@@ -185,25 +121,7 @@ Vue.component('data-table', {
         users(val, oldVal) {
             let vm = this;
             vm.rows = [];
-            var times = 1;
-            if (flag == 1) {
-                times = 0;
-            }
-
-            options.xAxis.categories = [];
-            options.series[0].data = [];
-
-            for (var i = 0; i <= times; i++) {                          /*观察user是否变化,重绘HighCharts图*/
-                options.xAxis.categories[i] = val[i].brasName;
-                options.series[0].data[i] = val[i].httpAvgQoe;
-                options.series[1].data[i] = val[i].youkuAvgQoe;
-                options.series[2].data[i] = val[i].gameAvgQoe;
-                options.series[3].data[i] = val[i].speedAvgQoe;
-                options.series[4].data[i] = val[i].pingAvgQoe;
-            }
-            var chart = new Highcharts.Chart('container', options);
-
-
+            var i = 1;
             // You should _probably_ check that this is changed data... but we'll skip that for this example.
             val.forEach(function (item) {              /*观察user是否变化,更新表格数据*/
                 // Fish out the specific column data for each item in your data set and push it to the appropriate place.
@@ -211,14 +129,14 @@ Vue.component('data-table', {
                 // skip this loop...
                 let row = [];
 
-                row.push(item.brasName);
-                row.push(item.httpAvgQoe);
-                row.push(item.youkuAvgQoe);
-                row.push(item.gameAvgQoe);
-                row.push(item.speedAvgQoe);
-                row.push(item.pingAvgQoe);
+                row.push(i++);
+                row.push(item.destname);
+                row.push(item.rtt_avg);
+                row.push(item.qoe);
+                row.push(item.tcpconnect);
+                row.push(item.loss);
 
-                console.log(item);
+                /*console.log(item);*/
 
                 vm.rows.push(row);
             });
@@ -243,18 +161,19 @@ Vue.component('data-table', {
             info: false,
             ordering: false, /*禁用排序功能*/
             /*bInfo: false,*/
-            bLengthChange: false, /*禁用Show entries*/
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'excel', 'pdf'
+
+            bLengthChange: false,    /*禁用Show entries*/
+
+            scrollY: '450px',   /*表格内容滚动*/
+            scrollCollapse: true,
+            columnDefs: [
+                //给第一列指定宽度为表格整个宽度的 20px
+                { "width": "20px", "targets": 0 },
             ]
+
         });
 
-        /*new $.fn.dataTable.Buttons( vm.dtHandle, {
-         buttons: [
-         'copy', 'excel', 'pdf'
-         ]
-         } );*/
+
     }
 });
 
@@ -268,18 +187,23 @@ var new_data = new Vue({
         filteredUsers: function () {                 /*此处可以对传入数据进行处理*/
             let self = this;
             return self.users;
+            /*let search = self.search.toLowerCase();
+             return self.users.filter(function (user) {
+             return user.username.toLowerCase().indexOf(search) !== -1 ||
+             user.email.toLowerCase().indexOf(search) !== -1 ||
+             user.mobile.indexOf(search) !== -1
+             })*/
         }
     },
     mounted() {
-        Reset.reset();
-        /*调用reset,即为页面加载状态*/
+
+        Reset.reset();        /*调用reset,即为页面加载状态*/
     }
 });
 
-
 /*导出表格到excel*/
 function exportExcel() {
-    alasql('SELECT * INTO XLSX("BRAS总体感知对比.xlsx",{headers:true}) \
-                    FROM HTML("#bras_table",{headers:true})');
+    alasql('SELECT * INTO XLSX("网页门户指标统计.xlsx",{headers:true}) \
+                    FROM HTML("#webCount_table",{headers:true})');
 
 }

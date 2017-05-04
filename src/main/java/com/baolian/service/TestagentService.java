@@ -19,6 +19,8 @@ public interface TestagentService {
 
     int queryTotal(Map<String, Object> map);
 
+    List<String> queryBrasNames();
+
     void save(TestagentEntity testagent);
 
     void update(TestagentEntity testagent) ;
