@@ -1,17 +1,16 @@
 package com.baolian.entity.map;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
- * BRAS平均qoe的bean类
+ * 区县平均qoe的bean类
  * Created by tomxie on 2017/5/3 20:58.
  */
-public class TotalBRASQoeResult implements Serializable, BaseResult {
+public class TotalCountyQoeResult implements Serializable, BaseResult {
     private static final long serialVersionUID = 1L;
 
     //BRAS
-    private String brasName;
+    private String county;
     //ping感知平均qoe
     private Double pingAvgQoe;
     //网页感知平均qoe
@@ -25,22 +24,22 @@ public class TotalBRASQoeResult implements Serializable, BaseResult {
     // 日期
     private String date;
 
-    public TotalBRASQoeResult(String brasName) {
-        this.brasName = brasName;
+    public TotalCountyQoeResult(String county) {
+        this.county = county;
     }
 
 
-    public TotalBRASQoeResult(String brasName, String date) {
-        this.brasName = brasName;
+    public TotalCountyQoeResult(String county, String date) {
+        this.county = county;
         this.date = date;
     }
 
-    public String getBrasName() {
-        return brasName;
+    public String getCounty() {
+        return county;
     }
 
-    public void setBrasName(String brasName) {
-        this.brasName = brasName;
+    public void setCounty(String county) {
+        this.county = county;
     }
 
     public Double getPingAvgQoe() {
@@ -95,7 +94,7 @@ public class TotalBRASQoeResult implements Serializable, BaseResult {
 
     @Override
     public String toString() {
-        return String.format("%s,%f,%f,%f,%f,%f,%s", brasName, pingAvgQoe, httpAvgQoe, speedAvgQoe, gameAvgQoe, youkuAvgQoe, date);
+        return String.format("%s,%f,%f,%f,%f,%f,%s", county, pingAvgQoe, httpAvgQoe, speedAvgQoe, gameAvgQoe, youkuAvgQoe, date);
     }
 
     // @Override

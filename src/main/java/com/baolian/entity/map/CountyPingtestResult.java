@@ -6,7 +6,7 @@ import java.io.Serializable;
  * 区域Ping测试返回结果对应类，用于resultMap
  * Created by tomxie on 2017/4/20 10:31.
  */
-public class CountyPingtestResult implements Serializable {
+public class CountyPingtestResult implements Serializable, BaseResult {
     private static final long serialVersionUID = 1L;
 
     //id
@@ -21,17 +21,16 @@ public class CountyPingtestResult implements Serializable {
     private Double loss;
     //qoe
     private Double qoe;
-
-
-
     //区县
     private String county;
+    //日期
+    private String date;
 
-    public CountyPingtestResult(){
+    public CountyPingtestResult() {
 
     }
 
-    public CountyPingtestResult(String county, Integer id, Double rttAvg, Double rttMax, Double rttMin, Double loss, Double qoe){
+    public CountyPingtestResult(String county, Integer id, Double rttAvg, Double rttMax, Double rttMin, Double loss, Double qoe) {
         this.county = county;
         this.id = id;
         this.rttAvg = rttAvg;
@@ -95,6 +94,14 @@ public class CountyPingtestResult implements Serializable {
 
     public void setQoe(Double qoe) {
         this.qoe = qoe;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     @Override

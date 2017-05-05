@@ -18,6 +18,7 @@
         <result property="tcpConnect" column="tcpconnect"/>
         <result property="loss" column="loss"/>
         <result property="qoe" column="qoe"/>
+        <result property="date" column="date"/>
         <result property="county" column="county"/>
     </resultMap>
 
@@ -46,12 +47,12 @@
 
     <select id="queryWebList" resultMap="webGameCountResult">
         SELECT
-        MAX(result_gametest.id) AS id,
-        AVG(result_gametest.rtt_avg) AS rtt_avg,
-        AVG(result_gametest.qoe) AS qoe,
-        AVG(result_gametest.tcpconnect) AS tcpconnect,
-        AVG(result_gametest.loss) AS loss,
-            result_gametest.destname AS destname
+            MAX(result_gametest.id)         AS id,
+            AVG(result_gametest.rtt_avg)    AS rtt_avg,
+            AVG(result_gametest.qoe)        AS qoe,
+            AVG(result_gametest.tcpconnect) AS tcpconnect,
+            AVG(result_gametest.loss)       AS loss,
+            result_gametest.destname        AS destname
         FROM result_gametest
         WHERE result_gametest.testtime BETWEEN #{starttime} AND #{endtime}
         GROUP BY result_gametest.destname;
@@ -64,6 +65,12 @@
         AVG(result_gametest.tcpconnect) AS tcpconnect,
         AVG(result_gametest.loss) AS loss,
         AVG(result_gametest.qoe) AS qoe,
+        <if test="groupByDate != null and groupByDate == true">
+            date_format(result_gametest.testtime, '%Y-%m-%d') AS date,
+        </if>
+        <if test="groupByDate == null or groupByDate == false">
+            date_format(MAX(result_gametest.testtime), '%Y-%m-%d') AS date,
+        </if>
         testagent.county AS county
         FROM result_gametest
         INNER JOIN testagent
@@ -71,10 +78,14 @@
         WHERE result_gametest.testtime BETWEEN #{starttime} AND #{endtime}
         <if test="county != null and county != ''">
             AND testagent.county = #{county}
+            GROUP BY testagent.county
         </if>
         <if test="county == null or county == ''">
             AND testagent.county IN ('新城区', '碑林区')
-            GROUP BY testagent.county;
+            GROUP BY testagent.county
+        </if>
+        <if test="groupByDate != null and groupByDate == true">
+            ,date_format(result_gametest.testtime, '%Y-%m-%d')
         </if>
 
     </select>
