@@ -120,7 +120,7 @@ var new_search = new Vue({
         search: function () {
             console.log("你选择了时间区间" + starttime + "to" + endtime);
             var postdata = {};
-            // postdata.area = $('#area').val();
+            postdata.county = $('#area').val();
             postdata.starttime = starttime;
             postdata.endtime = endtime;
             $.ajax({
