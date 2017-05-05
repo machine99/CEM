@@ -11,6 +11,7 @@
         <result property="responseDelay" column="responsedelay"/>
         <result property="speed" column="speed"/>
         <result property="qoe" column="qoe"/>
+        <result property="date" column="date"/>
         <result property="county" column="county"/>
     </resultMap>
 
@@ -74,6 +75,12 @@
         AVG(result_httptest.responsedelay) AS responsedelay,
         AVG(result_httptest.speed) AS speed,
         AVG(result_httptest.qoe) AS qoe,
+        <if test="groupByDate != null and groupByDate == true">
+            date_format(result_httptest.testtime, '%Y-%m-%d') AS date,
+        </if>
+        <if test="groupByDate == null or groupByDate == false">
+            date_format(MAX(result_httptest.testtime), '%Y-%m-%d') AS date,
+        </if>
         testagent.county AS county
         FROM result_httptest
         INNER JOIN testagent
@@ -81,10 +88,14 @@
         WHERE result_httptest.testtime BETWEEN #{starttime} AND #{endtime}
         <if test="county != null and county != ''">
             AND testagent.county = #{county}
+            GROUP BY testagent.county;
         </if>
         <if test="county == null or county == ''">
             AND testagent.county IN ('新城区', '碑林区')
             GROUP BY testagent.county;
+        </if>
+        <if test="groupByDate != null and groupByDate == true">
+            ,date_format(result_httptest.testtime, '%Y-%m-%d')
         </if>
 
     </select>

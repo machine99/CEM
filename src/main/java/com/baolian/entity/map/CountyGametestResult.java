@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by apple on 2017/4/27.
  */
-public class CountyGametestResult implements Serializable {
+public class CountyGametestResult implements Serializable, BaseResult {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,7 +24,7 @@ public class CountyGametestResult implements Serializable {
     //日期
     private String date;
 
-    public CountyGametestResult(){
+    public CountyGametestResult() {
 
     }
 
@@ -35,14 +35,6 @@ public class CountyGametestResult implements Serializable {
         this.tcpConnect = tcpConnect;
         this.loss = loss;
         this.qoe = qoe;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
     }
 
     public Integer getId() {
@@ -91,6 +83,14 @@ public class CountyGametestResult implements Serializable {
 
     public void setCounty(String county) {
         this.county = county;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     @Override

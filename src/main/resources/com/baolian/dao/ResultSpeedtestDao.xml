@@ -14,6 +14,7 @@
         <id property="id" column="id"/>
         <result property="speed" column="speed"/>
         <result property="qoe" column="qoe"/>
+        <result property="date" column="date"/>
         <result property="county" column="county"/>
     </resultMap>
 
@@ -30,6 +31,12 @@
         MAX(result_speedtest.id) AS id,
         AVG(result_speedtest.speed) AS speed,
         AVG(result_speedtest.qoe) AS qoe,
+        <if test="groupByDate != null and groupByDate == true">
+            date_format(result_speedtest.testtime, '%Y-%m-%d') AS date,
+        </if>
+        <if test="groupByDate == null or groupByDate == false">
+            date_format(MAX(result_speedtest.testtime), '%Y-%m-%d') AS date,
+        </if>
         testagent.county AS county
         FROM result_speedtest
         INNER JOIN testagent
@@ -37,10 +44,14 @@
         WHERE result_speedtest.testtime BETWEEN #{starttime} AND #{endtime}
         <if test="county != null and county != ''">
             AND testagent.county = #{county}
+            GROUP BY testagent.county;
         </if>
         <if test="county == null or county == ''">
             AND testagent.county IN ('新城区', '碑林区')
             GROUP BY testagent.county;
+        </if>
+        <if test="groupByDate != null and groupByDate == true">
+            ,date_format(result_speedtest.testtime, '%Y-%m-%d')
         </if>
 
     </select>

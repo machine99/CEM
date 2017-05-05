@@ -1,9 +1,12 @@
 package com.baolian.entity.map;
 
+import java.io.Serializable;
+
 /**
- * Created by yuanbaby on 2017/5/4.
+ * 区县平均qoe的bean类
+ * Created by tomxie on 2017/5/3 20:58.
  */
-public class TotalCountyQoeResult {
+public class TotalCountyQoeResult implements Serializable, BaseResult {
     private static final long serialVersionUID = 1L;
 
     //BRAS
@@ -19,7 +22,6 @@ public class TotalCountyQoeResult {
     //视频感知平均qoe
     private Double youkuAvgQoe;
     // 日期
-
     private String date;
 
     public TotalCountyQoeResult(String county) {

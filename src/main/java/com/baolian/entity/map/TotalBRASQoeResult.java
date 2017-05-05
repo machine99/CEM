@@ -23,7 +23,6 @@ public class TotalBRASQoeResult implements Serializable, BaseResult {
     //视频感知平均qoe
     private Double youkuAvgQoe;
     // 日期
-
     private String date;
 
     public TotalBRASQoeResult(String brasName) {

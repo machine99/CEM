@@ -19,8 +19,9 @@
         <result property="speed" column="speed"/>
         <result property="pausecount" column="pausecount"/>
         <result property="pausetime" column="pausetime"/>
-        <result property="qoe" column="qoe"/>
         <result property="buffertime" column="buffertime"/>
+        <result property="qoe" column="qoe"/>
+        <result property="date" column="date"/>
         <result property="county" column="county"/>
     </resultMap>
 
@@ -69,8 +70,14 @@
         AVG(result_youkutest.speed) AS speed,
         AVG(result_youkutest.pausecount) AS pausecount,
         AVG(result_youkutest.pausetime) AS pausetime,
-        AVG(result_youkutest.qoe) AS qoe,
         AVG(result_youkutest.buffertime) AS buffertime,
+        AVG(result_youkutest.qoe) AS qoe,
+        <if test="groupByDate != null and groupByDate == true">
+            date_format(result_youkutest.testtime, '%Y-%m-%d') AS date,
+        </if>
+        <if test="groupByDate == null or groupByDate == false">
+            date_format(MAX(result_youkutest.testtime), '%Y-%m-%d') AS date,
+        </if>
         testagent.county AS county
         FROM result_youkutest
         INNER JOIN testagent
@@ -78,10 +85,14 @@
         WHERE result_youkutest.testtime BETWEEN #{starttime} AND #{endtime}
         <if test="county != null and county != ''">
             AND testagent.county = #{county}
+            GROUP BY testagent.county;
         </if>
         <if test="county == null or county == ''">
             AND testagent.county IN ('新城区', '碑林区')
             GROUP BY testagent.county;
+        </if>
+        <if test="groupByDate != null and groupByDate == true">
+            ,date_format(result_youkutest.testtime, '%Y-%m-%d')
         </if>
     </select>
 

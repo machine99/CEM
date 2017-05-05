@@ -18,9 +18,6 @@ var bras_choose = new Vue({
     el: '#bras_choose',
     data: {
         items: []
-    },
-    mounted() {
-
     }
 });
 
@@ -35,14 +32,10 @@ var options = {
     xAxis: {
         type: 'datetime',
         dateTimeLabelFormats: {
-            // millisecond: '%Y-%m-%d',
-            // second: '%Y-%m-%d',
-            // minute: '%Y-%m-%d',
-            // hour: '%Y-%m-%d',
-            // day: '%Y-%m-%d',
-            // week: '%Y-%m-%d',
-            // month: '%Y-%m-%d',
-            // year: '%Y-%m-%d'
+            day: '%Y-%m-%d',
+            week: '%Y-%m-%d',
+            month: '%Y-%m-%d',
+            year: '%Y-%m-%d'
         },
         title: {
             text: 'Date'
@@ -57,7 +50,7 @@ var options = {
     },
     tooltip: {
         headerFormat: '<b>{series.name}</b><br>',
-        pointFormat: '日期{point.x:%Y-%m-%d}: qoe{point.y:.2f}分'
+        pointFormat: '日期:{point.x:%Y-%m-%d} qoe:{point.y:.2f}分'
     },
     plotOptions: {
         spline: {
@@ -68,19 +61,39 @@ var options = {
     },
     series: [{
         name: '网页感知',
-        data: []
+        data: [
+            // [Date.UTC(2017, 4, 3), 91.6667],
+            // [Date.UTC(2017, 4, 4), 92.1765],
+            // [Date.UTC(2017, 4, 5), 93.4504]
+        ]
     }, {
         name: '视频感知',
-        data: []
+        data: [
+            // [Date.UTC(2017, 4, 3), 100],
+            // [Date.UTC(2017, 4, 4), 68.3517],
+            // [Date.UTC(2017, 4, 5), 64.2381]
+        ]
     }, {
         name: '游戏感知',
-        data: []
+        data: [
+            // [Date.UTC(2017, 4, 3), null],
+            // [Date.UTC(2017, 4, 4), null],
+            // [Date.UTC(2017, 4, 5), null]
+        ]
     }, {
         name: '下载感知',
-        data: []
+        data: [
+            // [Date.UTC(2017, 4, 3), null],
+            // [Date.UTC(2017, 4, 4), null],
+            // [Date.UTC(2017, 4, 5), null]
+        ]
     }, {
         name: 'ping感知',
-        data: []
+        data: [
+            // [Date.UTC(2017, 4, 3), 99],
+            // [Date.UTC(2017, 4, 4), 97.0655],
+            // [Date.UTC(2017, 4, 5), 96.6111]
+        ]
     }]
 };
 
@@ -109,7 +122,7 @@ $('input[name="daterange"]').daterangepicker(
         endDate: (new Date()).toLocaleDateString(), /*当前日期*/
     },
     function (start, end, label) {          /*日期选择触发事件*/
-        console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        // console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
         starttime = start.format('YYYY-MM-DD HH:mm:ss');
         endtime = end.format('YYYY-MM-DD HH:mm:ss');
 
@@ -130,8 +143,8 @@ var new_search = new Vue({
             postdata.brasname = $('#bras_choose').val();
             postdata.starttime = starttime;
             postdata.endtime = endtime;
-            console.log("传递的参数：");
-            console.log(postdata);
+            // console.log("传递的参数：");
+            // console.log(postdata);
             $.ajax({
                 /*后台取得数据,赋值给观察者*/
                 type: "POST",
@@ -140,10 +153,10 @@ var new_search = new Vue({
                 data: postdata,  //传入组装的参数
                 dataType: "json",
                 success: function (result) {
-                    console.log(result);
-                    console.log("成功返回!" + typeof (result.resultBRASDailyQoeList));
-                    console.log(result.resultBRASDailyQoeList);
-                    console.log(result.resultBRASDailyQoeList.length);
+                    // console.log(result);
+                    // console.log("成功返回!" + typeof (result.resultBRASDailyQoeList));
+                    // console.log(result.resultBRASDailyQoeList);
+                    // console.log(result.resultBRASDailyQoeList.length);
                     if (result.resultBRASDailyQoeList.length != 0 && result.resultBRASDailyQoeList[0] != null) {
                         if (result.resultBRASDailyQoeList.length == 1) {
                             flag = 1;
@@ -191,7 +204,7 @@ var Reset = new Vue({
             /*前4天日期*/
             postdata.endtime = (new Date()).Format("yyyy-MM-dd") + " 23:59:59";
             /*当前日期*/
-            console.log(postdata);
+            // console.log(postdata);
             $.ajax({
                 /*后台取得数据,赋值给观察者*/
                 type: "POST",
@@ -200,10 +213,10 @@ var Reset = new Vue({
                 data: postdata,  //传入组装的参数
                 dataType: "json",
                 success: function (result) {
-                    console.log(result);
-                    console.log("成功返回!" + typeof (result.resultBRASDailyQoeList));
-                    console.log(result.resultBRASDailyQoeList);
-                    console.log(result.resultBRASDailyQoeList.length);
+                    // console.log(result);
+                    // console.log("成功返回!" + typeof (result.resultBRASDailyQoeList));
+                    // console.log(result.resultBRASDailyQoeList);
+                    // console.log(result.resultBRASDailyQoeList.length);
                     if (result.resultBRASDailyQoeList.length > 0) {
                         staus = 0;
                         flag = 0;
@@ -222,8 +235,8 @@ var Reset = new Vue({
                 // data: postdata,  //传入组装的参数
                 dataType: "json",
                 success: function (result) {
-                    console.log("成功获取BRAS列表");
-                    console.log(result);
+                    // console.log("成功获取BRAS列表");
+                    // console.log(result);
                     bras_choose.items = [];
                     if (result.code == 0) {
                         result.brasNames.forEach(function (item) {
@@ -264,22 +277,28 @@ Vue.component('data-table', {
             if (flag == 1) {
                 times = 0;
             }
-
-            options.xAxis.categories = [];
             for (let i = 0; i < options.series.length; i++) {
                 options.series[i].data = [];
             }
             // options.xAxis.categories[0] = val[0].county;
             /*观察user是否变化,重绘HighCharts图*/
             for (let i = 0; i < val.length; i++) {
+                // console.log(val[i].date);
                 let date_token = val[i].date.split("-");
-                options.series[0].data[i] = [Date.UTC(date_token[0], date_token[1], date_token[2]), val[i].httpAvgQoe];
-                options.series[1].data[i] = [Date.UTC(date_token[0], date_token[1], date_token[2]), val[i].youkuAvgQoe];
-                options.series[2].data[i] = [Date.UTC(date_token[0], date_token[1], date_token[2]), val[i].gameAvgQoe];
-                options.series[3].data[i] = [Date.UTC(date_token[0], date_token[1], date_token[2]), val[i].speedAvgQoe];
-                options.series[4].data[i] = [Date.UTC(date_token[0], date_token[1], date_token[2]), val[i].pingAvgQoe];
+                let year = parseInt(date_token[0]);
+                let month = parseInt(date_token[1]) - 1;
+                let day = parseInt(date_token[2]);
+                if (isNaN(year) || isNaN(month) || isNaN(day)) {
+                    continue;
+                }
+                // console.log(Date.UTC(year, month, day));
+                options.series[0].data[i] = [Date.UTC(year, month, day), val[i].httpAvgQoe];
+                options.series[1].data[i] = [Date.UTC(year, month, day), val[i].youkuAvgQoe];
+                options.series[2].data[i] = [Date.UTC(year, month, day), val[i].gameAvgQoe];
+                options.series[3].data[i] = [Date.UTC(year, month, day), val[i].speedAvgQoe];
+                options.series[4].data[i] = [Date.UTC(year, month, day), val[i].pingAvgQoe];
             }
-
+            // console.log(options.series);
             var chart = new Highcharts.Chart('container', options);
 
 
