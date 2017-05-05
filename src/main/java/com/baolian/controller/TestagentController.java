@@ -219,7 +219,7 @@ public class TestagentController {
     @ResponseBody
     @RequestMapping("/countyavgqoelist")
     @RequiresPermissions("testagent:countyavgqoelist")
-    public R countyDailyQoeList(String starttime, String endtime, String county) {
+    public R countyAvgQoeList(String starttime, String endtime, String county) {
         Map<String, Object> map = new HashMap<>();
         map.put("starttime", starttime);
         map.put("endtime", endtime);
@@ -277,6 +277,81 @@ public class TestagentController {
 
         List<TotalCountyQoeResult> resultCountyAvgQoeList = new ArrayList<>(resultMap.values());
         return R.ok().put("resultCountyAvgQoeList", resultCountyAvgQoeList);
+    }
+
+    /**
+     * 获取区域每日平均qoe
+     */
+    @ResponseBody
+    @RequestMapping("/countydailyqoelist")
+    @RequiresPermissions("testagent:countydailyqoelist")
+    public R countyDailyQoeList(String starttime, String endtime, String county) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("starttime", starttime);
+        map.put("endtime", endtime);
+        map.put("county", county);
+        map.put("groupByDate", true);
+
+        // System.out.println("starttime" + starttime);
+        // System.out.println("endtime" + endtime);
+        // System.out.println("brasName" + brasname);
+
+        // 查询列表数据
+        List<CountyPingtestResult> countyPingtestResults = resultPingtestService.queryCountyPingList(map);
+        List<CountyHttptestResult> countyHttptestResults = resultHttptestService.queryCountyHttpList(map);
+        List<CountySpeedtestResult> countySpeedtestResults = resultSpeedtestService.queryCountySpeedList(map);
+        List<CountyGametestResult> countyGametestResults = resultGametestService.queryCountyGameList(map);
+        List<CountyYoukutestResult> countyYoukutestResults = resultYoukutestService.queryCountyYoukuList(map);
+
+        Map<String, TotalCountyQoeResult> resultMap = new HashMap<>();
+        // 合并
+        for (CountyPingtestResult result : countyPingtestResults) {
+            String date = result.getDate();
+            String resultCounty = result.getCounty();
+            if (!resultMap.containsKey(date)) {
+                resultMap.put(date, new TotalCountyQoeResult(resultCounty, date));
+            }
+            resultMap.get(date).setPingAvgQoe(result.getQoe());
+        }
+        for (CountyHttptestResult result : countyHttptestResults) {
+            String date = result.getDate();
+            String resultCounty = result.getCounty();
+            if (!resultMap.containsKey(date)) {
+                resultMap.put(date, new TotalCountyQoeResult(resultCounty, date));
+            }
+            resultMap.get(date).setHttpAvgQoe(result.getQoe());
+        }
+        for (CountySpeedtestResult result : countySpeedtestResults) {
+            String date = result.getDate();
+            String resultCounty = result.getCounty();
+            if (!resultMap.containsKey(date)) {
+                resultMap.put(date, new TotalCountyQoeResult(resultCounty, date));
+            }
+            resultMap.get(date).setSpeedAvgQoe(result.getQoe());
+        }
+        for (CountyGametestResult result : countyGametestResults) {
+            String date = result.getDate();
+            String resultCounty = result.getCounty();
+            if (!resultMap.containsKey(date)) {
+                resultMap.put(date, new TotalCountyQoeResult(resultCounty, date));
+            }
+            resultMap.get(date).setGameAvgQoe(result.getQoe());
+        }
+        for (CountyYoukutestResult result : countyYoukutestResults) {
+            String date = result.getDate();
+            String resultCounty = result.getCounty();
+            if (!resultMap.containsKey(date)) {
+                resultMap.put(date, new TotalCountyQoeResult(resultCounty, date));
+            }
+            resultMap.get(date).setYoukuAvgQoe(result.getQoe());
+        }
+
+        List<TotalCountyQoeResult> resultCountyDailyQoeList = new ArrayList<>(resultMap.values());
+        Collections.sort(resultCountyDailyQoeList, new ResultComparator<TotalCountyQoeResult>());
+        for (TotalCountyQoeResult result : resultCountyDailyQoeList) {
+            System.out.println(result);
+        }
+        return R.ok().put("resultCountyDailyQoeList", resultCountyDailyQoeList);
     }
 
     /**

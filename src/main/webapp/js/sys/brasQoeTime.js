@@ -14,11 +14,26 @@ var get_data;
 
 var data_fitst = [];
 
+$(document).on("click", ".dropdown-menu li a", function () {
+    get_bras = $(this).text().trim();
+    /*trim()去除空格*/
+    /*获取下拉值*/
+    $('#bras').val(get_bras);
+    /*区域选择框赋值*/
+    console.log(get_bras);
+});
+
 var bras_choose = new Vue({
     el: '#bras_choose',
     data: {
         items: []
     }
+});
+$('#bras').typeahead({
+    /*输入提示框*/
+    source: bras_choose.items,
+    items: 7        /*下拉菜单中显示的最大的条目数。*/
+
 });
 
 var json = {};
@@ -140,7 +155,7 @@ var new_search = new Vue({
         search: function () {
             console.log("你选择了时间区间" + starttime + "to" + endtime);
             var postdata = {};
-            postdata.brasname = $('#bras_choose').val();
+            postdata.brasname = $('#bras').val();
             postdata.starttime = starttime;
             postdata.endtime = endtime;
             // console.log("传递的参数：");

@@ -13,39 +13,53 @@
 
             <form class="bs-example bs-example-form" role="form">
                 <div class="row" id="first_row">
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"></div>    <!--自适应分辨率-->
-                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                        <div class="input-group">
-                            <div class="input-group-btn" id="bras_dropdown">
-                                <span class="searchname" title="BRAS">BRAS：</span>
-                                <select class="form-control" id="bras_choose" style="width: 110px">
-                                    <option value="">---请选择---</option>
-                                    <option v-for="item in items">{{ item.message }}</option>
-                                </select>
-                            </div><!-- /btn-group -->
-                        </div><!-- /input-group -->
-                    </div><!-- /.col-lg-2 -->
-                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5"></div>    <!--自适应分辨率-->
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                         <form class="bs-example bs-example-form" role="form">
                             <div class="input-daterange input-group" id="datepicker">
                                 <span class="input-group-addon">时间:</span>
                                 <input type="text" class="form-control" name="daterange"
-                                       value="01/01/2015 - 01/31/2015"/>
+                                       value=""/>
                             </div>
                         </form>
                     </div>
-                    <div class="btn-toolbar" role="toolbar">
-                        <div class="btn-group" id="min_button">
-                            <button type="button" class="btn btn-default" v-on:click="search" id="search">
-                                <span class="fa fa-search"></span>查询
-                            </button>
-                            <button type="button" class="btn btn-default" v-on:click="reset" id="reset">
-                                <span class="glyphicon glyphicon-repeat"></span>重置
-                            </button>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <div class="input-group">
+                            <span class="input-group-addon">BRAS:</span>
+                            <input type="text" class="form-control" id="bras" data-provide="typeahead">
+                            <!--输入提示框typeahead-->
+                            <div class="input-group-btn" id="bras_dropdown">
+                                <button type="button" class="btn btn-default dropdown-toggle"
+                                        data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right" id="bras_choose">  <!--应该为动态的-->
+                                    <li>                                       <!--Vue渲染列表-->
+                                        <a href="#" v-for="item in items">
+                                            {{ item.message }}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div><!-- /btn-group -->
+                            <div id="message"></div>
+                        </div><!-- /input-group -->
+                    </div><!-- /.col-lg-2 -->
+
+
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <div class="btn-toolbar" role="toolbar">
+                            <div class="btn-group" id="min_button">
+                                <button type="button" class="btn btn-default" v-on:click="search" id="search">
+                                    <span class="fa fa-search"></span>查询
+                                </button>
+                                <button type="button" class="btn btn-default" v-on:click="reset" id="reset">
+                                    <span class="glyphicon glyphicon-repeat"></span>重置
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
+                </div><!-- /.row -->
             </form>
 
         </div>

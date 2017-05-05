@@ -44,11 +44,11 @@
         WHERE result_speedtest.testtime BETWEEN #{starttime} AND #{endtime}
         <if test="county != null and county != ''">
             AND testagent.county = #{county}
-            GROUP BY testagent.county;
+            GROUP BY testagent.county
         </if>
         <if test="county == null or county == ''">
             AND testagent.county IN ('新城区', '碑林区')
-            GROUP BY testagent.county;
+            GROUP BY testagent.county
         </if>
         <if test="groupByDate != null and groupByDate == true">
             ,date_format(result_speedtest.testtime, '%Y-%m-%d')
