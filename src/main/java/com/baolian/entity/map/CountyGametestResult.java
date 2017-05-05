@@ -21,6 +21,8 @@ public class CountyGametestResult implements Serializable {
     private Double qoe;
     //区县
     private String county;
+    //日期
+    private String date;
 
     public CountyGametestResult(){
 
@@ -33,6 +35,14 @@ public class CountyGametestResult implements Serializable {
         this.tcpConnect = tcpConnect;
         this.loss = loss;
         this.qoe = qoe;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public Integer getId() {
@@ -85,6 +95,14 @@ public class CountyGametestResult implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%d,%f,%f,%f,%f,%s", id, rtt_avg, tcpConnect, loss, qoe, county);
+        return "CountyGametestResult{" +
+                "id=" + id +
+                ", rtt_avg=" + rtt_avg +
+                ", tcpConnect=" + tcpConnect +
+                ", loss=" + loss +
+                ", qoe=" + qoe +
+                ", county='" + county + '\'' +
+                ", date='" + date + '\'' +
+                '}';
     }
 }

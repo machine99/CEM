@@ -16,7 +16,8 @@ public class CountySpeedtestResult implements Serializable {
     private Double qoe;
     //区县
     private String county;
-
+    //日期
+    private String date;
 
     public CountySpeedtestResult(){
 
@@ -27,6 +28,14 @@ public class CountySpeedtestResult implements Serializable {
         this.id = id;
         this.speed = speed;
         this.qoe = qoe;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public Integer getId() {
@@ -63,7 +72,13 @@ public class CountySpeedtestResult implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%d,%f,%f,%s", id, speed, qoe, county);
+        return "CountySpeedtestResult{" +
+                "id=" + id +
+                ", speed=" + speed +
+                ", qoe=" + qoe +
+                ", county='" + county + '\'' +
+                ", date='" + date + '\'' +
+                '}';
     }
 }
 

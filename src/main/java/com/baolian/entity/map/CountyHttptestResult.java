@@ -20,6 +20,8 @@ public class CountyHttptestResult implements Serializable {
     private Double speed;
     //qoe
     private Double qoe;
+    //日期
+    private String date;
 
     //区县
     private String county;
@@ -36,6 +38,14 @@ public class CountyHttptestResult implements Serializable {
         this.dnsDelay = dnsDelay;
         this.speed = speed;
         this.qoe = qoe;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public Integer getId() {
@@ -96,6 +106,15 @@ public class CountyHttptestResult implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%d,%f,%f,%f,%f,%f,%s", id, connectDelay, dnsDelay, responseDelay, speed, qoe, county);
+        return "CountyHttptestResult{" +
+                "id=" + id +
+                ", connectDelay=" + connectDelay +
+                ", dnsDelay=" + dnsDelay +
+                ", responseDelay=" + responseDelay +
+                ", speed=" + speed +
+                ", qoe=" + qoe +
+                ", date='" + date + '\'' +
+                ", county='" + county + '\'' +
+                '}';
     }
 }

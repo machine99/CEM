@@ -21,7 +21,8 @@ public class CountyPingtestResult implements Serializable {
     private Double loss;
     //qoe
     private Double qoe;
-
+    //日期
+    private String date;
 
 
     //区县
@@ -39,6 +40,14 @@ public class CountyPingtestResult implements Serializable {
         this.rttMin = rttMin;
         this.loss = loss;
         this.qoe = qoe;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getCounty() {
@@ -99,6 +108,15 @@ public class CountyPingtestResult implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("%d,%f,%f,%f,%f,%f,%s", id, rttAvg, rttMin, rttMax, loss, qoe, county);
+        return "CountyPingtestResult{" +
+                "id=" + id +
+                ", rttAvg=" + rttAvg +
+                ", rttMin=" + rttMin +
+                ", rttMax=" + rttMax +
+                ", loss=" + loss +
+                ", qoe=" + qoe +
+                ", date='" + date + '\'' +
+                ", county='" + county + '\'' +
+                '}';
     }
 }
