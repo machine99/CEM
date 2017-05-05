@@ -7,7 +7,7 @@ import java.util.Objects;
  * BRAS平均qoe的bean类
  * Created by tomxie on 2017/5/3 20:58.
  */
-public class TotalBRASQoeResult implements Serializable {
+public class TotalBRASQoeResult implements Serializable, BaseResult {
     private static final long serialVersionUID = 1L;
 
     //BRAS

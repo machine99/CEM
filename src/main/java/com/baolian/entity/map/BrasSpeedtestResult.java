@@ -6,7 +6,7 @@ import java.io.Serializable;
  * BRAS下载测试返回结果对应类，用于resultMap
  * Created by tomxie on 2017/5/2 21:15.
  */
-public class BrasSpeedtestResult implements Serializable {
+public class BrasSpeedtestResult implements Serializable, BaseResult {
     private static final long serialVersionUID = 1L;
 
     //id

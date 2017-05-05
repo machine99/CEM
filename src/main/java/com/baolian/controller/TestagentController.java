@@ -1,13 +1,11 @@
 package com.baolian.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baolian.entity.map.*;
+import com.baolian.entity.map.comp.ResultComparator;
 import com.baolian.service.*;
 import com.baolian.utils.JSONUtils;
 import com.baolian.utils.RRException;
@@ -151,6 +149,11 @@ public class TestagentController {
         map.put("starttime", starttime);
         map.put("endtime", endtime);
         map.put("brasName", brasname);
+        map.put("groupByDate", true);
+
+        // System.out.println("starttime" + starttime);
+        // System.out.println("endtime" + endtime);
+        // System.out.println("brasName" + brasname);
 
         // 查询列表数据
         List<BrasPingtestResult> brasPingtestResults = resultPingtestService.queryBRASPingList(map);
@@ -203,6 +206,10 @@ public class TestagentController {
         }
 
         List<TotalBRASQoeResult> resultBRASDailyQoeList = new ArrayList<>(resultMap.values());
+        Collections.sort(resultBRASDailyQoeList, new ResultComparator<TotalBRASQoeResult>());
+        for (TotalBRASQoeResult result : resultBRASDailyQoeList) {
+            System.out.println(result);
+        }
         return R.ok().put("resultBRASDailyQoeList", resultBRASDailyQoeList);
     }
 
