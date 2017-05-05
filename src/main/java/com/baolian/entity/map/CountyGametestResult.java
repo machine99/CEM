@@ -95,6 +95,14 @@ public class CountyGametestResult implements Serializable, BaseResult {
 
     @Override
     public String toString() {
-        return String.format("%d,%f,%f,%f,%f,%s", id, rtt_avg, tcpConnect, loss, qoe, county);
+        return "CountyGametestResult{" +
+                "id=" + id +
+                ", rtt_avg=" + rtt_avg +
+                ", tcpConnect=" + tcpConnect +
+                ", loss=" + loss +
+                ", qoe=" + qoe +
+                ", county='" + county + '\'' +
+                ", date='" + date + '\'' +
+                '}';
     }
 }

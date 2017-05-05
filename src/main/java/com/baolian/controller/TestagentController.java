@@ -214,6 +214,67 @@ public class TestagentController {
     }
 
     /**
+     * 获取county平均qoe
+     */
+    @ResponseBody
+    @RequestMapping("/countyavgqoelist")
+    @RequiresPermissions("testagent:countyavgqoelist")
+    public R countyDailyQoeList(String starttime, String endtime, String county) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("starttime", starttime);
+        map.put("endtime", endtime);
+        map.put("county", county);
+
+        // 查询列表数据
+        List<CountyPingtestResult> countyPingtestResults = resultPingtestService.queryCountyPingList(map);
+        List<CountyHttptestResult> countyHttptestResults = resultHttptestService.queryCountyHttpList(map);
+        List<CountySpeedtestResult> countySpeedtestResults = resultSpeedtestService.queryCountySpeedList(map);
+        List<CountyGametestResult> countyGametestResults = resultGametestService.queryCountyGameList(map);
+        List<CountyYoukutestResult> countyYoukutestResults = resultYoukutestService.queryCountyYoukuList(map);
+
+        Map<String, TotalCountyQoeResult> resultMap = new HashMap<>();
+        // 合并
+        for (CountyPingtestResult result : countyPingtestResults) {
+            String County = result.getCounty();
+            if (!resultMap.containsKey(County)) {
+                resultMap.put(County, new TotalCountyQoeResult(County));
+            }
+            resultMap.get(County).setPingAvgQoe(result.getQoe());
+        }
+        for (CountyHttptestResult result : countyHttptestResults) {
+            String County = result.getCounty();
+            if (!resultMap.containsKey(County)) {
+                resultMap.put(County, new TotalCountyQoeResult(County));
+            }
+            resultMap.get(County).setHttpAvgQoe(result.getQoe());
+        }
+        for (CountySpeedtestResult result : countySpeedtestResults) {
+            String County = result.getCounty();
+            if (!resultMap.containsKey(County)) {
+                resultMap.put(County, new TotalCountyQoeResult(County));
+            }
+            resultMap.get(County).setSpeedAvgQoe(result.getQoe());
+        }
+        for (CountyGametestResult result : countyGametestResults) {
+            String County = result.getCounty();
+            if (!resultMap.containsKey(County)) {
+                resultMap.put(County, new TotalCountyQoeResult(County));
+            }
+            resultMap.get(County).setGameAvgQoe(result.getQoe());
+        }
+        for (CountyYoukutestResult result : countyYoukutestResults) {
+            String County = result.getCounty();
+            if (!resultMap.containsKey(County)) {
+                resultMap.put(County, new TotalCountyQoeResult(County));
+            }
+            resultMap.get(County).setYoukuAvgQoe(result.getQoe());
+        }
+
+        List<TotalCountyQoeResult> resultCountyAvgQoeList = new ArrayList<>(resultMap.values());
+        return R.ok().put("resultCountyAvgQoeList", resultCountyAvgQoeList);
+    }
+
+    /**
      * 信息
      */
     @ResponseBody

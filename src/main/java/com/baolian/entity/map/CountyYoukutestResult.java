@@ -111,6 +111,7 @@ public class CountyYoukutestResult implements Serializable, BaseResult {
                 ", pausetime=" + pausetime +
                 ", qoe=" + qoe +
                 ", buffertime=" + buffertime +
+                ", date='" + date + '\'' +
                 ", county='" + county + '\'' +
                 '}';
     }

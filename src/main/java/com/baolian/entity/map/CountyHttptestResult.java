@@ -105,6 +105,15 @@ public class CountyHttptestResult implements Serializable, BaseResult {
 
     @Override
     public String toString() {
-        return String.format("%d,%f,%f,%f,%f,%f,%s", id, connectDelay, dnsDelay, responseDelay, speed, qoe, county);
+        return "CountyHttptestResult{" +
+                "id=" + id +
+                ", connectDelay=" + connectDelay +
+                ", dnsDelay=" + dnsDelay +
+                ", responseDelay=" + responseDelay +
+                ", speed=" + speed +
+                ", qoe=" + qoe +
+                ", date='" + date + '\'' +
+                ", county='" + county + '\'' +
+                '}';
     }
 }

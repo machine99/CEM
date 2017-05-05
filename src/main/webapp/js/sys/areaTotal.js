@@ -104,82 +104,111 @@ $('input[name="daterange"]').daterangepicker(
             daysOfWeek: "一_二_三_四_五_六_日".split("_"),
 
         },
-        startDate: '2013-01-01',
-        endDate: '2013-89-31'
+        startDate: new Date(new Date() - 1000 * 60 * 60 * 24 * 4).toLocaleDateString(), /*前4天日期*/
+        endDate: (new Date()).toLocaleDateString(), /*当前日期*/
     },
     function (start, end, label) {          /*日期选择触发事件*/
-        console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-        console.log("地区选择:" + typeof(get_area) == "undefined");
-        if (typeof(get_area) != "undefined" && $('#area').val() != '') {   /*此时应该判断输入框里内容不为空*/
-
-            flag = 1;
-            /*改变标志位*/
-            get_data = {
-                /*模拟异步数据*/
-                myarea: get_area,
-                WebQoe: 78,
-                VideoQoe: 83,
-                GameQoe: 84,
-                DownloadQoe: 89,
-                PingQoe: 85
-            };
-            new_data.users = [get_data];
-            /*观察者,更新user数据*/
-        } else {          /*如果不选择地区,默认按照日期更新新城区和碑林区的数据*/
-            flag = 0;
-            /*********************************************/
-            var area1 = {
-                myarea: "新城区",
-                WebQoe: 78,
-                VideoQoe: 83,
-                GameQoe: 84,
-                DownloadQoe: 89,
-                PingQoe: 85
-            };
-            var area2 = {
-                myarea: "碑林区",
-                WebQoe: 78,
-                VideoQoe: 83,
-                GameQoe: 84,
-                DownloadQoe: 89,
-                PingQoe: 85
-            };
-
-            new_area_data = [area1, area2];
-            /*页面刚加载,模拟异步数据*/
-            /********************************************************/
-            new_data.users = new_area_data;
-            /*观察者,更新highcharts表和表格*/
-            console.log(new_data.users);
-        }
+        /*console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));*/
+        starttime = start.format('YYYY-MM-DD HH:mm:ss');
+        endtime = end.format('YYYY-MM-DD HH:mm:ss');
     });
-new Vue({
+
+var new_search = new Vue({
+    /*监听查询事件*/
+    el: '#search',
+    methods: {
+        search: function () {
+            console.log("你选择了时间区间" + starttime + "to" + endtime);
+            var postdata = {};
+            postdata.county = $('#area').val();
+            postdata.starttime = starttime;
+            postdata.endtime = endtime;
+            $.ajax({
+                /*后台取得数据,赋值给观察者*/
+                type: "POST",
+                url: "../testagent/countyavgqoelist",
+                cache: false,  //禁用缓存
+                data: postdata,  //传入组装的参数
+                dataType: "json",
+                success: function (result) {
+                    console.log(result);
+                    console.log("成功返回!" + typeof (result.resultCountyAvgQoeList));
+                    console.log(result.resultCountyAvgQoeList);
+                    console.log(result.resultCountyAvgQoeList.length);
+                    if (result.resultCountyAvgQoeList.length != 0 && result.resultCountyAvgQoeList[0] != null) {
+                        if (result.resultCountyAvgQoeList.length == 1) {
+                            flag = 1;
+                        } else {
+                            flag = 0;
+                        }
+                        new_data.users = result.resultCountyAvgQoeList;
+                    } else {
+                        toastr.warning('该时间区间没有对应数据！');
+                    }
+                }
+            });
+
+        }
+    }
+});
+// 对Date的扩展，将 Date 转化为指定格式的String
+Date.prototype.Format = function (fmt) { //author: meizz
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+};
+
+var Reset = new Vue({
     el: '#reset',
     methods: {
-        reset () {
+        reset: function () {
             /****************************/
             /*重置,回到页面加载时的数据*/
-            var area1 = {
-                myarea: "新城区",
-                WebQoe: 78,
-                VideoQoe: 83,
-                GameQoe: 84,
-                DownloadQoe: 89,
-                PingQoe: 88,
-            };
-            var area2 = {
-                myarea: "碑林区",
-                WebQoe: 78,
-                VideoQoe: 37,
-                GameQoe: 91,
-                DownloadQoe: 77,
-                PingQoe: 88,
-
-            };
-            /**********************************/
-            flag = 0;
-            /*option先回到状态0,注意,不然会出错*/
-            new_data.users = [area1, area2];
+            var postdata = {};
+            postdata.county = '';
+            postdata.starttime = new Date(new Date() - 1000 * 60 * 60 * 24 * 4).Format("yyyy-MM-dd") + " 00:00:00";
+            /*前4天日期*/
+            postdata.endtime = (new Date()).Format("yyyy-MM-dd") + " 23:59:59";
+            /*当前日期*/
+            console.log(postdata);
+            $.ajax({
+                /*后台取得数据,赋值给观察者*/
+                type: "POST",
+                url: "../testagent/countyavgqoelist",
+                cache: false,  //禁用缓存
+                data: postdata,  //传入组装的参数
+                dataType: "json",
+                success: function (result) {
+                    console.log(result);
+                    if (result.resultCountyAvgQoeList.length == 1) {
+                        // staus = 0;
+                        flag = 1;
+                        new_data.users = result.resultCountyAvgQoeList;
+                        if(result.resultCountyAvgQoeList[0].county=="碑林区"){
+                            toastr.info("该时间区间没有新城区数据!");
+                        }else if(result.resultCountyAvgQoeList[0].county=="新城区"){
+                            toastr.info("该时间区间没有被碑林区数据!");
+                        }
+                    }
+                    else if(result.resultCountyAvgQoeList.length == 2){
+                        flag = 0;
+                        /*option先回到状态0,注意,不然会出错*/
+                        new_data.users = result.resultCountyAvgQoeList;
+                    }else {
+                        toastr.warning('获取数据失败！');
+                    }
+                }
+            });
         }
     }
 });
@@ -220,13 +249,13 @@ Vue.component('data-table', {
             options.series[4].data = [];
 
             for (var i = 0; i <= times; i++) {                          /*观察user是否变化,重绘HighCharts图*/
-                options.xAxis.categories[i] = val[i].myarea;
+                options.xAxis.categories[i] = val[i].county;
                 /*设置当前状态option*/
-                options.series[0].data[i] = val[i].WebQoe;
-                options.series[1].data[i] = val[i].VideoQoe;
-                options.series[2].data[i] = val[i].GameQoe;
-                options.series[3].data[i] = val[i].DownloadQoe;
-                options.series[4].data[i] = val[i].PingQoe;
+                options.series[0].data[i] = val[i].httpAvgQoe;
+                options.series[1].data[i] = val[i].youkuAvgQoe;
+                options.series[2].data[i] = val[i].gameAvgQoe;
+                options.series[3].data[i] = val[i].speedAvgQoe;
+                options.series[4].data[i] = val[i].pingAvgQoe;
 
             }
             var chart = new Highcharts.Chart('container', options);
@@ -235,12 +264,12 @@ Vue.component('data-table', {
             val.forEach(function (item) {              /*观察user是否变化,更新表格数据*/
                 let row = [];
 
-                row.push(item.myarea);
-                row.push(item.WebQoe);
-                row.push(item.VideoQoe);
-                row.push(item.GameQoe);
-                row.push(item.DownloadQoe);
-                row.push(item.PingQoe);
+                row.push(item.county);
+                row.push(item.httpAvgQoe);
+                row.push(item.youkuAvgQoe);
+                row.push(item.gameAvgQoe);
+                row.push(item.speedAvgQoe);
+                row.push(item.pingAvgQoe);
                 console.log(item);
 
                 vm.rows.push(row);
@@ -290,44 +319,8 @@ var new_data = new Vue({
         }
     },
     mounted() {
-        let vm = this;
-        /*********************************************/
-        var area1 = {
-            myarea: "新城区",
-            WebQoe: 78,
-            VideoQoe: 83,
-            GameQoe: 84,
-            DownloadQoe: 89,
-            PingQoe: 88,
-        };
-        var area2 = {
-            myarea: "碑林区",
-            WebQoe: 78,
-            VideoQoe: 37,
-            GameQoe: 91,
-            DownloadQoe: 77,
-            PingQoe: 88,
-
-        };
-        data_fitst = [area1, area2];
-        /*页面刚加载,模拟异步数据*/
-        /********************************************************/
-
-        vm.users = data_fitst;
-        console.log(vm.users);
-        /*$.ajax({
-         url: '../sys/user/list',
-         dataType: 'json',
-         data: {
-         username: null,
-         page: 1,
-         limit: 77
-         },
-         success(r) {
-         vm.users = r.page.list;
-         console.log(vm.users)
-         }
-         });*/
+        Reset.reset();
+        /*调用reset,即为页面加载状态*/
     }
 });
 

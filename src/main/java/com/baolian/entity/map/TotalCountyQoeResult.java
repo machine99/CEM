@@ -82,29 +82,24 @@ public class TotalCountyQoeResult implements Serializable, BaseResult {
         this.youkuAvgQoe = youkuAvgQoe;
     }
 
-
     public String getDate() {
         return date;
     }
 
     public void setDate(String date) {
         this.date = date;
-
     }
 
     @Override
     public String toString() {
-        return String.format("%s,%f,%f,%f,%f,%f,%s", county, pingAvgQoe, httpAvgQoe, speedAvgQoe, gameAvgQoe, youkuAvgQoe, date);
+        return "TotalCountyQoeResult{" +
+                "county='" + county + '\'' +
+                ", pingAvgQoe=" + pingAvgQoe +
+                ", httpAvgQoe=" + httpAvgQoe +
+                ", speedAvgQoe=" + speedAvgQoe +
+                ", gameAvgQoe=" + gameAvgQoe +
+                ", youkuAvgQoe=" + youkuAvgQoe +
+                ", date='" + date + '\'' +
+                '}';
     }
-
-    // @Override
-    // public boolean equals(Object obj) {
-    //     if (obj == this) {
-    //         return true;
-    //     }
-    //     if (obj instanceof TotalBRASQoeResult) {
-    //         return this.brasName.equals(((TotalBRASQoeResult) obj).getBrasName());
-    //     }
-    //     return false;
-    // }
 }

@@ -106,6 +106,15 @@ public class CountyPingtestResult implements Serializable, BaseResult {
 
     @Override
     public String toString() {
-        return String.format("%d,%f,%f,%f,%f,%f,%s", id, rttAvg, rttMin, rttMax, loss, qoe, county);
+        return "CountyPingtestResult{" +
+                "id=" + id +
+                ", rttAvg=" + rttAvg +
+                ", rttMin=" + rttMin +
+                ", rttMax=" + rttMax +
+                ", loss=" + loss +
+                ", qoe=" + qoe +
+                ", date='" + date + '\'' +
+                ", county='" + county + '\'' +
+                '}';
     }
 }

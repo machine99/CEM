@@ -19,7 +19,6 @@ public class CountySpeedtestResult implements Serializable, BaseResult {
     //日期
     private String date;
 
-
     public CountySpeedtestResult() {
 
     }
@@ -73,7 +72,13 @@ public class CountySpeedtestResult implements Serializable, BaseResult {
 
     @Override
     public String toString() {
-        return String.format("%d,%f,%f,%s", id, speed, qoe, county);
+        return "CountySpeedtestResult{" +
+                "id=" + id +
+                ", speed=" + speed +
+                ", qoe=" + qoe +
+                ", county='" + county + '\'' +
+                ", date='" + date + '\'' +
+                '}';
     }
 }
 
