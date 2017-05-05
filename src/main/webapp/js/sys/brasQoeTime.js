@@ -19,25 +19,8 @@ var bras_choose = new Vue({
     data: {
         items: []
     },
-    ready() {
-        $.ajax({
-            /*后台获取brasname*/
-            type: "POST",
-            url: "../testagent/brasnamelist",
-            cache: false,  //禁用缓存
-            // data: postdata,  //传入组装的参数
-            dataType: "json",
-            success: function (result) {
-                this.data.items = [];
-                if (result.code == 0) {
-                    result.brasNames.forEach(function (item) {
-                        data.items.push({message: item})
-                    });
-                } else {
-                    toastr.warning('获取BRAS列表失败');
-                }
-            }
-        });
+    mounted() {
+
     }
 });
 
@@ -52,10 +35,14 @@ var options = {
     xAxis: {
         type: 'datetime',
         dateTimeLabelFormats: {
-            day: '%Y-%m-%d',
-            week: '%Y-%m-%d',
-            month: '%Y-%m-%d',
-            year: '%Y-%m-%d'
+            // millisecond: '%Y-%m-%d',
+            // second: '%Y-%m-%d',
+            // minute: '%Y-%m-%d',
+            // hour: '%Y-%m-%d',
+            // day: '%Y-%m-%d',
+            // week: '%Y-%m-%d',
+            // month: '%Y-%m-%d',
+            // year: '%Y-%m-%d'
         },
         title: {
             text: 'Date'
@@ -122,7 +109,7 @@ $('input[name="daterange"]').daterangepicker(
         endDate: (new Date()).toLocaleDateString(), /*当前日期*/
     },
     function (start, end, label) {          /*日期选择触发事件*/
-        /*console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));*/
+        console.log("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
         starttime = start.format('YYYY-MM-DD HH:mm:ss');
         endtime = end.format('YYYY-MM-DD HH:mm:ss');
 
@@ -143,10 +130,12 @@ var new_search = new Vue({
             postdata.brasname = $('#bras_choose').val();
             postdata.starttime = starttime;
             postdata.endtime = endtime;
+            console.log("传递的参数：");
+            console.log(postdata);
             $.ajax({
                 /*后台取得数据,赋值给观察者*/
                 type: "POST",
-                url: "../resultpingtest/countypinglist",
+                url: "../testagent/brasdailyqoelist",
                 cache: false,  //禁用缓存
                 data: postdata,  //传入组装的参数
                 dataType: "json",
@@ -206,7 +195,7 @@ var Reset = new Vue({
             $.ajax({
                 /*后台取得数据,赋值给观察者*/
                 type: "POST",
-                url: "../resultpingtest/countypinglist",
+                url: "../testagent/brasdailyqoelist",
                 cache: false,  //禁用缓存
                 data: postdata,  //传入组装的参数
                 dataType: "json",
@@ -225,12 +214,32 @@ var Reset = new Vue({
                     }
                 }
             });
+            $.ajax({
+                /*后台获取brasname*/
+                type: "POST",
+                url: "../testagent/brasnamelist",
+                cache: false,  //禁用缓存
+                // data: postdata,  //传入组装的参数
+                dataType: "json",
+                success: function (result) {
+                    console.log("成功获取BRAS列表");
+                    console.log(result);
+                    bras_choose.items = [];
+                    if (result.code == 0) {
+                        result.brasNames.forEach(function (item) {
+                            bras_choose.items.push({message: item})
+                        });
+                    } else {
+                        toastr.warning('获取BRAS列表失败');
+                    }
+                }
+            });
         }
     }
 });
 
 Vue.component('data-table', {
-    template: '<table class="table table-bordered table-hover table-striped" id="area_table"></table>',
+    template: '<table class="table table-bordered table-hover table-striped" id="bras_table"></table>',
     props: ['users'],
     data() {
         return {
@@ -350,7 +359,7 @@ var new_data = new Vue({
 
 /*导出表格到excel*/
 function exportExcel() {
-    alasql('SELECT * INTO XLSX("区县Ping对比.xlsx",{headers:true}) \
-                    FROM HTML("#area_table",{headers:true})');
+    alasql('SELECT * INTO XLSX("BRAS感知变化趋势.xlsx",{headers:true}) \
+                    FROM HTML("#bras_table",{headers:true})');
 
 }

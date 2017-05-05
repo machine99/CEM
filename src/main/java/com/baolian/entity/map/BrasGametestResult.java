@@ -6,7 +6,7 @@ import java.io.Serializable;
  * BRAS游戏测试返回结果对应类，用于resultMap
  * Created by tomxie on 2017/5/2 14:25.
  */
-public class BrasGametestResult implements Serializable {
+public class BrasGametestResult implements Serializable, BaseResult {
     private static final long serialVersionUID = 1L;
 
     //id

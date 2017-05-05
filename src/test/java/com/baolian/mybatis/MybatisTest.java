@@ -3,6 +3,7 @@ package com.baolian.mybatis;
 import com.baolian.entity.TestagentEntity;
 import com.baolian.entity.TesttargetEntity;
 import com.baolian.entity.map.*;
+import com.baolian.entity.map.comp.ResultComparator;
 import com.baolian.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Mybatis测试类
@@ -45,6 +43,7 @@ public class MybatisTest {
         map.put("groupByDate", true);
 
         List<BrasHttptestResult> results = resultHttptestService.queryBRASHttpList(map);
+        Collections.sort(results, new ResultComparator<BrasHttptestResult>());
         for (BrasHttptestResult result : results) {
             System.out.println(result);
         }
