@@ -38,6 +38,13 @@
         <result property="date" column="date"/>
         <result property="brasName" column="brasname"/>
     </resultMap>
+    <!--首页Top网页返回的联表类型-->
+    <resultMap id="topAliasResult" type="com.baolian.entity.map.TopAliasResult">
+        <id property="id" column="id"/>
+        <result property="destName" column="destname"/>
+        <result property="alias" column="alias"/>
+        <result property="qoeAvg" column="qoe_avg"/>
+    </resultMap>
 
     <select id="queryObject" resultType="com.baolian.entity.ResultHttptestEntity">
         SELECT *
@@ -127,6 +134,20 @@
             ,date_format(result_httptest.testtime, '%Y-%m-%d')
         </if>
 
+    </select>
+
+    <select id="queryTopAlias" resultMap="topAliasResult">
+        SELECT
+        MAX(result_httptest.id) AS id,
+        AVG(result_httptest.qoe) AS qoe_avg,
+        result_httptest.destname,
+        testtarget.alias
+        FROM result_httptest, testtarget
+        WHERE result_httptest.destname = testtarget.target
+        AND testtarget.type = 'http'
+        GROUP BY testtarget.target
+        ORDER BY qoe_avg DESC
+        LIMIT #{limit};
     </select>
 
     <select id="queryTotal" resultType="int">

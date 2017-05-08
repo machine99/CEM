@@ -13,6 +13,10 @@ import java.util.Date;
  */
 public class DateUtils {
     /**
+     * 时间格式(yyyy-MM)
+     */
+    public final static String MONTH_PATTERN = "yyyy-MM";
+    /**
      * 时间格式(yyyy-MM-dd)
      */
     public final static String DATE_PATTERN = "yyyy-MM-dd";
@@ -38,5 +42,15 @@ public class DateUtils {
         DateFormat sdf = new SimpleDateFormat(pattern);
         date = sdf.parse(dateStr);
         return date;
+    }
+
+    public static void main(String[] args) {
+        String s = "2017-05";
+        try {
+            Date date = parse(s, MONTH_PATTERN);
+            System.out.println(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }
