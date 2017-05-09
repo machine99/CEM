@@ -149,7 +149,7 @@ public class TestagentController {
         map.put("starttime", starttime);
         map.put("endtime", endtime);
         map.put("brasName", brasname);
-        map.put("groupByDate", true);
+        map.put("groupByTime", 1);
 
         // System.out.println("starttime" + starttime);
         // System.out.println("endtime" + endtime);
