@@ -59,6 +59,9 @@ var probedata_handle = new Vue({
                 }
                 group_id = tds.eq(2).text();
                 this.gettarget_group(group_id);  /*搜索中间表中对应group_id的内容*/
+                $('.alias_namesselector').prop("disabled", false);//将select元素设置为可变,此处还是必须的,如果user没用变,
+                                                                 // 放在draw后面的readOnly就不会执行,也就不会改变这个状态
+
                 probeform_data.modaltitle = "测试任务组编辑";
                 /*修改模态框标题*/
                 $('#myModal').modal('show');
@@ -105,6 +108,8 @@ var probedata_handle = new Vue({
 
                 group_id = tds.eq(2).text();
                 this.gettarget_group(group_id);  /*搜索中间表中对应group_id的内容*/
+                $('.alias_namesselector').prop("disabled", true);//将select元素设置为不可变
+
                 probeform_data.modaltitle = "查看";
                 /*修改模态框标题*/
                 $('#myModal').modal('show');
@@ -141,8 +146,11 @@ var probedata_handle = new Vue({
                 var tds = trs.eq(i).find("td");
                 tds.eq(2).find("select").val(targetidBygroupid[i].targetId); //获取targetId并赋id对应的值
             }
+                console.log("状态:"+status)
             if(status==3){   //判断是否为查看
                 $('.alias_namesselector').prop("disabled", true);//将select元素设置为不可变
+            }else {
+                $('.alias_namesselector').prop("disabled", false);//将select元素设置为可变
             }
             }else {
                 console.log("错误,数组没值!");   /*这个执行先后问题先这么着吧,不知道怎么解决*/
