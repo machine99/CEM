@@ -40,14 +40,25 @@ public class TargetGroupController {
 	@ResponseBody
 	@RequestMapping("/list")
 	@RequiresPermissions("targetgroup:list")
-	public R list(Integer page, Integer limit){
+	public R list(Integer page, Integer limit, String group_id){
 		Map<String, Object> map = new HashMap<>();
-		map.put("offset", (page - 1) * limit);
-		map.put("limit", limit);
+		map.put("group_id", group_id);
+		int total = 0;
+		System.out.println(group_id);
+		if(page==null) {              /*没有传入page,则取全部值*/
+			map.put("offset", null);
+			map.put("limit", null);
+			page = 0;
+			limit = 0;
+		}else {
+			map.put("offset", (page - 1) * limit);
+			map.put("limit", limit);
+			total = targetGroupService.queryTotal(map);
+		}
 		
 		//查询列表数据
 		List<TargetGroupEntity> targetGroupList = targetGroupService.queryList(map);
-		int total = targetGroupService.queryTotal(map);
+
 		
 		PageUtils pageUtil = new PageUtils(targetGroupList, total, limit, page);
 		

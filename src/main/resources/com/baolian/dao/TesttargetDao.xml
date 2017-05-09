@@ -19,8 +19,7 @@
  	<select id="queryTotal" resultType="int">
 		select count(*) from testtarget 
 	</select>
-	 
-	<insert id="save" parameterType="com.baolian.entity.TesttargetEntity" useGeneratedKeys="true" keyProperty="id">
+	 	<insert id="save" parameterType="com.baolian.entity.TesttargetEntity" useGeneratedKeys="true" keyProperty="id">
 		insert into testtarget
 		(
 			`alias`, 

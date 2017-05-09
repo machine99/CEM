@@ -3,8 +3,12 @@
  */
 
 var status;
+var group_id;
 var idArray = new Array();
-
+var targetidArray = new Array();
+var testGroupNames = new Array();
+var aliasNames = new Array();
+var targetidBygroupid = new Array();
 /*各种监听事件*/
 var probedata_handle = new Vue({
     el: '#handle',
@@ -23,11 +27,19 @@ var probedata_handle = new Vue({
             }
             probeform_data.modaltitle = "测试任务组录入";
             /*修改模态框标题*/
+            probeform_data.users = 1; //相关测试目标表格归一
+            $('#probetesttarget_title').hide();//隐藏相关测试目标表格
+            $('#handle_button').hide(); //隐藏相关测试目标表格
+            $('#tabledemo').hide();     //隐藏相关测试目标表格
             $('#myModal').modal('show');
 
         },
         testagentupdate: function () {     /*监听编辑触发事件*/
             status = 1;/*状态1表示编辑*/
+            $('#probetesttarget_title').show();//显示相关测试目标表格
+            $('#handle_button').show(); //显示相关测试目标表格
+            $('#tabledemo').show();     //显示相关测试目标表格
+
             var trs = $('#probe_table tbody').find('tr:has(:checked)');
             /*find被选中的行*/
             var forms = $('#probeform_data .form-control');
@@ -45,6 +57,8 @@ var probedata_handle = new Vue({
                     console.log(tds.eq(i + 3).text());
                     forms[i].value = tds.eq(i + 2).text();         /*给表单赋值,注意,把id值也赋值,不然后台找不到对应id*/
                 }
+                group_id = tds.eq(2).text();
+                this.gettarget_group(group_id);  /*搜索中间表中对应group_id的内容*/
                 probeform_data.modaltitle = "测试任务组编辑";
                 /*修改模态框标题*/
                 $('#myModal').modal('show');
@@ -70,6 +84,11 @@ var probedata_handle = new Vue({
 
         },
         testagentview: function () {     /*查看监听事件*/
+            status = 3;/*状态3表示查看*/
+            $('#probetesttarget_title').show();//显示相关测试目标表格
+            $('#handle_button').show(); //显示相关测试目标表格
+            $('#tabledemo').show();     //显示相关测试目标表格
+
             var trs = $('#probe_table tbody').find('tr:has(:checked)');
             /*find被选中的行*/
             var forms = $('#probeform_data .form-control');
@@ -84,15 +103,81 @@ var probedata_handle = new Vue({
                 $('#probeform_data input[type=text]').prop("readonly", true);//将input元素设置为readonly
                 $('#probeform_data select').prop("disabled", true);//将select元素设置为不可变
 
+                group_id = tds.eq(2).text();
+                this.gettarget_group(group_id);  /*搜索中间表中对应group_id的内容*/
                 probeform_data.modaltitle = "查看";
                 /*修改模态框标题*/
                 $('#myModal').modal('show');
             } else {
                 toastr.warning('请选择一条记录再查看！');
             }
+        },
+        gettarget_group:function (group_id) {  /*获取中间表信息*/
+
+            let param = {};
+            param.group_id = group_id;
+            $.ajax({
+                type: "POST",   /*GET会乱码*/
+                url: "../targetgroup/list",
+                cache: false,  //禁用缓存
+                data: param,  //传入组装的参数
+                dataType: "json",
+                /* contentType:"application/json",  /!*必须要,不可少*!/*/
+                success: function (result) {
+                   console.log(result);
+                    probeform_data.users = result.page.list.length;  /*观察者,对应相关目标总记录数*/
+                    targetidBygroupid = result.page.list;
+                }
+            });
+        },
+        readOnly:function (group_id) {
+            $(".testgroup_namesselector").val(group_id);
+            $('.testgroup_namesselector').prop("disabled", true);//将select元素设置为不可变
+
+
+            var trs = $("#myModal table").find("tr");
+            if(targetidBygroupid.length!=0){
+            for(var i=0;i<targetidBygroupid.length;i++){
+                var tds = trs.eq(i).find("td");
+                tds.eq(2).find("select").val(targetidBygroupid[i].targetId); //获取targetId并赋id对应的值
+            }
+            if(status==3){   //判断是否为查看
+                $('.alias_namesselector').prop("disabled", true);//将select元素设置为不可变
+            }
+            }else {
+                console.log("错误,数组没值!");   /*这个执行先后问题先这么着吧,不知道怎么解决*/
+            }
         }
 
-    }
+    },
+    mounted(){         /*动态加载测试任务组数据*/
+        $.ajax({
+            type: "POST",   /*GET会乱码*/
+            url: "../testgroup/list",
+            cache: false,  //禁用缓存
+            dataType: "json",
+            /* contentType:"application/json",  /!*必须要,不可少*!/*/
+            success: function (result) {
+                for(var i=0;i<result.page.list.length;i++){
+                    testGroupNames[i] = {id: result.page.list[i].id,name:result.page.list[i].name}
+                }
+                probeform_data.testgroup_names = testGroupNames;
+            }
+        });
+        $.ajax({
+            type: "POST",   /*GET会乱码*/
+            url: "../testtarget/list",
+            cache: false,  //禁用缓存
+            dataType: "json",
+            /* contentType:"application/json",  /!*必须要,不可少*!/*/
+            success: function (result) {
+                for(var i=0;i<result.page.list.length;i++){
+                    aliasNames[i] = {id: result.page.list[i].id,alias:result.page.list[i].alias}
+                }
+                probeform_data.alias_names = aliasNames;
+            }
+        });
+    },
 });
 /*删除ajax*/
 function delete_ajax() {
@@ -135,7 +220,7 @@ var delete_data = new Vue({
         },
         close_modal:function (obj) {
             $(this.$el).modal('hide');
-
+            targetidArray = []; //清空相关测试目标id数组
         },
         cancel_delete:function () {
 
@@ -148,17 +233,130 @@ var delete_data = new Vue({
         }
     }
 });
+Vue.component('data-table', {
+    template: '<table class="table table-bordered" id="target_table"></table>',
+    props: ['users'],
+    data() {
+        return {
+            headers: [
+                {title: '<div style="white-space:nowrap;width:50px">序号</div>'},
+                {title: '<div style="white-space:nowrap;width:50px">操作</div>'},
+                {title: '<div style="white-space:nowrap;width:270px">目标id</div>'},
+                {title: '<div style="white-space:nowrap;width:270px">分组id</div>'},
+            ],
+            rows: [],
+            dtHandle: null,
+        }
+    },
+    watch: {
+        users(val, oldVal) {
+            let vm = this;
+            vm.rows = [];
+            if(val[1].length!=0&&val[2].length!=0){
+            var aliasnamesoptionstring = "";
+            var testgroupnamesoptionstring = "";
+            for (var j = 0; j < val[1].length; j++) {
+                aliasnamesoptionstring += "<option value=" + val[1][j].id + ">" + val[1][j].alias + "</option>";
+            }
+            for (var k = 0; k < val[2].length; k++) {
+                testgroupnamesoptionstring += "<option value=" + val[2][k].id + ">" + val[2][k].name + "</option>";
+            }
+
+            // You should _probably_ check that this is changed data... but we'll skip that for this example.
+            for (var i = 1; i < val[0]+1; i++) {              /*观察user是否变化,更新表格数据*/
+                // Fish out the specific column data for each item in your data set and push it to the appropriate place.
+                // Basically we're just building a multi-dimensional array here. If the data is _already_ in the right format you could
+                // skip this loop...
+                let row = [];
+                row.push(i);
+                row.push('<div class="checkbox"> <label> <input type="checkbox" name="selectFlag"></label> </div>');
+                row.push('<select class="form-control alias_namesselector" name="alias_names" style="width: 265px">'+aliasnamesoptionstring+'</select>');
+                row.push('<select class="form-control testgroup_namesselector" name="testgroup_names" style="width: 265px">'+testgroupnamesoptionstring+'</select>');
+                /*console.log(item);*/
+
+                vm.rows.push(row);
+            }
+
+            // Here's the magic to keeping the DataTable in sync.
+            // It must be cleared, new rows added, then redrawn!
+            vm.dtHandle.clear();
+            vm.dtHandle.rows.add(vm.rows);
+            vm.dtHandle.draw();
+                probedata_handle.readOnly(group_id)  /*！！！重要,改变这个状态只有在表格draw之后才有效果*/
+            }else {
+                console.log("数据延误！")
+            }
+        }
+    },
+    mounted() {
+        let vm = this;
+        // Instantiate the datatable and store the reference to the instance in our dtHandle element.
+        vm.dtHandle = $(this.$el).DataTable({
+            // Specify whatever options you want, at a minimum these:
+            columns: vm.headers,
+            data: vm.rows,
+            searching: false,
+            paging: false,
+            //serverSide: true,
+            info: false,
+            ordering: false, /*禁用排序功能*/
+            /*bInfo: false,*/
+            scrollY: '300px',   /*表格内容滚动*/
+            scrollCollapse: true,
+
+            bLengthChange: false,    /*禁用Show entries*/
+        });
+
+
+    }
+});
 /*模态框数据提交*/
 var probeform_data = new Vue({
     el: '#myModal',
     data: {
         modaltitle: "测试机管理录入", /*定义模态框标题*/
+        users: 0,
+        search: '',
+        testgroup_names: [],
+        alias_names:[]
+    },
+    computed: {
+        filteredUsers: function () {                 /*此处可以对传入数据进行处理*/
+            let self = this;
+            return [self.users,self.alias_names,self.testgroup_names];
+            /*let search = self.search.toLowerCase();
+             return self.users.filter(function (user) {
+             return user.username.toLowerCase().indexOf(search) !== -1 ||
+             user.email.toLowerCase().indexOf(search) !== -1 ||
+             user.mobile.indexOf(search) !== -1
+             })*/
+        }
+    },
+    mounted() {
+         this.users = 1;
     },
     // 在 `methods` 对象中定义方法
     methods: {
+        targetadd:function () {
+            this.users++;
+        },
+        targetdelet:function () {
+            var trs = $("#myModal table").find("tr").filter('.selected');
+            if (trs.length == 0) {
+                toastr.warning('请选择删除项目！');
+            }else {
+                for(var i=0;i<trs.length;i++){       /*取得选中行的id*/
+                    var tds = trs.eq(i).find("td");
+
+                    targetidArray[i] = parseInt(tds.eq(2).find("option:selected").val());   /*将id加入数组中*/
+                }
+
+            }
+            /*find被选中的行*/
+        },
         submit: function () {
             var testagentJson = getFormJson($('#probeform_data'));
-            if(typeof(testagentJson["name"])=="undefined"){                  /*3个select必选*/
+            if(testagentJson["name"]==""){                  /*必选*/
                 toastr.warning("请录入组名!");
             }else {
                 var testagent = JSON.stringify(testagentJson);  /*封装成json数组*/
@@ -225,6 +423,20 @@ $(document).ready(function () {
             $(this).find("input:checkbox").prop("checked", true);
         }
     });
+    /*模态框相关目标测试表格*/
+    $('#myModal tbody').on('click', 'tr', function () {   /*表格某一行选中状态*/
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+            $(this).find("input:checkbox").prop("checked", false);
+            /*prop可以,attr会出错*/
+        }
+        else {
+            /*vm.dtHandle.$('tr.selected').removeClass('selected');*/
+            /*只能选中一行*/
+            $(this).addClass('selected');
+            $(this).find("input:checkbox").prop("checked", true);
+        }
+    });
 
     $('#checkAll').on('click', function () {
         if (this.checked) {
@@ -243,27 +455,6 @@ $(document).ready(function () {
         }
     })
 
-});
-/*注册模态框表格*/
-var targetgroup_table = new Vue({
-    el: '#target_group_table',
-    data:{
-        header:[
-            {title: '<div style="white-space:nowrap;width:50px;">序号</div>'},
-            {title: '<div style="white-space:nowrap;width:50px;">操作</div>'},
-            {title: '<div>目标id</div>'},
-            {title: '<div>分组id</div>'}
-        ],
-        rows: [],
-        dtHandle: null,
-        targetlist:[],
-        grouplist:[],
-        target_flag : 0,
-        group_flag : 0
-    },
-    methods:{
-        
-    },
 });
 // 注册
 var probetable = new Vue({
@@ -400,3 +591,4 @@ var probetable = new Vue({
         });
     }
 });
+

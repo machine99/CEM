@@ -41,13 +41,24 @@ public class TesttargetController {
 	@RequiresPermissions("testtarget:list")
 	public R list(Integer page, Integer limit){
 		Map<String, Object> map = new HashMap<>();
-		map.put("offset", (page - 1) * limit);
-		map.put("limit", limit);
+		int total = 0;
+
+		System.out.println(page);
+		System.out.println(limit);
+		if(page==null) {              /*没有传入page,则取全部值*/
+			map.put("offset", null);
+			map.put("limit", null);
+			page = 0;
+			limit = 0;
+		}else {
+			map.put("offset", (page - 1) * limit);
+			map.put("limit", limit);
+			total = testtargetService.queryTotal(map);
+		}
 		
 		//查询列表数据
 		List<TesttargetEntity> testtargetList = testtargetService.queryList(map);
-		int total = testtargetService.queryTotal(map);
-		
+
 		PageUtils pageUtil = new PageUtils(testtargetList, total, limit, page);
 		
 		return R.ok().put("page", pageUtil);
