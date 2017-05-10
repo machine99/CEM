@@ -1,12 +1,10 @@
 package com.baolian.entity.map;
 
-import java.io.Serializable;
-
 /**
  * 首页网页Top返回结果对应类，用于resultMap
  * Created by tomxie on 2017/5/8 9:49.
  */
-public class TopAliasResult implements Serializable, BaseResult {
+public class TopAliasResult extends BaseResult {
     private static final long serialVersionUID = 1L;
 
     // id
@@ -16,7 +14,7 @@ public class TopAliasResult implements Serializable, BaseResult {
     // 网站名
     private String alias;
     // 平均qoe
-    private Double qoeAvg;
+    private Double qoe;
     // 时间
     private String date;
 
@@ -44,12 +42,12 @@ public class TopAliasResult implements Serializable, BaseResult {
         this.alias = alias;
     }
 
-    public Double getQoeAvg() {
-        return qoeAvg;
+    public Double getQoe() {
+        return qoe;
     }
 
-    public void setQoeAvg(Double qoeAvg) {
-        this.qoeAvg = qoeAvg;
+    public void setQoe(Double qoe) {
+        this.qoe = qoe;
     }
 
     public String getDate() {

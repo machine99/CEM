@@ -2,6 +2,7 @@ package com.baolian.service;
 
 import com.baolian.entity.ResultYoukutestEntity;
 
+import com.baolian.entity.map.BaseResult;
 import com.baolian.entity.map.WebVideoCountResult;
 
 import com.baolian.entity.map.CountyYoukutestResult;
@@ -31,6 +32,7 @@ public interface ResultYoukutestService {
 
 	List<BrasYoukutestResult> queryBRASYoukuList(Map<String, Object> map);
 
+	List<BaseResult> queryYoukuMonthList(Map<String, Object> map);
 	
 	int queryTotal(Map<String, Object> map);
 	

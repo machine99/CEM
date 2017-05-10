@@ -32,6 +32,12 @@
         <result property="brasName" column="brasname"/>
     </resultMap>
 
+    <resultMap id="baseResult" type="com.baolian.entity.map.BaseResult">
+        <id property="id" column="id"/>
+        <result property="qoe" column="qoe"/>
+        <result property="date" column="date"/>
+    </resultMap>
+
     <select id="queryObject" resultType="com.baolian.entity.ResultGametestEntity">
         SELECT *
         FROM result_gametest
@@ -115,6 +121,15 @@
         <if test="groupByDate != null and groupByDate == true">
             ,date_format(result_gametest.testtime, '%Y-%m-%d')
         </if>
+    </select>
+
+    <select id="queryGameMonthList" resultMap="baseResult">
+        SELECT
+        MAX(result_gametest.id) AS id,
+        AVG(result_gametest.qoe) AS qoe,
+        date_format(result_gametest.testtime, '%Y-%m') AS date
+        FROM result_gametest
+        GROUP BY date_format(result_gametest.testtime, '%Y-%m');
     </select>
 
     <select id="queryTotal" resultType="int">
