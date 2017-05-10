@@ -225,6 +225,11 @@ public class TestagentController {
         List<CountySpeedtestResult> countySpeedtestResults = resultSpeedtestService.queryCountySpeedList(map);
         List<CountyGametestResult> countyGametestResults = resultGametestService.queryCountyGameList(map);
         List<CountyYoukutestResult> countyYoukutestResults = resultYoukutestService.queryCountyYoukuList(map);
+        System.out.println(countyPingtestResults);
+        System.out.println(countyHttptestResults);
+        System.out.println(countySpeedtestResults);
+        System.out.println(countyGametestResults);
+        System.out.println(countyYoukutestResults);
 
         Map<String, TotalCountyQoeResult> resultMap = new HashMap<>();
         // 合并
