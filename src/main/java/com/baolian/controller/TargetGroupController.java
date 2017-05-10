@@ -101,6 +101,20 @@ public class TargetGroupController {
 		
 		return R.ok();
 	}
+
+	/**
+	 * 修改
+	 */
+	@ResponseBody
+	@RequestMapping("/updatebatch")
+	@RequiresPermissions("targetgroup:updatebatch")
+	public R updatebatch(@RequestBody TargetGroupEntity[] targetGroups){
+//		targetGroupService.update(targetGroup);
+        for(TargetGroupEntity targetGroup:targetGroups){
+			System.out.println("id:"+targetGroup.getId()+";targetid:"+targetGroup.getTargetId()+";groupid:"+targetGroup.getGroupId());
+		}
+		return R.ok();
+	}
 	
 	/**
 	 * 删除
@@ -110,7 +124,9 @@ public class TargetGroupController {
 	@RequiresPermissions("targetgroup:delete")
 	public R delete(@RequestBody Integer[] ids){
 		targetGroupService.deleteBatch(ids);
-		
+		for(int i=0;i<ids.length;i++) {
+			System.out.println(ids[i]);
+		}
 		return R.ok();
 	}
 	

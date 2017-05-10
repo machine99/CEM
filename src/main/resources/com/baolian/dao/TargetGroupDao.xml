@@ -48,7 +48,7 @@
 	</delete>
 	
 	<delete id="deleteBatch">
-		delete from target_group where id in 
+		delete from target_group where id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>
