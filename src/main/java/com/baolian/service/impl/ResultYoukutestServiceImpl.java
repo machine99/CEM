@@ -2,6 +2,7 @@ package com.baolian.service.impl;
 
 import com.baolian.dao.datasouce.annotation.DataSource;
 
+import com.baolian.entity.map.BaseResult;
 import com.baolian.entity.map.WebVideoCountResult;
 
 import com.baolian.entity.map.CountyYoukutestResult;
@@ -38,11 +39,18 @@ public class ResultYoukutestServiceImpl implements ResultYoukutestService {
     public List<WebVideoCountResult> queryWebList(Map<String, Object> map) {
         return resultYoukutestDao.queryWebList(map);
     }
+
     public List<CountyYoukutestResult> queryCountyYoukuList(Map<String, Object> map) {
         return resultYoukutestDao.queryCountyYoukuList(map);
     }
+
     public List<BrasYoukutestResult> queryBRASYoukuList(Map<String, Object> map) {
         return resultYoukutestDao.queryBRASYoukuList(map);
+    }
+
+    @Override
+    public List<BaseResult> queryYoukuMonthList(Map<String, Object> map) {
+        return resultYoukutestDao.queryYoukuMonthList(map);
     }
 
     @Override

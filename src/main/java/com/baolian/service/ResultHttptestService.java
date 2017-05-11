@@ -1,9 +1,7 @@
 package com.baolian.service;
 
 import com.baolian.entity.ResultHttptestEntity;
-import com.baolian.entity.map.BrasHttptestResult;
-import com.baolian.entity.map.CountyHttptestResult;
-import com.baolian.entity.map.WebHttpCountResult;
+import com.baolian.entity.map.*;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +24,10 @@ public interface ResultHttptestService {
 	List<WebHttpCountResult> queryWebList(Map<String, Object> map);
 
     List<BrasHttptestResult> queryBRASHttpList(Map<String, Object> map);
+
+    List<BaseResult> queryHttpMonthList(Map<String, Object> map);
+
+    List<TopAliasResult> queryTopAlias(Map<String, Object> map);
 
     int queryTotal(Map<String, Object> map);
 

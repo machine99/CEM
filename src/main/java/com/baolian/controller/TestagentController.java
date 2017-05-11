@@ -2,16 +2,12 @@ package com.baolian.controller;
 
 import java.util.*;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baolian.entity.map.*;
-import com.baolian.entity.map.comp.ResultComparator;
+import com.baolian.entity.map.comp.ResultDateComparator;
 import com.baolian.service.*;
-import com.baolian.utils.JSONUtils;
-import com.baolian.utils.RRException;
-import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
+import com.baolian.utils.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.velocity.app.event.implement.EscapeXmlReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,8 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.stereotype.Controller;
 
 import com.baolian.entity.TestagentEntity;
-import com.baolian.utils.PageUtils;
-import com.baolian.utils.R;
 
 
 /**
@@ -206,7 +200,7 @@ public class TestagentController {
         }
 
         List<TotalBRASQoeResult> resultBRASDailyQoeList = new ArrayList<>(resultMap.values());
-        Collections.sort(resultBRASDailyQoeList, new ResultComparator<TotalBRASQoeResult>());
+        Collections.sort(resultBRASDailyQoeList, new ResultDateComparator<TotalBRASQoeResult>(DateUtils.DATE_PATTERN));
         for (TotalBRASQoeResult result : resultBRASDailyQoeList) {
             System.out.println(result);
         }
@@ -231,6 +225,11 @@ public class TestagentController {
         List<CountySpeedtestResult> countySpeedtestResults = resultSpeedtestService.queryCountySpeedList(map);
         List<CountyGametestResult> countyGametestResults = resultGametestService.queryCountyGameList(map);
         List<CountyYoukutestResult> countyYoukutestResults = resultYoukutestService.queryCountyYoukuList(map);
+        System.out.println(countyPingtestResults);
+        System.out.println(countyHttptestResults);
+        System.out.println(countySpeedtestResults);
+        System.out.println(countyGametestResults);
+        System.out.println(countyYoukutestResults);
 
         Map<String, TotalCountyQoeResult> resultMap = new HashMap<>();
         // 合并
@@ -342,11 +341,72 @@ public class TestagentController {
         }
 
         List<TotalCountyQoeResult> resultCountyDailyQoeList = new ArrayList<>(resultMap.values());
-        Collections.sort(resultCountyDailyQoeList, new ResultComparator<TotalCountyQoeResult>());
+        Collections.sort(resultCountyDailyQoeList, new ResultDateComparator<TotalCountyQoeResult>(DateUtils.DATE_PATTERN));
         for (TotalCountyQoeResult result : resultCountyDailyQoeList) {
             System.out.println(result);
         }
         return R.ok().put("resultCountyDailyQoeList", resultCountyDailyQoeList);
+    }
+
+    /**
+     * 获取月平均qoe
+     */
+    @ResponseBody
+    @RequestMapping("/monthqoelist")
+    // @RequiresPermissions("testagent:monthqoelist")
+    public R monthQoeList() {
+        Map<String, Object> map = new HashMap<>();
+
+        //查询列表数据
+        List<BaseResult> pingMonthList = resultPingtestService.queryPingMonthList(map);
+        List<BaseResult> httpMonthList = resultHttptestService.queryHttpMonthList(map);
+        List<BaseResult> speedMonthList = resultSpeedtestService.querySpeedMonthList(map);
+        List<BaseResult> gameMonthList = resultGametestService.queryGameMonthList(map);
+        List<BaseResult> youkuMonthList = resultYoukutestService.queryYoukuMonthList(map);
+
+        Map<String, TotalBaseResult> resultMap = new HashMap<>();
+
+        for (BaseResult result : pingMonthList) {
+            String date = result.getDate();
+            if (!resultMap.containsKey(date)) {
+                resultMap.put(date, new TotalBaseResult(date));
+            }
+            resultMap.get(date).setPingAvgQoe(result.getQoe());
+        }
+        for (BaseResult result : httpMonthList) {
+            String date = result.getDate();
+            if (!resultMap.containsKey(date)) {
+                resultMap.put(date, new TotalBaseResult(date));
+            }
+            resultMap.get(date).setHttpAvgQoe(result.getQoe());
+        }
+        for (BaseResult result : speedMonthList) {
+            String date = result.getDate();
+            if (!resultMap.containsKey(date)) {
+                resultMap.put(date, new TotalBaseResult(date));
+            }
+            resultMap.get(date).setSpeedAvgQoe(result.getQoe());
+        }
+        for (BaseResult result : gameMonthList) {
+            String date = result.getDate();
+            if (!resultMap.containsKey(date)) {
+                resultMap.put(date, new TotalBaseResult(date));
+            }
+            resultMap.get(date).setGameAvgQoe(result.getQoe());
+        }
+        for (BaseResult result : youkuMonthList) {
+            String date = result.getDate();
+            if (!resultMap.containsKey(date)) {
+                resultMap.put(date, new TotalBaseResult(date));
+            }
+            resultMap.get(date).setYoukuAvgQoe(result.getQoe());
+        }
+        List<TotalBaseResult> resultMonthQoeList = new ArrayList<>(resultMap.values());
+        Collections.sort(resultMonthQoeList, new ResultDateComparator<TotalBaseResult>(DateUtils.MONTH_PATTERN));
+        // for (TotalBaseResult result : resultMonthQoeList) {
+        //     System.out.println(result);
+        // }
+        return R.ok().put("resultMonthQoeList", resultMonthQoeList);
     }
 
     /**

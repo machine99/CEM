@@ -1,12 +1,15 @@
 package com.baolian.controller;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.baolian.entity.map.BrasHttptestResult;
 import com.baolian.entity.map.CountyHttptestResult;
+import com.baolian.entity.map.TopAliasResult;
 import com.baolian.entity.map.WebHttpCountResult;
+import com.baolian.entity.map.comp.TopAliasComparator;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -84,6 +87,21 @@ public class ResultHttptestController {
         return R.ok().put("resultBRASHttptestList", resultBRASHttptestList);
     }
 
+    // 首页获得网站Top排行
+    @ResponseBody
+    @RequestMapping("/topaliaslist")
+    // @RequiresPermissions("resulthttptest:topaliaslist")
+    public R topAliasList(Integer limit) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("limit", limit);
+
+        // 查询数据
+        List<TopAliasResult> resultTopAliasList = resultHttptestService.queryTopAlias(map);
+        // 排序
+        Collections.sort(resultTopAliasList, new TopAliasComparator());
+        return R.ok().put("resultTopAliasList", resultTopAliasList);
+    }
+
     @ResponseBody
     @RequestMapping("/list")
     @RequiresPermissions("resulthttptest:list")
@@ -101,29 +119,28 @@ public class ResultHttptestController {
         return R.ok().put("page", pageUtil);
     }
 
-	/**
-	 *
-	 * @param starttime
-	 * @param endtime
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping("/weblist")
-	@RequiresPermissions("resulthttptest:weblist")
-	public R list(String starttime, String endtime){
-		Map<String, Object> map = new HashMap<>();
-		map.put("starttime", starttime);
-		map.put("endtime", endtime);
+    /**
+     * @param starttime
+     * @param endtime
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/weblist")
+    @RequiresPermissions("resulthttptest:weblist")
+    public R list(String starttime, String endtime) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("starttime", starttime);
+        map.put("endtime", endtime);
 
-		System.out.println("starttime:"+starttime);
-		System.out.println("endtime:"+endtime);
+        System.out.println("starttime:" + starttime);
+        System.out.println("endtime:" + endtime);
 
-		//查询列表数据
-		List<WebHttpCountResult> resultHttpwebtestList = resultHttptestService.queryWebList(map);
+        //查询列表数据
+        List<WebHttpCountResult> resultHttpwebtestList = resultHttptestService.queryWebList(map);
 
 
-		return R.ok().put("resultHttpwebtestList", resultHttpwebtestList);
-	}
+        return R.ok().put("resultHttpwebtestList", resultHttpwebtestList);
+    }
 
 
     /**

@@ -34,7 +34,12 @@
         <result property="qoe" column="qoe"/>
         <result property="date" column="date"/>
         <result property="brasName" column="brasname"/>
+    </resultMap>
 
+    <resultMap id="baseResult" type="com.baolian.entity.map.BaseResult">
+        <id property="id" column="id"/>
+        <result property="qoe" column="qoe"/>
+        <result property="date" column="date"/>
     </resultMap>
 
     <select id="queryObject" resultType="com.baolian.entity.ResultYoukutestEntity">
@@ -122,6 +127,15 @@
         <if test="groupByDate != null and groupByDate == true">
             ,date_format(result_youkutest.testtime, '%Y-%m-%d')
         </if>
+    </select>
+
+    <select id="queryYoukuMonthList" resultMap="baseResult">
+        SELECT
+        MAX(result_youkutest.id) AS id,
+        AVG(result_youkutest.qoe) AS qoe,
+        date_format(result_youkutest.testtime, '%Y-%m') AS date
+        FROM result_youkutest
+        GROUP BY date_format(result_youkutest.testtime, '%Y-%m');
     </select>
 
     <select id="queryTotal" resultType="int">

@@ -1,10 +1,9 @@
 package com.baolian.mybatis;
 
-import com.baolian.entity.TestagentEntity;
-import com.baolian.entity.TesttargetEntity;
 import com.baolian.entity.map.*;
-import com.baolian.entity.map.comp.ResultComparator;
+import com.baolian.entity.map.comp.ResultDateComparator;
 import com.baolian.service.*;
+import com.baolian.utils.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,13 +39,7 @@ public class MybatisTest {
         Map<String, Object> map = new HashMap<>();
         map.put("starttime", "2016-04-01 00:00:00");
         map.put("endtime", "2017-04-30 00:00:00");
-        map.put("groupByDate", true);
-
-        List<BrasHttptestResult> results = resultHttptestService.queryBRASHttpList(map);
-        Collections.sort(results, new ResultComparator<BrasHttptestResult>());
-        for (BrasHttptestResult result : results) {
-            System.out.println(result);
-        }
+        map.put("groupByTime", 2); // 按照月份
 
         // List<String> list = testagentService.queryBrasNames();
         // for (String s : list) {
@@ -54,52 +47,57 @@ public class MybatisTest {
         // }
 
         // //查询列表数据
-        // List<BrasPingtestResult> brasPingtestResults = resultPingtestService.queryBRASPingList(map);
-        // List<BrasHttptestResult> brasHttptestResults = resultHttptestService.queryBRASHttpList(map);
-        // List<BrasSpeedtestResult> brasSpeedtestResults = resultSpeedtestService.queryBRASSpeedList(map);
-        // List<BrasGametestResult> brasGametestResults = resultGametestService.queryBRASGameList(map);
-        // List<BrasYoukutestResult> brasYoukutestResults = resultYoukutestService.queryBRASYoukuList(map);
+        // List<BaseResult> brasPingtestResults = resultPingtestService.queryPingMonthList(map);
+        // List<BaseResult> brasHttptestResults = resultHttptestService.queryHttpMonthList(map);
+        // List<BaseResult> brasSpeedtestResults = resultSpeedtestService.querySpeedMonthList(map);
+        // List<BaseResult> brasGametestResults = resultGametestService.queryGameMonthList(map);
+        // List<BaseResult> brasYoukutestResults = resultYoukutestService.queryYoukuMonthList(map);
         //
-        // Map<String, TotalBRASQoeResult> resultMap = new HashMap<>();
+        // Map<String, TotalBaseResult> resultMap = new HashMap<>();
         //
-        // for (BrasPingtestResult result : brasPingtestResults) {
-        //     String brasName = result.getBrasName();
-        //     if (!resultMap.containsKey(brasName)) {
-        //         resultMap.put(brasName, new TotalBRASQoeResult(brasName));
+        // for (BaseResult result : brasPingtestResults) {
+        //     String date = result.getDate();
+        //     if (!resultMap.containsKey(date)) {
+        //         resultMap.put(date, new TotalBaseResult(date));
         //     }
-        //     resultMap.get(brasName).setPingAvgQoe(result.getQoe());
+        //     resultMap.get(date).setPingAvgQoe(result.getQoe());
         // }
-        // for (BrasHttptestResult result : brasHttptestResults) {
-        //     String brasName = result.getBrasName();
-        //     if (!resultMap.containsKey(brasName)) {
-        //         resultMap.put(brasName, new TotalBRASQoeResult(brasName));
+        // for (BaseResult result : brasHttptestResults) {
+        //     String date = result.getDate();
+        //     if (!resultMap.containsKey(date)) {
+        //         resultMap.put(date, new TotalBaseResult(date));
         //     }
-        //     resultMap.get(brasName).setHttpAvgQoe(result.getQoe());
+        //     resultMap.get(date).setHttpAvgQoe(result.getQoe());
         // }
-        // for (BrasSpeedtestResult result : brasSpeedtestResults) {
-        //     String brasName = result.getBrasName();
-        //     if (!resultMap.containsKey(brasName)) {
-        //         resultMap.put(brasName, new TotalBRASQoeResult(brasName));
+        // for (BaseResult result : brasSpeedtestResults) {
+        //     String date = result.getDate();
+        //     if (!resultMap.containsKey(date)) {
+        //         resultMap.put(date, new TotalBaseResult(date));
         //     }
-        //     resultMap.get(brasName).setSpeedAvgQoe(result.getQoe());
+        //     resultMap.get(date).setSpeedAvgQoe(result.getQoe());
         // }
-        // for (BrasGametestResult result : brasGametestResults) {
-        //     String brasName = result.getBrasName();
-        //     if (!resultMap.containsKey(brasName)) {
-        //         resultMap.put(brasName, new TotalBRASQoeResult(brasName));
+        // for (BaseResult result : brasGametestResults) {
+        //     String date = result.getDate();
+        //     if (!resultMap.containsKey(date)) {
+        //         resultMap.put(date, new TotalBaseResult(date));
         //     }
-        //     resultMap.get(brasName).setGameAvgQoe(result.getQoe());
+        //     resultMap.get(date).setGameAvgQoe(result.getQoe());
         // }
-        // for (BrasYoukutestResult result : brasYoukutestResults) {
-        //     String brasName = result.getBrasName();
-        //     if (!resultMap.containsKey(brasName)) {
-        //         resultMap.put(brasName, new TotalBRASQoeResult(brasName));
+        // for (BaseResult result : brasYoukutestResults) {
+        //     String date = result.getDate();
+        //     if (!resultMap.containsKey(date)) {
+        //         resultMap.put(date, new TotalBaseResult(date));
         //     }
-        //     resultMap.get(brasName).setYoukuAvgQoe(result.getQoe());
+        //     resultMap.get(date).setYoukuAvgQoe(result.getQoe());
         // }
-        // Set<Map.Entry<String, TotalBRASQoeResult>> entries = resultMap.entrySet();
-        // for (Map.Entry<String, TotalBRASQoeResult> entry : entries) {
-        //     System.out.println(entry.getValue());
+        // List<TotalBaseResult> list = new ArrayList<>(resultMap.values());
+        // Collections.sort(list, new ResultDateComparator<TotalBaseResult>(DateUtils.MONTH_PATTERN));
+        // for (TotalBaseResult result : list) {
+        //     System.out.println(result);
         // }
+        List<CityPingtestResult> cityPingtestResults = resultPingtestService.queryCityAvgList(map);
+        for (CityPingtestResult result : cityPingtestResults) {
+            System.out.println(result);
+        }
     }
 }

@@ -1,10 +1,8 @@
 package com.baolian.service.impl;
 
 
-import com.baolian.entity.map.BrasHttptestResult;
-import com.baolian.entity.map.CountyHttptestResult;
+import com.baolian.entity.map.*;
 import com.baolian.dao.datasouce.annotation.DataSource;
-import com.baolian.entity.map.WebHttpCountResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,15 +36,25 @@ public class ResultHttptestServiceImpl implements ResultHttptestService {
         return resultHttptestDao.queryCountyHttpList(map);
     }
 
-	/*门户感知*/
-	@Override
-	public List<WebHttpCountResult> queryWebList(Map<String, Object> map) {
-		return resultHttptestDao.queryWebList(map);
-	}
+    /*门户感知*/
+    @Override
+    public List<WebHttpCountResult> queryWebList(Map<String, Object> map) {
+        return resultHttptestDao.queryWebList(map);
+    }
 
     @Override
     public List<BrasHttptestResult> queryBRASHttpList(Map<String, Object> map) {
         return resultHttptestDao.queryBRASHttpList(map);
+    }
+
+    @Override
+    public List<BaseResult> queryHttpMonthList(Map<String, Object> map) {
+        return resultHttptestDao.queryHttpMonthList(map);
+    }
+
+    @Override
+    public List<TopAliasResult> queryTopAlias(Map<String, Object> map) {
+        return resultHttptestDao.queryTopAlias(map);
     }
 
     @Override

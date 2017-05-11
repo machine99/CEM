@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by apple on 2017/4/27.
  */
-public class CountyGametestResult implements Serializable, BaseResult {
+public class CountyGametestResult extends BaseResult {
 
     private static final long serialVersionUID = 1L;
 

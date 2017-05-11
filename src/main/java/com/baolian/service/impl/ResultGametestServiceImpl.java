@@ -1,5 +1,6 @@
 package com.baolian.service.impl;
 
+import com.baolian.entity.map.BaseResult;
 import com.baolian.entity.map.BrasGametestResult;
 import com.baolian.entity.map.CountyGametestResult;
 import com.baolian.dao.datasouce.annotation.DataSource;
@@ -44,6 +45,11 @@ public class ResultGametestServiceImpl implements ResultGametestService {
     @Override
     public List<BrasGametestResult> queryBRASGameList(Map<String, Object> map) {
         return resultGametestDao.queryBRASGameList(map);
+    }
+
+    @Override
+    public List<BaseResult> queryGameMonthList(Map<String, Object> map) {
+        return resultGametestDao.queryGameMonthList(map);
     }
 
     @Override

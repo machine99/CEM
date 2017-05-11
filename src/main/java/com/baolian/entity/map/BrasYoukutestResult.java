@@ -6,7 +6,7 @@ import java.io.Serializable;
  * BRAS视频测试返回结果对应类，用于resultMap
  * Created by tomxie on 2017/5/2 15:16.
  */
-public class BrasYoukutestResult implements Serializable, BaseResult {
+public class BrasYoukutestResult extends BaseResult {
     private static final long serialVersionUID = 1L;
 
     //id

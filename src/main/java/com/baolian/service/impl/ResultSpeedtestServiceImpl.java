@@ -2,6 +2,7 @@ package com.baolian.service.impl;
 
 import com.baolian.dao.datasouce.annotation.DataSource;
 
+import com.baolian.entity.map.BaseResult;
 import com.baolian.entity.map.WebSpeedCountResult;
 
 import com.baolian.entity.map.BrasSpeedtestResult;
@@ -39,6 +40,7 @@ public class ResultSpeedtestServiceImpl implements ResultSpeedtestService {
     public List<WebSpeedCountResult> queryWebList(Map<String, Object> map) {
         return resultSpeedtestDao.queryWebList(map);
     }
+
     public List<CountySpeedtestResult> queryCountySpeedList(Map<String, Object> map) {
         return resultSpeedtestDao.queryCountySpeedList(map);
     }
@@ -47,6 +49,11 @@ public class ResultSpeedtestServiceImpl implements ResultSpeedtestService {
     public List<BrasSpeedtestResult> queryBRASSpeedList(Map<String, Object> map) {
         return resultSpeedtestDao.queryBRASSpeedList(map);
 
+    }
+
+    @Override
+    public List<BaseResult> querySpeedMonthList(Map<String, Object> map) {
+        return resultSpeedtestDao.querySpeedMonthList(map);
     }
 
     @Override

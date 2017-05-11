@@ -1,9 +1,7 @@
 package com.baolian.dao;
 
 import com.baolian.entity.ResultHttptestEntity;
-import com.baolian.entity.map.BrasHttptestResult;
-import com.baolian.entity.map.CountyHttptestResult;
-import com.baolian.entity.map.WebHttpCountResult;
+import com.baolian.entity.map.*;
 
 import java.util.List;
 import java.util.Map;
@@ -19,9 +17,11 @@ public interface ResultHttptestDao extends BaseDao<ResultHttptestEntity> {
 
     /*门户感知*/
     List<WebHttpCountResult> queryWebList(Map<String, Object> map);
-    
-
 
     List<BrasHttptestResult> queryBRASHttpList(Map<String, Object> map);
+
+    List<TopAliasResult> queryTopAlias(Map<String, Object> map);
+
+    List<BaseResult> queryHttpMonthList(Map<String, Object> map);
 
 }

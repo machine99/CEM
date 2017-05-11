@@ -26,6 +26,12 @@
         <result property="brasName" column="brasname"/>
     </resultMap>
 
+    <resultMap id="baseResult" type="com.baolian.entity.map.BaseResult">
+        <id property="id" column="id"/>
+        <result property="qoe" column="qoe"/>
+        <result property="date" column="date"/>
+    </resultMap>
+
     <select id="queryCountySpeedList" resultMap="countySpeedtestResult">
         SELECT
         MAX(result_speedtest.id) AS id,
@@ -53,7 +59,6 @@
         <if test="groupByDate != null and groupByDate == true">
             ,date_format(result_speedtest.testtime, '%Y-%m-%d')
         </if>
-
     </select>
 
     <select id="queryBRASSpeedList" resultMap="brasSpeedtestResult">
@@ -79,7 +84,15 @@
         <if test="groupByDate != null and groupByDate == true">
             ,date_format(result_speedtest.testtime, '%Y-%m-%d')
         </if>
+    </select>
 
+    <select id="querySpeedMonthList" resultMap="baseResult">
+        SELECT
+        MAX(result_speedtest.id) AS id,
+        AVG(result_speedtest.qoe) AS qoe,
+        date_format(result_speedtest.testtime, '%Y-%m') AS date
+        FROM result_speedtest
+        GROUP BY date_format(result_speedtest.testtime, '%Y-%m');
     </select>
 
     <select id="queryObject" resultType="com.baolian.entity.ResultSpeedtestEntity">

@@ -2,6 +2,7 @@ package com.baolian.service;
 
 import com.baolian.entity.ResultSpeedtestEntity;
 
+import com.baolian.entity.map.BaseResult;
 import com.baolian.entity.map.WebSpeedCountResult;
 
 import com.baolian.entity.map.BrasSpeedtestResult;
@@ -31,6 +32,7 @@ public interface ResultSpeedtestService {
 
 	List<BrasSpeedtestResult> queryBRASSpeedList(Map<String, Object> map);
 
+	List<BaseResult> querySpeedMonthList(Map<String, Object> map);
 	
 	int queryTotal(Map<String, Object> map);
 	

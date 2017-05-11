@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -70,7 +70,7 @@
                         <form class="form-horizontal" id="probeform_data" role="form">
                             <div class="form-group row">
                                 <label for="id"
-                                       class="col-lg-3 col-md-3 col-sm-3 control-label form_border" style="display: none">组名:</label>
+                                       class="col-lg-3 col-md-3 col-sm-3 control-label form_border" style="display: none">id:</label>
                                 <div class="col-lg-3 col-md-3 col-sm-3 form_border" style="display: none">
                                     <input type="text" class="form-control" id="id" name="id"
                                            placeholder="id">
@@ -98,15 +98,19 @@
                     </div>
                 </div>
                 <div class="row" id="handle_button">
-                    <div class="btn-group btn-group-sm fontcolor col-lg-3 col-md-3 col-sm-3">
-                        <button type="button" class="btn btn-default testtargetbutton">添加</button>
-                        <button type="button" class="btn btn-default testtargetbutton">删除</button>
+                    <div class="btn-group btn-group-sm fontcolor col-lg-4 col-md-4 col-sm-4">
+                        <button type="button" class="btn btn-default testtargetbutton" v-on:click="targetadd">添加</button>
+                        <button type="button" class="btn btn-default testtargetbutton" v-on:click="targetupdate">编辑</button>
+                        <button type="button" class="btn btn-default testtargetbutton" v-on:click="targetdelet">删除</button>
                     </div>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <table class="table table-bordered table-hover" id="target_group_table"></table>
-                        <!--<table id="target_group_table" class="table table-bordered table-hover"
+                        <div id="tabledemo">
+                            <data-table :users="filteredUsers"></data-table>
+                        </div>
+                    </div>
+<!--                        <table id="target_group_table" class="table table-bordered table-hover"
                                style="margin-bottom: 0;">
                             <thead>
                             <tr>
@@ -141,18 +145,7 @@
                                 <td>
                                     <select id="target_group[0].group_id" class="form-control"
                                             name="target_group[0].group_id" datatype="*">
-                                        <option value="1">
-                                            标准测试任务
-                                        </option>
-                                        <option value="2">
-                                            视频类测试
-                                        </option>
-                                        <option value="3">
-                                            网站应用
-                                        </option>
-                                        <option value="4">
-                                            他网测试
-                                        </option>
+                                        <option v-for="item in testgroup_names" v-bind:value="item.message.name">{{ item.message.name }}</option>
                                     </select>
 
                                     <label class="Validform_label" style="display: none;">分组id</label>
@@ -160,7 +153,6 @@
                             </tr>
                             </tbody>
                         </table>-->
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
