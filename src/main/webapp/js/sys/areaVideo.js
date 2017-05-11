@@ -311,10 +311,8 @@ var button_change = new Vue({
             console.log("停顿次数");
             options.title = this.option_pausecount.title;
             /*设置标题*/
-
             options.series = this.option_pausecount.series_pausecount;
             /*设置数据*/
-
             options.yAxis = this.option_pausecount.yAxis;
             /*设置y轴*/
             options.tooltip = {};
@@ -425,7 +423,6 @@ Vue.component('data-table', {
                 row.push(item.buffertime);
 
                 console.log(item);
-
                 vm.rows.push(row);
             });
             vm.dtHandle.clear();
