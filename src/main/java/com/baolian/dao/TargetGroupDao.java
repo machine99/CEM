@@ -10,5 +10,5 @@ import com.baolian.entity.TargetGroupEntity;
  * @date 2017-04-18 17:03:59
  */
 public interface TargetGroupDao extends BaseDao<TargetGroupEntity> {
-	
+
 }

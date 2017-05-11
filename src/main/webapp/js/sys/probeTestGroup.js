@@ -10,6 +10,7 @@ var testGroupNames = new Array();
 var aliasNames = new Array();
 var targetidBygroupid = new Array();
 var targetGroupId = new Array();
+var targetAdd = new Array();
 var targetUpdate = new Array();
 /*各种监听事件*/
 var probedata_handle = new Vue({
@@ -303,6 +304,7 @@ Vue.component('data-table', {
             vm.dtHandle.rows.add(vm.rows);
             vm.dtHandle.draw();
                 probedata_handle.readOnly(group_id);  /*！！！重要,改变这个状态只有在表格draw之后才有效果*/
+                probeform_data.targetadd_selectable(); /*！！！重要,改变这个状态只有在表格draw之后才有效果*/
             }else {
                 console.log("数据延误！")
             }
@@ -340,7 +342,9 @@ var probeform_data = new Vue({
         testgroup_names: [],
         alias_names:[],
         updateflag:0,
-        trs:[]
+        trs:[],
+        targetaddtrs:[]
+
     },
     computed: {
         filteredUsers: function () {                 /*此处可以对传入数据进行处理*/
@@ -360,7 +364,21 @@ var probeform_data = new Vue({
     // 在 `methods` 对象中定义方法
     methods: {
         targetadd:function () {
-            this.users.push(0); //末尾添加一个0元素
+            this.targetaddtrs = [];     //tr数组先清空
+            targetAdd = []; //删除前,先清空相关数组
+            this.users.push(0); //末尾添加一个0元素,赋值观察者增添一行
+            $('#targetaddaffirm').css("display","block");  //确认添加弹出
+        },
+        targetadd_selectable:function () {
+            var index=$.inArray(0,this.users); //第一个0所在索引位置
+            if(index!=-1){  //如果不包含0,即没有点击增加来新增加tr
+                console.log(index+":"+this.users.length);
+                for(var i=index;i<this.users.length+1;i++){
+                var newtr = $("#myModal table").find("tr").eq(i+2);
+                newtr.click();
+                }
+                $('.selected .alias_namesselector').prop("disabled", false);//将选中编辑元素设置为可变,
+            }
         },
         targetupdate:function () {
             this.trs = [];     //tr数组先清空
@@ -369,8 +387,31 @@ var probeform_data = new Vue({
             if (this.trs.length == 0) {
                 toastr.warning('请选择相关目标编辑项目！');
             }else {
+                $('#targetupdateaffirm').css("display","block");
                 $('.selected .alias_namesselector').prop("disabled", false);//将选中编辑元素设置为可变,
                 this.updateflag = 1; //flag为1表示要修改
+            }
+        },
+        targetaddaffirm:function () {
+            this.targetaddtrs = $("#myModal table").find("tr").filter('.selected');
+            for(var i=0;i<this.targetaddtrs.length;i++){       /*取得选中编辑行的entity对象数组*/
+                var tds = this.targetaddtrs.eq(i).find("td");
+                targetAdd[i] = {id:tds.eq(2).text(),targetId:tds.eq(3).find('select').val(),groupId:tds.eq(4).find('select').val()};
+            }
+            console.log(targetAdd);
+            this.targetadd_ajax();
+            $('#targetaddaffirm').css("display","none");//隐藏按钮
+        },
+        targetupdateaffirm:function () {
+            if(this.updateflag==1){
+                for(var i=0;i<this.trs.length;i++){       /*取得选中编辑行的entity对象数组*/
+                    var tds = this.trs.eq(i).find("td");
+                    targetUpdate[i] = {id:tds.eq(2).text(),targetId:tds.eq(3).find('select').val(),groupId:tds.eq(4).find('select').val()};
+                }
+                console.log(targetUpdate);
+                this.targetupdate_ajax();
+                $('#targetupdateaffirm').css("display","none");//隐藏按钮
+                this.updateflag = 0;  //编辑flag归零
             }
         },
         targetdelet:function () {
@@ -381,11 +422,23 @@ var probeform_data = new Vue({
             }else {
                 for(var i=0;i<trs.length;i++){       /*取得选中行的id*/
                     var tds = trs.eq(i).find("td");
-
+                    if(tds.eq(2).text()==0){
+                        trs.eq(i).remove();     //如果是增添项就直接移除
+                        this.users.pop(); //删除数组中最后一个元素0
+                    }else {
                     target_groupidArray[i] = parseInt(tds.eq(2).text());   /*将id加入数组中*/
+                    }
                 }
+                if(target_groupidArray.length!=0){
                 this.targetdelet_ajax();
                 console.log(target_groupidArray)
+                }
+                var isadd = $.inArray(0,this.users);  //检测users中是否有零元素
+                if(isadd == -1){              //有增添项就显示确认增加按钮
+                    $('#targetaddaffirm').css("display","none");
+                }else {
+                    $('#targetaddaffirm').css("display","block");
+                }
 
             }
             /*find被选中的行*/
@@ -428,6 +481,29 @@ var probeform_data = new Vue({
                 }
             });
         },
+        targetadd_ajax:function () {
+            var target_group = JSON.stringify(targetAdd);
+            $.ajax({
+                type: "POST",   /*GET会乱码*/
+                url: "../targetgroup/savebatch",
+                cache: false,  //禁用缓存
+                data: target_group,  //传入组装的参数
+                dataType: "json",
+                contentType:"application/json",  /*必须要,不可少*/
+                success: function (result) {
+                    console.log("传递成功");
+                    toastr.success("相关目标增加成功!");
+
+                    probedata_handle.gettarget_group(group_id);  /*搜索中间表中对应group_id的内容*//*观察者,更新相关目标总记录数*/
+                    targetAdd = []; //清空相关测试目标entity对象数组
+
+                }
+            });
+        },
+        cancel:function () {
+            $('#targetupdateaffirm').css("display","none");//隐藏按钮
+            $('#targetaddaffirm').css("display","none");//隐藏按钮
+        },
         submit: function () {
             var testagentJson = getFormJson($('#probeform_data'));
             if(testagentJson["name"]==""){                  /*必选*/
@@ -461,15 +537,7 @@ var probeform_data = new Vue({
                     }
                 });
             }
-            if(this.updateflag==1){
-            for(var i=0;i<this.trs.length;i++){       /*取得选中编辑行的entity对象数组*/
-                var tds = this.trs.eq(i).find("td");
-                targetUpdate[i] = {id:tds.eq(2).text(),targetId:tds.eq(3).find('select').val(),groupId:tds.eq(4).find('select').val()};
-            }
-            console.log(targetUpdate);
-            this.targetupdate_ajax();
-            this.updateflag = 0;  //编辑flag归零
-            }
+
         }
     }
 });

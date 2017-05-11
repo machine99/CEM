@@ -23,7 +23,7 @@ public interface TargetGroupService {
 	void save(TargetGroupEntity targetGroup);
 	
 	void update(TargetGroupEntity targetGroup);
-	
+
 	void delete(Integer id);
 	
 	void deleteBatch(Integer[] ids);
