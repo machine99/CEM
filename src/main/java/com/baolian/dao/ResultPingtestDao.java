@@ -1,9 +1,7 @@
 package com.baolian.dao;
 
 import com.baolian.entity.ResultPingtestEntity;
-import com.baolian.entity.map.BrasPingtestResult;
-import com.baolian.entity.map.CountyPingtestResult;
-import com.baolian.entity.map.WebPingCountResult;
+import com.baolian.entity.map.*;
 
 import java.util.List;
 import java.util.Map;
@@ -33,4 +31,7 @@ public interface ResultPingtestDao extends BaseDao<ResultPingtestEntity> {
      */
     List<BrasPingtestResult> queryBRASPingList(Map<String, Object> map);
 
+    List<BaseResult> queryPingMonthList(Map<String, Object> map);
+
+    List<CityPingtestResult> queryCityAvgList(Map<String, Object> map);
 }

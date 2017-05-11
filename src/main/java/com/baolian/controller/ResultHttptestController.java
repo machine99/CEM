@@ -1,5 +1,6 @@
 package com.baolian.controller;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import com.baolian.entity.map.BrasHttptestResult;
 import com.baolian.entity.map.CountyHttptestResult;
 import com.baolian.entity.map.TopAliasResult;
 import com.baolian.entity.map.WebHttpCountResult;
+import com.baolian.entity.map.comp.TopAliasComparator;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -88,14 +90,15 @@ public class ResultHttptestController {
     // 首页获得网站Top排行
     @ResponseBody
     @RequestMapping("/topaliaslist")
-    @RequiresPermissions("resulthttptest:topaliaslist")
+    // @RequiresPermissions("resulthttptest:topaliaslist")
     public R topAliasList(Integer limit) {
         Map<String, Object> map = new HashMap<>();
         map.put("limit", limit);
 
-        //查询数据
+        // 查询数据
         List<TopAliasResult> resultTopAliasList = resultHttptestService.queryTopAlias(map);
-
+        // 排序
+        Collections.sort(resultTopAliasList, new TopAliasComparator());
         return R.ok().put("resultTopAliasList", resultTopAliasList);
     }
 

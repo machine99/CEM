@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by apple on 2017/5/2.
  */
-public class CountyYoukutestResult implements Serializable, BaseResult {
+public class CountyYoukutestResult extends BaseResult {
     private static final long serialVersionUID = 1L;
 
     //id

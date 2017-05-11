@@ -43,7 +43,13 @@
         <id property="id" column="id"/>
         <result property="destName" column="destname"/>
         <result property="alias" column="alias"/>
-        <result property="qoeAvg" column="qoe_avg"/>
+        <result property="qoe" column="qoe_avg"/>
+    </resultMap>
+
+    <resultMap id="baseResult" type="com.baolian.entity.map.BaseResult">
+        <id property="id" column="id"/>
+        <result property="qoe" column="qoe"/>
+        <result property="date" column="date"/>
     </resultMap>
 
     <select id="queryObject" resultType="com.baolian.entity.ResultHttptestEntity">
@@ -148,6 +154,15 @@
         GROUP BY testtarget.target
         ORDER BY qoe_avg DESC
         LIMIT #{limit};
+    </select>
+
+    <select id="queryHttpMonthList" resultMap="baseResult">
+        SELECT
+        MAX(result_httptest.id) AS id,
+        AVG(result_httptest.qoe) AS qoe,
+        date_format(result_httptest.testtime, '%Y-%m') AS date
+        FROM result_httptest
+        GROUP BY date_format(result_httptest.testtime, '%Y-%m');
     </select>
 
     <select id="queryTotal" resultType="int">

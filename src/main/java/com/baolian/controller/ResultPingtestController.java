@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.baolian.entity.map.BrasPingtestResult;
+import com.baolian.entity.map.CityPingtestResult;
 import com.baolian.entity.map.CountyPingtestResult;
 import com.baolian.entity.map.WebPingCountResult;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -122,6 +123,17 @@ public class ResultPingtestController {
 		return R.ok().put("resultPingwebtestList", resultPingwebtestList);
 	}
 
+    @ResponseBody
+    @RequestMapping("/cityavglist")
+    public R cityAvgList(){
+        Map<String, Object> map = new HashMap<>();
+
+        //查询列表数据
+        List<CityPingtestResult> resultCityPingtestList = resultPingtestService.queryCityAvgList(map);
+
+
+        return R.ok().put("resultCityPingtestList", resultCityPingtestList);
+    }
 
     /**
      * 信息

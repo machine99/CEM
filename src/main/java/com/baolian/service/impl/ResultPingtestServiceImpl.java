@@ -1,9 +1,7 @@
 package com.baolian.service.impl;
 
 import com.baolian.dao.datasouce.annotation.DataSource;
-import com.baolian.entity.map.BrasPingtestResult;
-import com.baolian.entity.map.CountyPingtestResult;
-import com.baolian.entity.map.WebPingCountResult;
+import com.baolian.entity.map.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +43,16 @@ public class ResultPingtestServiceImpl implements ResultPingtestService {
     @Override
     public List<BrasPingtestResult> queryBRASPingList(Map<String, Object> map) {
         return resultPingtestDao.queryBRASPingList(map);
+    }
+
+    @Override
+    public List<BaseResult> queryPingMonthList(Map<String, Object> map) {
+        return resultPingtestDao.queryPingMonthList(map);
+    }
+
+    @Override
+    public List<CityPingtestResult> queryCityAvgList(Map<String, Object> map) {
+        return resultPingtestDao.queryCityAvgList(map);
     }
 
     @Override

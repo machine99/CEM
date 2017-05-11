@@ -1,9 +1,7 @@
 package com.baolian.service;
 
 import com.baolian.entity.ResultPingtestEntity;
-import com.baolian.entity.map.BrasPingtestResult;
-import com.baolian.entity.map.CountyPingtestResult;
-import com.baolian.entity.map.WebPingCountResult;
+import com.baolian.entity.map.*;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +23,10 @@ public interface ResultPingtestService {
     List<WebPingCountResult> queryWebList(Map<String, Object> map);
 
     List<BrasPingtestResult> queryBRASPingList(Map<String, Object> map);
+
+    List<BaseResult> queryPingMonthList(Map<String, Object> map);
+
+    List<CityPingtestResult> queryCityAvgList(Map<String, Object> map);
 
     int queryTotal(Map<String, Object> map);
 

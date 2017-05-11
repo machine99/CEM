@@ -6,7 +6,7 @@ import java.io.Serializable;
  * BRASPing测试返回结果对应类，用于resultMap
  * Created by tomxie on 2017/5/2 9:18.
  */
-public class BrasPingtestResult implements Serializable, BaseResult {
+public class BrasPingtestResult extends BaseResult {
     private static final long serialVersionUID = 1L;
 
     //id

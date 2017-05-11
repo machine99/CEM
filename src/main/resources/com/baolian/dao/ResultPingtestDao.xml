@@ -41,6 +41,18 @@
         <result property="brasName" column="brasname"/>
     </resultMap>
 
+    <resultMap id="baseResult" type="com.baolian.entity.map.BaseResult">
+        <id property="id" column="id"/>
+        <result property="qoe" column="qoe"/>
+        <result property="date" column="date"/>
+    </resultMap>
+
+    <resultMap id="cityPingtestResult" type="com.baolian.entity.map.CityPingtestResult">
+        <id property="id" column="id"/>
+        <result property="qoe" column="qoe"/>
+        <result property="city" column="city"/>
+    </resultMap>
+
     <select id="queryObject" resultType="com.baolian.entity.ResultPingtestEntity">
         SELECT *
         FROM result_pingtest
@@ -129,7 +141,27 @@
         <if test="groupByDate != null and groupByDate == true">
             ,date_format(result_pingtest.testtime, '%Y-%m-%d')
         </if>
+    </select>
 
+    <select id="queryPingMonthList" resultMap="baseResult">
+        SELECT
+        MAX(result_pingtest.id) AS id,
+        AVG(result_pingtest.qoe) AS qoe,
+        date_format(result_pingtest.testtime, '%Y-%m') AS date
+        FROM result_pingtest
+        GROUP BY date_format(result_pingtest.testtime, '%Y-%m');
+    </select>
+
+    <select id="queryCityAvgList" resultMap="cityPingtestResult">
+        SELECT
+        MAX(result_pingtest.id) AS id,
+        AVG(result_pingtest.qoe) AS qoe,
+        testagent.city_man AS city
+        FROM result_pingtest
+        INNER JOIN testagent
+        ON result_pingtest.testagentid = testagent.id
+        WHERE testagent.city_man IN ('榆林市','延安市','铜川市','宝鸡市','咸阳市','渭南市','西安市','汉中市','商洛市','安康市')
+        GROUP BY testagent.city_man;
     </select>
 
     <select id="queryTotal" resultType="int">

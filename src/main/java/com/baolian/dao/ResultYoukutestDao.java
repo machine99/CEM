@@ -2,6 +2,7 @@ package com.baolian.dao;
 
 import com.baolian.entity.ResultYoukutestEntity;
 
+import com.baolian.entity.map.BaseResult;
 import com.baolian.entity.map.WebVideoCountResult;
 
 import com.baolian.entity.map.CountyYoukutestResult;
@@ -19,11 +20,11 @@ import java.util.Map;
 public interface ResultYoukutestDao extends BaseDao<ResultYoukutestEntity> {
 
     List<WebVideoCountResult> queryWebList(Map<String, Object> map);
-	
-
 
     List<CountyYoukutestResult> queryCountyYoukuList(Map<String, Object> map);
 
     List<BrasYoukutestResult> queryBRASYoukuList(Map<String, Object> map);
+
+    List<BaseResult> queryYoukuMonthList(Map<String, Object> map);
 
 }

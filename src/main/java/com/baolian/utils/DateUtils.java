@@ -38,9 +38,11 @@ public class DateUtils {
     }
 
     public static Date parse(String dateStr, String pattern) throws ParseException {
-        Date date;
-        DateFormat sdf = new SimpleDateFormat(pattern);
-        date = sdf.parse(dateStr);
+        Date date = null;
+        if (dateStr != null) {
+            DateFormat sdf = new SimpleDateFormat(pattern);
+            date = sdf.parse(dateStr);
+        }
         return date;
     }
 

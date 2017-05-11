@@ -6,7 +6,7 @@ import java.io.Serializable;
  * 区域Ping测试返回结果对应类，用于resultMap
  * Created by tomxie on 2017/4/20 10:31.
  */
-public class CountyPingtestResult implements Serializable, BaseResult {
+public class CountyPingtestResult extends BaseResult {
     private static final long serialVersionUID = 1L;
 
     //id
