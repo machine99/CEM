@@ -85,8 +85,22 @@ public class TargetGroupController {
 	@RequestMapping("/save")
 	@RequiresPermissions("targetgroup:save")
 	public R save(@RequestBody TargetGroupEntity targetGroup){
+
 		targetGroupService.save(targetGroup);
-		
+
+		return R.ok();
+	}
+	/**
+	 * 保存
+	 */
+	@ResponseBody
+	@RequestMapping("/savebatch")
+	@RequiresPermissions("targetgroup:savebatch")
+	public R savebatch(@RequestBody TargetGroupEntity[] targetGroups){
+		for(TargetGroupEntity targetGroup:targetGroups){
+			System.out.println("id:"+targetGroup.getId()+";targetid:"+targetGroup.getTargetId()+";groupid:"+targetGroup.getGroupId());
+			targetGroupService.save(targetGroup);
+		}
 		return R.ok();
 	}
 	
@@ -109,9 +123,9 @@ public class TargetGroupController {
 	@RequestMapping("/updatebatch")
 	@RequiresPermissions("targetgroup:updatebatch")
 	public R updatebatch(@RequestBody TargetGroupEntity[] targetGroups){
-//		targetGroupService.update(targetGroup);
         for(TargetGroupEntity targetGroup:targetGroups){
 			System.out.println("id:"+targetGroup.getId()+";targetid:"+targetGroup.getTargetId()+";groupid:"+targetGroup.getGroupId());
+			targetGroupService.update(targetGroup);
 		}
 		return R.ok();
 	}

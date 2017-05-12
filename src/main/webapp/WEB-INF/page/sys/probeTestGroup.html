@@ -103,6 +103,10 @@
                         <button type="button" class="btn btn-default testtargetbutton" v-on:click="targetupdate">编辑</button>
                         <button type="button" class="btn btn-default testtargetbutton" v-on:click="targetdelet">删除</button>
                     </div>
+                    <div class="btn-group btn-group-sm fontcolor col-lg-4 col-md-4 col-sm-4 pull-right">
+                        <button type="button" id="targetaddaffirm" class="btn btn-default testtargetbutton" style="display: none" v-on:click="targetaddaffirm">确认添加</button>
+                        <button type="button" id="targetupdateaffirm" class="btn btn-default testtargetbutton" style="display: none" v-on:click="targetupdateaffirm">确认更新</button>
+                    </div>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -155,7 +159,7 @@
                         </table>-->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" v-on:click="cancel">关闭</button>
                     <button type="button" class="btn btn-primary" v-on:click="submit">确定</button>
                 </div>
             </div><!-- /.modal-content -->

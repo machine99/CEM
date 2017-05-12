@@ -42,7 +42,8 @@
 		</set>
 		where id = #{id}
 	</update>
-	
+
+
 	<delete id="delete">
 		delete from target_group where id = #{value}
 	</delete>
