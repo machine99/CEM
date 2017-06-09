@@ -45,6 +45,13 @@ public class TesttargetController {
 	@RequiresPermissions("testtarget:list")
 	public R list(String probedata, Integer page, Integer limit) throws Exception {
 		Map<String, Object> map = new HashMap<>();
+		int total = 0;
+		if(page==null){
+			map.put("offset", null);
+			map.put("limit", null);
+			page = 0;
+			limit = 0;
+		}else{
 		map.put("offset", (page - 1) * limit);
 		map.put("limit", limit);
 		System.out.println(probedata);
@@ -56,8 +63,9 @@ public class TesttargetController {
 		} catch (RuntimeException e) {
 			throw new RRException("内部参数错误，请重试！");
 		}
+			total = testtargetService.queryTotal(map);
+		}
 		List<TesttargetEntity> testtargetList = testtargetService.queryList(map);
-		int total = testtargetService.queryTotal(map);
 		PageUtils pageUtil = new PageUtils(testtargetList, total, limit, page);
 		return R.ok().put("page", pageUtil);
 	}

@@ -38,24 +38,24 @@
 	 	<insert id="save" parameterType="com.baolian.entity.TesttargetEntity" useGeneratedKeys="true" keyProperty="id">
 		insert into testtarget
 		(
-			`alias`, 
-			`target`, 
-			`targetip`, 
-			`param`, 
-			`location`, 
-			`idc`, 
-			`type`, 
+			`alias`,
+			`target`,
+			`targetip`,
+			`param`,
+			`location`,
+			`idc`,
+			`type`,
 			`createtime`
 		)
 		values
 		(
-			#{alias}, 
-			#{target}, 
-			#{targetip}, 
-			#{param}, 
-			#{location}, 
-			#{idc}, 
-			#{type}, 
+			#{alias},
+			#{target},
+			#{targetip},
+			#{param},
+			#{location},
+			#{idc},
+			#{type},
 			#{createtime}
 		)
 	</insert>
@@ -69,6 +69,9 @@
 		</if>
 		<if test="target != null and target != ''">
 			AND target = #{target}
+		</if>
+		<if test="targetip != null and targetip != ''">
+			AND targetip = #{targetip}
 		</if>
 		<if test="type != null and type != ''">
 			AND type = #{type}
@@ -85,7 +88,7 @@
 	</select>
 
 	<update id="update" parameterType="com.baolian.entity.TesttargetEntity">
-		update testtarget 
+		update testtarget
 		<set>
 			<if test="alias != null">`alias` = #{alias}, </if>
 			<if test="target != null">`target` = #{target}, </if>
@@ -98,13 +101,13 @@
 		</set>
 		where id = #{id}
 	</update>
-	
+
 	<delete id="delete">
 		delete from testtarget where id = #{value}
 	</delete>
-	
+
 	<delete id="deleteBatch">
-		delete from testtarget where id in 
+		delete from testtarget where id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>

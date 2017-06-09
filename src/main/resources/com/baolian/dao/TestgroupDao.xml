@@ -18,7 +18,7 @@
 	</select>
 
  	<select id="queryTotal" resultType="int">
-		select count(*) from testgroup 
+		select count(*) from testgroup
 	</select>
 	 
 	<insert id="save" parameterType="com.baolian.entity.TestgroupEntity" useGeneratedKeys="true" keyProperty="id">
