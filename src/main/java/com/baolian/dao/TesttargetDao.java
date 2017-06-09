@@ -11,6 +11,6 @@ import java.util.List;
  * @email ${email}
  * @date 2017-04-18 17:03:59
  */
-public interface TesttargetDao extends BaseDao<TesttargetEntity> {
-
+public interface TesttargetDao  extends BaseDao<TesttargetEntity> {
 }
+
