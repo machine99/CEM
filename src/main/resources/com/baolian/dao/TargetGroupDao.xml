@@ -8,7 +8,7 @@
 	</select>
 
 	<select id="queryList" resultType="com.baolian.entity.TargetGroupEntity">
-		select * from target_group 
+		select * from target_group
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
@@ -16,37 +16,38 @@
 			where group_id = #{group_id}
 		</if>
 	</select>
-	
+
  	<select id="queryTotal" resultType="int">
-		select count(*) from target_group 
+		select count(*) from target_group
 	</select>
-	 
+
 	<insert id="save" parameterType="com.baolian.entity.TargetGroupEntity" useGeneratedKeys="true" keyProperty="id">
 		insert into target_group
 		(
-			`target_id`, 
+			`target_id`,
 			`group_id`
 		)
 		values
 		(
-			#{targetId}, 
+			#{targetId},
 			#{groupId}
 		)
 	</insert>
-	 
+
 	<update id="update" parameterType="com.baolian.entity.TargetGroupEntity">
-		update target_group 
+		update target_group
 		<set>
 			<if test="targetId != null">`target_id` = #{targetId}, </if>
 			<if test="groupId != null">`group_id` = #{groupId}</if>
 		</set>
 		where id = #{id}
 	</update>
-	
+
+
 	<delete id="delete">
 		delete from target_group where id = #{value}
 	</delete>
-	
+
 	<delete id="deleteBatch">
 		delete from target_group where id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">

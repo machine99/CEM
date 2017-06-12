@@ -80,7 +80,7 @@
 
     <select id="queryBrasNames" resultType="String">
         SELECT
-        DISTINCT brasname
+            DISTINCT brasname
         FROM testagent
         WHERE brasname IS NOT NULL;
 

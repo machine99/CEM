@@ -1,5 +1,5 @@
 /**
- * Created by yuanbaby on 2017/4/14.
+ * Created by apple on 2017/6/2.
  */
 var status;
 var idArray = new Array();
@@ -25,7 +25,7 @@ var probedata_handle = new Vue({
         });
     },
     methods: {
-        testagentadd: function () {   /*监听录入触发事件*/
+        testtargetadd: function () {   /*监听录入触发事件*/
             status = 0;
             /*状态0,表示录入*/
             var forms = $('#probeform_data .form-control');
@@ -34,18 +34,18 @@ var probedata_handle = new Vue({
             /*去除只读状态*/
             $('#probeform_data select').prop("disabled", false);
 
-            for (var i = 0; i < 11; i++) {
+            for (var i = 0; i < 7; i++) {
                 forms[i].value = ""
             }
-            probeform_data.modaltitle = "测试机管理录入";
+            probeform_data.modaltitle = "测试目标录入";
             /*修改模态框标题*/
             $('#myModal').modal('show');
 
         },
-        testagentupdate: function () {     /*监听编辑触发事件*/
+        testtargetupdate: function () {     /*监听编辑触发事件*/
             status = 1;
             /*状态1表示编辑*/
-            var trs = $('#probe_table tbody').find('tr:has(:checked)');
+            var trs = $('#test_target tbody').find('tr:has(:checked)');
             /*find被选中的行*/
             var forms = $('#probeform_data .form-control');
             console.log(trs.length + "表单对象:" + forms.length);
@@ -62,28 +62,21 @@ var probedata_handle = new Vue({
                     console.log(tds.eq(i + 3).text());
                     forms[i].value = tds.eq(i + 2).text()
                 }
-                forms[6].value = tds.eq(10).text();
-                /*修改测试任务组*/
-                console.log(tds.eq(10).text());
-                for (var j = 0; j < 4; j++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
-                    console.log(tds.eq(j + 15).text());
-                    forms[j + 7].value = tds.eq(j + 15).text()
-                }
                 /*tds.each(function(){
                  var td = $(this);
                  console.log(td.text());//这个就是td的文本
                  });*/
-                probeform_data.modaltitle = "测试机管理编辑";
+                probeform_data.modaltitle = "测试目标编辑";
                 /*修改模态框标题*/
                 $('#myModal').modal('show');
             } else {
                 toastr.warning('请选择一条记录再编辑！');
             }
         },
-        testagentdelBatch: function () {   /*批量删除监听事件*/
+        testtargetdelBatch: function () {   /*批量删除监听事件*/
             status = 2;
             /*状态2表示删除*/
-            var trs = $('#probe_table tbody').find('tr:has(:checked)');
+            var trs = $('#test_target tbody').find('tr:has(:checked)');
             if (trs.length == 0) {
                 toastr.warning('请选择删除项目！');
             } else {
@@ -100,8 +93,8 @@ var probedata_handle = new Vue({
             /*find被选中的行*/
 
         },
-        testagentview: function () {     /*查看监听事件*/
-            var trs = $('#probe_table tbody').find('tr:has(:checked)');
+        testtargetview: function () {     /*查看监听事件*/
+            var trs = $('#test_target tbody').find('tr:has(:checked)');
             /*find被选中的行*/
             var forms = $('#probeform_data .form-control');
             if (trs.length == 0) {
@@ -111,13 +104,6 @@ var probedata_handle = new Vue({
                 for (var i = 0; i < 6; i++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
                     console.log(tds.eq(i + 2).text());
                     forms[i].value = tds.eq(i + 2).text()
-                }
-                forms[6].value = tds.eq(10).text();
-                /*修改测试任务组*/
-                console.log(tds.eq(10).text());
-                for (var j = 0; j < 4; j++) {                /*tds.eq(0).text()取得td的值,注意tds[0].text()取不到*/
-                    console.log(tds.eq(j + 15).text());
-                    forms[j + 7].value = tds.eq(j + 15).text()
                 }
                 $('#probeform_data input[type=text]').prop("readonly", true);//将input元素设置为readonly
                 $('#probeform_data select').prop("disabled", true);//将select元素设置为不可变
@@ -129,7 +115,7 @@ var probedata_handle = new Vue({
                 toastr.warning('请选择一条记录再查看！');
             }
         },
-        testagentListsearch: function () {   /*查询监听事件*/
+        testtargetListsearch: function () {   /*查询监听事件*/
             var data = getFormJson($('#searchcolums'));
             /*得到查询条件*/
             /*获取表单元素的值*/
@@ -151,7 +137,7 @@ function delete_ajax() {
 
     $.ajax({
         type: "POST", /*GET会乱码*/
-        url: "../testagent/delete",
+        url: "../testtarget/delete",
         cache: false,  //禁用缓存
         data: ids,  //传入组装的参数
         dataType: "json",
@@ -207,42 +193,23 @@ var delete_data = new Vue({
 var probeform_data = new Vue({
     el: '#myModal',
     data: {
-        modaltitle: "测试机管理录入", /*定义模态框标题*/
-        countys: [
-            {message: '新城区'},
-            {message: '碑林区'},
-            {message: '莲湖区'},
-            {message: '雁塔区'},
-            {message: '未央区'},
-            {message: '灞桥区'},
-            {message: '长安区'},
-            {message: '阎良区'},
-            {message: '临潼区'},
-            {message: '蓝田县'},
-            {message: '周至县'},
-            {message: '户县'},
-            {message: '高陵县'}
-        ],
-        city_mans: [
-            {message: '西安市'}
-        ],
-        testgroup_names: []
+        modaltitle: "测试目标录入", /*定义模态框标题*/
     },
     // 在 `methods` 对象中定义方法
     methods: {
         submit: function () {
-            var testagentJson = getFormJson($('#probeform_data'));
-            if (typeof(testagentJson["cityMan"]) == "undefined") {                  /*3个select必选*/
-                toastr.warning("请录入地市信息!");
-            } else if (typeof(testagentJson["county"]) == "undefined") {
-                toastr.warning("请录入区县信息!");
-            } else if (typeof(testagentJson["testgroupName"]) == "undefined") {
-                toastr.warning("请录入测试任务组!");
+            var testtargetJson = getFormJson($('#probeform_data'));
+            if (typeof(testtargetJson["alias"]) == "undefined") {                  /*3个select必选*/
+                toastr.warning("请录入目标别名!");
+            } else if (typeof(testtargetJson["target"]) == "undefined") {
+                toastr.warning("请录入地址信息!");
+            } else if (typeof(testtargetJson["type"]) == "undefined") {
+                toastr.warning("请录入类型信息!");
             } else {
-                var testagent = JSON.stringify(testagentJson);
+                var testtarget = JSON.stringify(testtargetJson);
                 /*封装成json数组*/
                 /*获取表单元素的值*/
-                console.log(testagent);
+                console.log(testtarget);
                 var mapstr;
                 if (status == 0) {
                     mapstr = "save";
@@ -251,9 +218,9 @@ var probeform_data = new Vue({
                 }
                 $.ajax({
                     type: "POST", /*GET会乱码*/
-                    url: "../testagent/" + mapstr,
+                    url: "../testtarget/" + mapstr,
                     cache: false,  //禁用缓存
-                    data: testagent,  //传入组装的参数
+                    data: testtarget,  //传入组装的参数
                     dataType: "json",
                     contentType: "application/json", /*必须要,不可少*/
                     success: function (result) {
@@ -316,15 +283,15 @@ var search_data = new Vue({
 
     el:'#searchcolums',
     data:{
-        countys:probeform_data.countys,
-        city_mans:probeform_data.city_mans,
-        testgroup_names:[]
+        target:probeform_data.target,
+        alias:probeform_data.alias,
+        type:[]
 
     }
 });
 /*选中表格事件*/
 $(document).ready(function () {
-    $('#probe_table tbody').on('click', 'tr', function () {   /*表格某一行选中状态*/
+    $('#test_target tbody').on('click', 'tr', function () {   /*表格某一行选中状态*/
         if ($(this).hasClass('selected')) {
             $(this).removeClass('selected');
             $(this).find("input:checkbox").prop("checked", false);
@@ -359,30 +326,19 @@ $(document).ready(function () {
 
 // 注册
 var probetable = new Vue({
-        el: '#probedata_table',
+    el: '#probedata_table',
     data: {
         headers: [
             {title: ''},
             {title: '<div class="checkbox"> <label> <input type="checkbox" id="checkAll"></label> </div>'},
             {title: '<div style="display:none">id</div>'},
-            {title: '<div style="width:142px">测试机名</div>'},
-            {title: '<div style="width:142px">IP地址</div>'},
-            {title: '<div style="width:112px">带宽</div>'},
-            {title: '<div style="width:67px">地市</div>'},
-            {title: '<div style="width:67px">区县</div>'},
-            {title: '<div style="width:92px">软件标识</div>'},
-            {title: '<div style="width:112px">硬件编码</div>'},
-            {title: '<div style="width:112px">测试任务组</div>'},
-            {title: '<div style="width:52px">在线状态</div>'},
-            {title: '<div style="width:112px">在线时间</div>'},
-            {title: '<div style="width:112px">探针类型</div>'},
-            {title: '<div style="width:112px">版本号</div>'},
-            {title: '<div style="width:67px">任务间隔</div>'},
-            {title: '<div style="width:167px">装机地址</div>'},
-            {title: '<div style="width:142px">BRAS名称</div>'},
-            {title: '<div style="width:112px">BRAS_IP</div>'},
-            {title: '<div style="width:112px">BRAS端口</div>'},
-            {title: '<div style="width:52px">操作</div>'}
+            {title: '<div style="width:112px">别名</div>'},
+            {title: '<div style="width:112px">地址</div>'},
+            {title: '<div style="width:112px">类型</div>'},
+            {title: '<div style="width:112px">参数</div>'},
+            {title: '<div style="width:112px">地区</div>'},
+            {title: '<div style="width:112px">IDC</div>'},
+            {title: '<div style="width:112px">操作</div>'}
         ],
         rows: [],
         dtHandle: null,
@@ -458,58 +414,47 @@ var probetable = new Vue({
                 //ajax请求数据
                 $.ajax({
                     type: "POST", /*GET会乱码*/
-                    url: "../testagent/list",
+                    url: "../testtarget/list",
                     cache: false,  //禁用缓存
                     data: param,  //传入组装的参数
                     dataType: "json",
                     success: function (result) {
                         console.log(result);
 
-                            //封装返回数据
-                            let returnData = {};
-                            returnData.draw = data.draw;//这里直接自行返回了draw计数器,应该由后台返回
-                            returnData.recordsTotal = result.page.totalCount;//返回数据全部记录
-                            returnData.recordsFiltered = result.page.totalCount;//后台不实现过滤功能，每次查询均视作全部结果
-                            // returnData.data = result.page.list;//返回的数据列表
-                            // 重新整理返回数据以匹配表格
-                            let rows = [];
-                            var i = param.start+1;
-                            result.page.list.forEach(function (item) {
-                                let row = [];
-                                row.push(i++);
-                                row.push('<div class="checkbox"> <label> <input type="checkbox" name="selectFlag"></label> </div>');
-                                row.push('<div class="probe_id">'+item.id+'</div>');
-                                row.push(item.name);
-                                row.push(item.ip);
-                                row.push(item.bandwidth);
-                                row.push(item.cityMan);
-                                row.push(item.county);
-                                row.push(item.useruid);
-                                row.push(item.sysuuid);
-                                row.push(item.testgroupName);
-                                row.push(item.onlinestatus);
-                                row.push(item.onlineTime);
-                                row.push(item.model);
-                                row.push(item.version);
-                                row.push(item.runInterval);
-                                row.push(item.address);
-                                row.push(item.brasname);
-                                row.push(item.brasip);
-                                row.push(item.brasport);
-                                row.push('<a class="fontcolor" onclick="delete_this(this)" id='+item.id+'>删除</a>');
-                                rows.push(row);
-                            });
-                            returnData.data = rows;
-                            console.log(returnData);
-                            //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
-                            //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
-                            callback(returnData);
+                        //封装返回数据
+                        let returnData = {};
+                        returnData.draw = data.draw;//这里直接自行返回了draw计数器,应该由后台返回
+                        returnData.recordsTotal = result.page.totalCount;//返回数据全部记录
+                        returnData.recordsFiltered = result.page.totalCount;//后台不实现过滤功能，每次查询均视作全部结果
+                        // returnData.data = result.page.list;//返回的数据列表
+                        // 重新整理返回数据以匹配表格
+                        let rows = [];
+                        var i = param.start+1;
+                        result.page.list.forEach(function (item) {
+                            let row = [];
+                            row.push(i++);
+                            row.push('<div class="checkbox"> <label> <input type="checkbox" name="selectFlag"></label> </div>');
+                            row.push('<div class="probe_id">'+item.id+'</div>');
+                            row.push(item.alias);
+                            row.push(item.target);
+                            row.push(item.type);
+                            row.push(item.param);
+                            row.push(item.location);
+                            row.push(item.idc);
+                            row.push('<a class="fontcolor" onclick="delete_this(this)" id='+item.id+'>删除</a>');
+                            rows.push(row);
+                        });
+                        returnData.data = rows;
+                        console.log(returnData);
+                        //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+                        //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+                        callback(returnData);
                     }
                 });
             }
         });
         new AjaxUpload('#excel_import', {
-            action: '../sys/upload/upload/testagent',
+            action: '../sys/upload/upload/testtarget',
             name: 'file',
             autoSubmit: true,
             responseType: "json",
