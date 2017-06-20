@@ -152,10 +152,17 @@ var probedata_handle = new Vue({
 
 
             var trs = $("#myModal table").find("tr");
+            // var first_td = trs.eq(0).find("td").eq(3).find("select").text();
+            // while (trs.eq(0).find("td").eq(3).find("select").text()==""){
+            //     console.log("我就看看"+trs.eq(0).find("td").eq(3).find("select").text())
+            // }
             if(targetidBygroupid.length!=0){
             for(var i=0;i<targetidBygroupid.length;i++){
                 var tds = trs.eq(i).find("td");
                 tds.eq(3).find("select").val(targetidBygroupid[i].targetId); //获取targetId并赋id对应的值
+                console.log(targetidBygroupid[i].targetId)
+                console.log(tds.eq(3).find("select option:selected").text())
+
             }
             console.log("状态:"+status);
             $('.alias_namesselector').prop("disabled", true);//将select元素设置为不可变,
@@ -266,6 +273,7 @@ Vue.component('data-table', {
             ],
             rows: [],
             dtHandle: null,
+
         }
     },
     watch: {
@@ -273,6 +281,7 @@ Vue.component('data-table', {
             let vm = this;
             vm.rows = [];
             if(val[1].length!=0&&val[2].length!=0){
+
             var aliasnamesoptionstring = "";
             var testgroupnamesoptionstring = "";
             for (var j = 0; j < val[1].length; j++) {
@@ -281,6 +290,7 @@ Vue.component('data-table', {
             for (var k = 0; k < val[2].length; k++) {
                 testgroupnamesoptionstring += "<option value=" + val[2][k].id + ">" + val[2][k].name + "</option>";
             }
+
             var i = 1;
             // You should _probably_ check that this is changed data... but we'll skip that for this example.
                 val[0].forEach(function (item) {              /*观察user是否变化,更新表格数据*/
@@ -297,14 +307,14 @@ Vue.component('data-table', {
 
                 vm.rows.push(row);
             });
-
+            console.log("我看看这是什么时候！")
             // Here's the magic to keeping the DataTable in sync.
             // It must be cleared, new rows added, then redrawn!
             vm.dtHandle.clear();
             vm.dtHandle.rows.add(vm.rows);
             vm.dtHandle.draw();
-                probedata_handle.readOnly(group_id);  /*！！！重要,改变这个状态只有在表格draw之后才有效果*/
-                probeform_data.targetadd_selectable(); /*！！！重要,改变这个状态只有在表格draw之后才有效果*/
+            probedata_handle.readOnly(group_id);  /*！！！重要,改变这个状态只有在表格draw之后才有效果*/
+            probeform_data.targetadd_selectable(); /*！！！重要,改变这个状态只有在表格draw之后才有效果*/
             }else {
                 console.log("数据延误！")
             }
