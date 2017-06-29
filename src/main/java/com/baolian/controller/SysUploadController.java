@@ -1,7 +1,9 @@
 package com.baolian.controller;
 
 import com.baolian.entity.TestagentEntity;
+import com.baolian.entity.TestgroupEntity;
 import com.baolian.service.TestagentService;
+import com.baolian.service.TestgroupService;
 import com.baolian.utils.FileUtils;
 import com.baolian.utils.R;
 import com.baolian.utils.RRException;
@@ -44,6 +46,8 @@ import java.util.Map;
 public class SysUploadController extends AbstractController {
     @Autowired
     private TestagentService testagentService;
+    @Autowired
+    private TestgroupService testgroupService;
 
     /**
      * 上传文件
@@ -65,40 +69,17 @@ public class SysUploadController extends AbstractController {
 
     @RequestMapping("/download/testagent")
     @RequiresPermissions("sys:upload:all")
-    public void download(HttpServletResponse response) throws RRException {
+    public void downloadTestagent(HttpServletResponse response) throws RRException {
         Map<String, Object> map = new HashMap<String, Object>();
         List<TestagentEntity> list = testagentService.queryList(map);
         collectionToFile(response, list, TestagentEntity.class);
-        // InputStream is = null;
-        // ServletOutputStream out = null;
-        // try {
-        //     // is = new FileInputStream("F://student_info.xls");
-        //     // Collection<Student> list = ExcelUtils.readExcel(is, "xls", Student.class);
-        //     // for (Student student : list) {
-        //     //     System.out.println(student);
-        //     // }
-        //     XSSFWorkbook workbook = ExcelUtils.<TestagentEntity>exportExcel("sheet1", TestagentEntity.class, list);
-        //     response.setContentType("application/octet-stream");
-        //     // response.setCharacterEncoding("UTF-8");
-        //     String fileName = "testagent_all.xlsx";
-        //     response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
-        //     // File outFile = new File("F://out.xlsx");
-        //     out = response.getOutputStream();
-        //     workbook.write(out);
-        //     out.flush();
-        //     out.close();
-        // } catch (IOException e) {
-        //     e.printStackTrace();
-        //     throw new RRException("下载文件出错");
-        // } finally {
-        //     if (is != null) {
-        //         try {
-        //             is.close();
-        //         } catch (IOException e) {
-        //             e.printStackTrace();
-        //         }
-        //     }
-        // }
+    }
+    @RequestMapping("/download/testgroup")
+    @RequiresPermissions("sys:upload:all")
+    public void downloadTestgroup(HttpServletResponse response) throws RRException {
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<TestgroupEntity> list = testgroupService.queryList(map);
+        collectionToFile(response, list, TestgroupEntity.class);
     }
 
     private Collection excelToCollection(MultipartFile file, Class c) throws RRException {
