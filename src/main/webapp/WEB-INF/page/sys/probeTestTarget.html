@@ -1,10 +1,188 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>测试目标</title>
+    #parse("sys/areaHeader.html")  <!--导入CSS和js文件-->
+    <link href="${rc.contextPath}/statics/css/probe.css" rel="stylesheet">
 </head>
 <body>
-<h1>测试目标</h1>
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 class="fontcolor">测试目标</h5>
+                </div>
+                <div class="ibox-content" style="padding-bottom: 0">
+                    <div class="row">
+                        <form class="form-horizontal" id="searchcolums" role="form">
+                            <div class="input-group searchspan">
+                                <span class="searchname" title="别名">别名：</span>
+                                <input type="text" class="form-control" name="alias" style="width: 110px" value="">
+                            </div>
+
+                            <div class="input-group searchspan">
+                                <span class="searchname" title="地址">地址：</span>
+                                <input type="text" class="form-control" name="target" style="width: 110px" value="">
+                            </div>
+
+                            <div class="input-group searchspan">
+                                <span class="searchname" title="类型">类型：</span>
+                                <input class="form-control" type="text" name="type" style="width: 110px" value="">
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="test_target">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title fontcolor" id="handle" style="padding-bottom: 0px !important;">
+                    <button type="button" class="btn btn-default " v-on:click="testtargetadd"><span
+                            class="glyphicon glyphicon-plus"></span>录入
+                    </button>
+                    <button type="button" class="btn btn-default " v-on:click="testtargetupdate"><span
+                            class="glyphicon glyphicon-pencil"></span>编辑
+                    </button>
+                    <button type="button" class="btn btn-default " v-on:click="testtargetdelBatch"><span
+                            class="glyphicon glyphicon-trash"></span>批量删除
+                    </button>
+                    <button type="button" class="btn btn-default "
+                            v-on:click="testtargetview"><span
+                            class="glyphicon glyphicon-zoom-in"></span>查看
+                    </button>
+                    <button id="excel_import" type="button" class="btn btn-default "><span
+                            class="glyphicon glyphicon-save"></span>Excel数据导入
+                    </button>
+                    <button type="button" class="btn btn-default "><a href="../sys/upload/download/testtarget"
+                                                                      class="fontcolor"><span
+                            class="glyphicon glyphicon-open"></span>Excel导出</a>
+                    </button>
+                    <div class="btn-group pull-right">
+                        <button type="button" class="btn btn-default " style="margin-right: 5px"
+                                v-on:click="testtargetListsearch"><span
+                                class="glyphicon glyphicon-zoom-in"></span>查询
+                        </button>
+                        <button type="button" class="btn btn-default " v-on:click="reset"><span
+                                class="glyphicon glyphicon-refresh"></span>重置
+                        </button>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row " style="overflow-x: scroll">     <!--表格 verflow-x: scroll超出滚动-->
+                        <table class="table table-bordered " id="probedata_table"></table>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" style="width: 768px"> <!--修改bootstrap modal模态框的宽度-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="myModalLabel">{{modaltitle}}</h4>
+                            </div>
+                            <div class="row" id="probeform_title">
+                                <div class="col-lg-3 col-md-2 col-sm-3">
+                                    <h4 class="fontcolor probeformtitle_border">表单信息管理</h4>
+                                </div>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <form class="form-horizontal" id="probeform_data" role="form">
+                                        <div class="form-group row">
+                                            <label for="id"
+                                                   class="col-lg-3 col-md-3 col-sm-3 control-label form_border" style="display: none">id:</label>
+                                            <div class="col-lg-3 col-md-3 col-sm-3 form_border" style="display: none">
+                                                <input type="text" class="form-control" id="id" name="id"
+                                                       placeholder="请输入id">
+                                            </div>
+                                            <label for="alias"
+                                                   class="col-lg-3 col-md-3 col-sm-3 control-label form_border">目标别名:</label>
+                                            <div class="col-lg-3 col-md-3 col-sm-3 form_border">
+                                                <input type="text" class="form-control" id="alias" name="alias"
+                                                       placeholder="请输入目标别名">
+                                            </div>
+                                            <label for="target"
+                                                   class="col-lg-3 col-md-3 col-sm-3 control-label form_border">地址:</label>
+                                            <div class="col-lg-3 col-md-3 col-sm-3 form_border">
+                                                <input type="text" class="form-control" id="target" name="target"
+                                                       placeholder="请输入目标地址">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="type"
+                                                   class="col-lg-3 col-md-3 col-sm-3 control-label form_border">类型:</label>
+                                            <div class="col-lg-3 col-md-3 col-sm-3 form_border">
+                                                <input type="text" class="form-control" id="type" name="type"
+                                                       placeholder="请输入类型">
+                                            </div>
+                                            <label for="param"
+                                                   class="col-lg-3 col-md-3 col-sm-3 control-label form_border">参数:</label>
+                                            <div class="col-lg-3 col-md-3 col-sm-3 form_border">
+                                                    <input type="text" class="form-control" id="param" name="param"
+                                                           placeholder="请输入参数">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="location"
+                                                   class="col-lg-3 col-md-3 col-sm-3 control-label form_border">地区：</label>
+                                            <div class="col-lg-3 col-md-3 col-sm-3 form_border">
+                                                <input type="text" class="form-control" id="location" name="location"
+                                                       placeholder="请输入地区">
+                                            </div>
+                                            <label for="idc"
+                                                   class="col-lg-3 col-md-3 col-sm-3 control-label form_border">IDC:</label>
+                                            <div class="col-lg-3 col-md-3 col-sm-3 form_border">
+                                                    <input type="text" class="form-control" id="idc" name="idc"
+                                                           placeholder="请输入IDC">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-primary" v-on:click="submit">确定</button>
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal_delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="width: 200px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel_delet">
+                        确认
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <b>确定删除吗?</b>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" v-on:click="cancel_delete">取消
+                    </button>
+                    <button type="button" class="btn btn-primary" v-on:click="delete_data">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+</div>
+
+<script type="text/javascript" src="${rc.contextPath}/js/sys/probeTestTarget.js?_${date.systemTime}"></script>
+
 </body>
 </html>

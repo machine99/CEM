@@ -9,43 +9,86 @@
 	</select>
 
 	<select id="queryList" resultType="com.baolian.entity.TesttargetEntity">
-		select * from testtarget 
+		SELECT *
+		FROM testtarget
+		WHERE id IS NOT NULL
+		<if test="alias != null and alias != ''">
+			AND alias = #{alias}
+		</if>
+		<if test="target != null and target != ''">
+			AND target = #{target}
+		</if>
+		<if test="type != null and type != ''">
+			AND type = #{type}
+		</if>
+		<if test="location != null and location != ''">
+			AND location = #{location}
+		</if>
+		<if test="param != null and param != ''">
+			AND param = #{param}
+		</if>
+		<if test="idc != null and idc != ''">
+			AND idc = #{idc}
+		</if>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
 	</select>
 
-	
- 	<select id="queryTotal" resultType="int">
-		select count(*) from testtarget 
-	</select>
 	 	<insert id="save" parameterType="com.baolian.entity.TesttargetEntity" useGeneratedKeys="true" keyProperty="id">
 		insert into testtarget
 		(
-			`alias`, 
-			`target`, 
-			`targetip`, 
-			`param`, 
-			`location`, 
-			`idc`, 
-			`type`, 
+			`alias`,
+			`target`,
+			`targetip`,
+			`param`,
+			`location`,
+			`idc`,
+			`type`,
 			`createtime`
 		)
 		values
 		(
-			#{alias}, 
-			#{target}, 
-			#{targetip}, 
-			#{param}, 
-			#{location}, 
-			#{idc}, 
-			#{type}, 
+			#{alias},
+			#{target},
+			#{targetip},
+			#{param},
+			#{location},
+			#{idc},
+			#{type},
 			#{createtime}
 		)
 	</insert>
-	 
+
+	<select id="queryTotal" resultType="int">
+		SELECT count(*)
+		FROM testtarget
+		WHERE id IS NOT NULL
+		<if test="alias != null and alias != ''">
+			AND alias = #{alias}
+		</if>
+		<if test="target != null and target != ''">
+			AND target = #{target}
+		</if>
+		<if test="targetip != null and targetip != ''">
+			AND targetip = #{targetip}
+		</if>
+		<if test="type != null and type != ''">
+			AND type = #{type}
+		</if>
+		<if test="location != null and location != ''">
+			AND location = #{location}
+		</if>
+		<if test="param != null and param != ''">
+			AND param = #{param}
+		</if>
+		<if test="idc != null and idc != ''">
+			AND idc = #{idc}
+		</if>
+	</select>
+
 	<update id="update" parameterType="com.baolian.entity.TesttargetEntity">
-		update testtarget 
+		update testtarget
 		<set>
 			<if test="alias != null">`alias` = #{alias}, </if>
 			<if test="target != null">`target` = #{target}, </if>
@@ -58,13 +101,13 @@
 		</set>
 		where id = #{id}
 	</update>
-	
+
 	<delete id="delete">
 		delete from testtarget where id = #{value}
 	</delete>
-	
+
 	<delete id="deleteBatch">
-		delete from testtarget where id in 
+		delete from testtarget where id in
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>

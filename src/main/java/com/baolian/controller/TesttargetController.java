@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
+import com.baolian.entity.TesttargetEntity;
+import com.baolian.utils.JSONUtils;
+import com.baolian.utils.RRException;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,28 +43,30 @@ public class TesttargetController {
 	@ResponseBody
 	@RequestMapping("/list")
 	@RequiresPermissions("testtarget:list")
-	public R list(Integer page, Integer limit){
+	public R list(String probedata, Integer page, Integer limit) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		int total = 0;
-
-		System.out.println(page);
-		System.out.println(limit);
-		if(page==null) {              /*没有传入page,则取全部值*/
+		if(page==null){
 			map.put("offset", null);
 			map.put("limit", null);
 			page = 0;
 			limit = 0;
-		}else {
-			map.put("offset", (page - 1) * limit);
-			map.put("limit", limit);
+		}else{
+		map.put("offset", (page - 1) * limit);
+		map.put("limit", limit);
+		System.out.println(probedata);
+		System.out.println(page);
+		JSONObject probedata_jsonobject = JSONObject.parseObject(probedata);
+		try {
+			map.putAll(JSONUtils.jsonToMap(probedata_jsonobject));
+			System.out.println(map.toString());
+		} catch (RuntimeException e) {
+			throw new RRException("内部参数错误，请重试！");
+		}
 			total = testtargetService.queryTotal(map);
 		}
-		
-		//查询列表数据
 		List<TesttargetEntity> testtargetList = testtargetService.queryList(map);
-
 		PageUtils pageUtil = new PageUtils(testtargetList, total, limit, page);
-		
 		return R.ok().put("page", pageUtil);
 	}
 

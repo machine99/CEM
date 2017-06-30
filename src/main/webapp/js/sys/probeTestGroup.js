@@ -156,26 +156,32 @@ var probedata_handle = new Vue({
             // while (trs.eq(0).find("td").eq(3).find("select").text()==""){
             //     console.log("我就看看"+trs.eq(0).find("td").eq(3).find("select").text())
             // }
-            if(targetidBygroupid.length!=0){
-            for(var i=0;i<targetidBygroupid.length;i++){
-                var tds = trs.eq(i).find("td");
-                tds.eq(3).find("select").val(targetidBygroupid[i].targetId); //获取targetId并赋id对应的值
-                console.log(targetidBygroupid[i].targetId)
-                console.log(tds.eq(3).find("select option:selected").text())
 
-            }
-            console.log("状态:"+status);
-            $('.alias_namesselector').prop("disabled", true);//将select元素设置为不可变,
-            if(status==3){   //判断是否为查看
-                $('.checkboxable').prop("disabled", true);  //单选框不可选
-                $('#handle_button button').prop("disabled", true);  //添加删除按钮不可用
-            }else {
-                $('.checkboxable').prop("disabled", false);  //单选框可选
-                $('#handle_button button').prop("disabled", false);  //添加删除按钮可用
-            }
+            //做你想做的的事
+            //trs.eq(i+2).find("td")为i+2;就是这个地方卡了好几周,就问气不气，好气呀~~~~~~
+            if(targetidBygroupid.length!=0){
+                for(var i=0;i<targetidBygroupid.length;i++){
+                    var tds = trs.eq(i+2).find("td");
+                    tds.eq(3).find("select").val(targetidBygroupid[i].targetId); //获取targetId并赋id对应的值
+                    console.log(targetidBygroupid[i].targetId)
+                    console.log(tds.eq(3).find("select option:selected").text())
+
+                }
+                console.log("状态:"+status);
+                $('.alias_namesselector').prop("disabled", true);//将select元素设置为不可变,
+                if(status==3){   //判断是否为查看
+                    $('.checkboxable').prop("disabled", true);  //单选框不可选
+                    $('#handle_button button').prop("disabled", true);  //添加删除按钮不可用
+                }else {
+                    $('.checkboxable').prop("disabled", false);  //单选框可选
+                    $('#handle_button button').prop("disabled", false);  //添加删除按钮可用
+                }
             }else {
                 console.log("错误,数组没值!");   /*这个执行先后问题先这么着吧,不知道怎么解决*/
             }
+
+
+
         }
 
     },
@@ -307,6 +313,7 @@ Vue.component('data-table', {
 
                 vm.rows.push(row);
             });
+
             console.log("我看看这是什么时候！")
             // Here's the magic to keeping the DataTable in sync.
             // It must be cleared, new rows added, then redrawn!
@@ -338,7 +345,6 @@ Vue.component('data-table', {
 
             bLengthChange: false,    /*禁用Show entries*/
         });
-
 
     }
 });
